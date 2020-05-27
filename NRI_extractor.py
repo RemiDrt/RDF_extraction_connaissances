@@ -4,7 +4,7 @@
 from Extractors import *
 print("Hello world")
 #opening the file in read only
-NRI_File = open("../Graphes_attribués_NRI/acl_XP1_aut_pub.nri", encoding="utf-8")
+NRI_File = open("testfile.nri", encoding="utf-8")
 #creer une liste avec toutes les lignes
 texte = NRI_File.readlines()
 #fermer le fichier pour éviter les problèmes
@@ -14,8 +14,8 @@ NRI_File.close()
 #for ligne in texte :
 #print(texte[1])
 sommets = Sommets(texte)
-for sommet in sommets :
-    print(sommet)
 attributs = Attributs(texte)
-for attribut in attributs :
-    print(attribut)
+itemsets = Itemsets(texte)
+AfficherListe(sommets)
+AfficherListe(attributs)
+AfficherDico(itemsets)

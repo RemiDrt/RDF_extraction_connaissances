@@ -1,0 +1,10 @@
+# genere par la fonction exportNRI[] de Mathematica
+AUTH_&Aacute;lvez_Javier | AUTH_&Aacute;ngel | AUTH_Aarseth_Paul
+Year<=1992 | Year>1992 | Year<=1999 | Year>1999 | Year<=2004 | Year>2004 | Year<=2007 | Year>2007 | CONC_3_d_modeling | CONC_3d_models
+0 10,1,3,5,7
+1 9,1,3,5,7
+2 10,1,3,4,6
+#
+0 1,2
+1 0
+2 0,1
