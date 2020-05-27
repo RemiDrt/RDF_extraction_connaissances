@@ -70,28 +70,22 @@ def Graphe(texte) :
         i += 1
     return graph
 
+def NRI(texte) :
+    """
+    Fonction qui créer un dictionnaire au format NRI à partir d'un fichier NRI
+    Prend en paramètre la liste des lignes du fichier (créée avec readlines())
+    Retourne un dictionnaire qui associe à chaque élément NRI ses données
+    """
+    nri = dict()
+    sommets = Sommets(texte)
+    attributs = Attributs(texte)
+    itemsets = Itemsets(texte)
+    graphe = Graphe(texte)
+    nri["Graphe"] = graphe
+    nri["Objets"] = sommets
+    nri["Items"] = attributs
+    nri["Itemsets"] = itemsets
+    return nri
 
-
-def AfficherListe(liste):
-    for item in liste :
-        print(item)
-
-
-def AfficherDico(dico):
-    n = len(dico)
-    i = 0
-    print("{")
-    while i < n :
-        j = 0
-        o = len(dico[i])
-        ligne = str(i) + "=>{"
-        while j < o :
-            if j == o - 1 :
-                ligne += dico[i][j]
-            else :
-                ligne += dico[i][j] + ","
-            j += 1
-        ligne += "}"
-        print(ligne)
-        i += 1
-    print("}")
+def AfficherNRI(dico):
+    print(dico)

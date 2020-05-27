@@ -8,13 +8,5 @@ NRI_File = open("testfile.nri", encoding="utf-8")
 texte = NRI_File.readlines()
 #fermer le fichier pour éviter les problèmes
 NRI_File.close()
-
-sommets = Sommets(texte)
-attributs = Attributs(texte)
-itemsets = Itemsets(texte)
-graphe = Graphe(texte)
-
-AfficherListe(sommets)
-AfficherListe(attributs)
-AfficherDico(itemsets)
-AfficherDico(graphe)
+nri = NRI(texte)
+AfficherNRI(nri)
