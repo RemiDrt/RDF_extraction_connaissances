@@ -37,9 +37,45 @@ def Itemsets(texte) :
         i += 1
     return itemsets
 
+
+def Graphe(texte) :
+    """
+    Fonction qui donne le graphe d'un fichier NRI
+    Prend en paramètre la liste des lignes du fichier (créée avec readlines())
+    Retourne un tableau associatif/dictionnaire des sommet->sommets liés
+    Pas besoin de représenté les liaisons qui n'y sont pas donc c'est la même forme que l'itemsets
+    """
+    #pour connaitre la ligne du début : c'est après le #
+    #ligne 1 est un commentaire
+    #ligne 2 : liste des sommets
+    #ligne 3 : liste des Attributs
+    #ligne 4 : début de l'itemsets, liste des attributs de chaque sommets
+    #ligne <nb de sommet + 3> : le #
+    #ligne <nb de sommet + 4> : le début du graphe
+    graph = dict()
+    nbSommets = len(Sommets(texte))
+    lgDebGraphe = nbSommets + 4
+    #on peut aussi calculer le nb total de ligne : 2*nbSommets + 4
+    #on parcours 2 fois tous les sommets (pour le graphe et l'itemsets) et on ajoute la ligne # et les 3 lignes du débuts
+    nbTot = (2 * nbSommets) + 4
+    i = lgDebGraphe
+    while i < nbTot:
+        tab1 = texte[i].split() #on sépare avec l'espace pour avoir d'un coté le numéro du sommet concerné et de l'autre les numéros des sommets liés
+        nSommet = int(tab1[0])
+        if len(tab1) > 1 : #attention aussi si on se retrouve avec un sommet sans lien la case tab[1] n'existe pas faudra la vérifier
+            listliens = tab1[1].split(",") #attention listAttribut est un liste de numéros mais ce sont des String
+        else :
+            listliens = [] #un tableau vide
+        graph[nSommet] = listliens
+        i += 1
+    return graph
+
+
+
 def AfficherListe(liste):
     for item in liste :
         print(item)
+
 
 def AfficherDico(dico):
     n = len(dico)
