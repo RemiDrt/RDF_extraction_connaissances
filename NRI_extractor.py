@@ -1,12 +1,7 @@
 #!/usr/bin/python
 #coding=utf-8
-def Sommets(ligne) :
-    """
-    Fonction qui donne les sommets listés d'un fichier NRI_File
-    Prend en paramètre la ligne comprenant les sommets
-    Retourne un tableau des sommets
-    """
-    return ligne.split("|")
+#import des fonctions d'extractions spécifiques aux fichier NRI
+from Extractors import *
 print("Hello world")
 #opening the file in read only
 NRI_File = open("../Graphes_attribués_NRI/acl_XP1_aut_pub.nri", encoding="utf-8")
@@ -18,6 +13,9 @@ NRI_File.close()
 #ind_ligne = 1
 #for ligne in texte :
 #print(texte[1])
-sommets = Sommets(texte[1])
+sommets = Sommets(texte)
 for sommet in sommets :
     print(sommet)
+attributs = Attributs(texte)
+for attribut in attributs :
+    print(attribut)
