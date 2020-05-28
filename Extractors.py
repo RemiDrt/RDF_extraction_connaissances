@@ -1,5 +1,7 @@
 #!/usr/bin/python
 #coding=utf-8
+import rdflib
+
 def Sommets(texte) :
     """
     Fonction qui donne les sommets listés d'un fichier NRI
@@ -88,4 +90,25 @@ def NRI(texte) :
     return nri
 
 def AfficherNRI(dico):
+    """
+    """
     print(dico)
+
+
+def getGrapheRDF(ttlFile) :
+    """
+    Crée et retourne un objet graphe de la librairi rdflib à partir d'un fichier turtle
+    cet objet contient tout les triplets du fichier
+    """
+    graphe = rdflib.Graph()
+    return graphe.parse(ttlFile , format="turtle")
+
+def AfficherTriplets(graphe):
+    """
+    """
+    for sujet, predicat, objet in graphe :
+        print("\n")
+        print(sujet)
+        print(predicat)
+        print(objet)
+        print("\n---------------------")
