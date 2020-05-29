@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #coding=utf-8
-import rdflib
+from rdflib import Graph, RDF, URIRef
+from rdflib.namespace import XSD , FOAF
 
 def Sommets(texte) :
     """
@@ -100,8 +101,9 @@ def getGrapheRDF(ttlFile) :
     Crée et retourne un objet graphe de la librairi rdflib à partir d'un fichier turtle
     cet objet contient tout les triplets du fichier
     """
-    graphe = rdflib.Graph()
-    return graphe.parse(ttlFile , format="turtle")
+    graphe = Graph()
+    graphe.parse(ttlFile, format="turtle")
+    return graphe
 
 def AfficherTriplets(graphe):
     """

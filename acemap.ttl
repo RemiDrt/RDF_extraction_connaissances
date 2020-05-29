@@ -34,9 +34,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_title
 
 <http://www.semanticweb.org/acemap#paper_title> rdf:type :ObjectProperty ;
-                                                
+
                                                 rdfs:domain <http://www.semanticweb.org/acemap#Paper> ;
-                                                
+
                                                 rdfs:range [ rdf:type :Restriction ;
                                                              :onProperty :topDataProperty ;
                                                              :someValuesFrom xsd:string
@@ -47,9 +47,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_publish_date
 
 <http://www.semanticweb.org/acemap#paper_publish_date> rdf:type :ObjectProperty ;
-                                                               
+
                                                                rdfs:domain <http://www.semanticweb.org/acemap#Conference> ;
-                                                               
+
                                                                rdfs:range [ rdf:type :Restriction ;
                                                                             :onProperty :topDataProperty ;
                                                                             :someValuesFrom xsd:date
@@ -60,9 +60,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#affiliation_name
 
 <http://www.semanticweb.org/acemap#affiliation_name> rdf:type :ObjectProperty ;
-                                                     
+
                                                      rdfs:domain <http://www.semanticweb.org/acemap#Affiliation> ;
-                                                     
+
                                                      rdfs:range [ rdf:type :Restriction ;
                                                                   :onProperty :topDataProperty ;
                                                                   :someValuesFrom xsd:string
@@ -73,9 +73,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#author_citation_count
 
 <http://www.semanticweb.org/acemap#author_citation_count> rdf:type :ObjectProperty ;
-                                                          
+
                                                           rdfs:domain <http://www.semanticweb.org/acemap#Author> ;
-                                                          
+
                                                           rdfs:range [ rdf:type :Restriction ;
                                                                        :onProperty :topDataProperty ;
                                                                        :someValuesFrom xsd:int
@@ -88,9 +88,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#author_name
 
 <http://www.semanticweb.org/acemap#author_name> rdf:type :ObjectProperty ;
-                                                
+
                                                 rdfs:domain <http://www.semanticweb.org/acemap#Author> ;
-                                                
+
                                                 rdfs:range [ rdf:type :Restriction ;
                                                              :onProperty :topDataProperty ;
                                                              :someValuesFrom xsd:string
@@ -101,9 +101,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#author_number_of_paper
 
 <http://www.semanticweb.org/acemap#author_number_of_paper> rdf:type :ObjectProperty ;
-                                                           
+
                                                            rdfs:domain <http://www.semanticweb.org/acemap#Author> ;
-                                                           
+
                                                            rdfs:range [ rdf:type :Restriction ;
                                                                         :onProperty :topDataProperty ;
                                                                         :someValuesFrom xsd:int
@@ -113,9 +113,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#author_sci_citation
 
 <http://www.semanticweb.org/acemap#author_sci_citation> rdf:type :ObjectProperty ;
-                                                        
+
                                                         rdfs:domain <http://www.semanticweb.org/acemap#Author> ;
-                                                        
+
                                                         rdfs:range [ rdf:type :Restriction ;
                                                                      :onProperty :topDataProperty ;
                                                                      :someValuesFrom xsd:int
@@ -124,9 +124,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#author_is_in_field
 
 <http://www.semanticweb.org/acemap#author_is_in_field> rdf:type :ObjectProperty ;
-                                                  
+
                                                   rdfs:range <http://www.semanticweb.org/acemap#Field> ;
-                                                  
+
                                                   rdfs:domain <http://www.semanticweb.org/acemap#Author> .
 
 
@@ -134,9 +134,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#work_in
 
 <http://www.semanticweb.org/acemap#work_in> rdf:type :ObjectProperty ;
-                                                  
+
                                                   rdfs:range <http://www.semanticweb.org/acemap#Author> ;
-                                                  
+
                                                   rdfs:domain <http://www.semanticweb.org/acemap#Institute> .
 
 
@@ -144,9 +144,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#field_name
 
 <http://www.semanticweb.org/acemap#field_name> rdf:type :ObjectProperty ;
-                                               
+
                                                rdfs:domain <http://www.semanticweb.org/acemap#Field> ;
-                                               
+
                                                rdfs:range [ rdf:type :Restriction ;
                                                             :onProperty :topDataProperty ;
                                                             :someValuesFrom xsd:string
@@ -154,9 +154,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#field_level
 
 <http://www.semanticweb.org/acemap#field_level> rdf:type :ObjectProperty ;
-                                               
+
                                                rdfs:domain <http://www.semanticweb.org/acemap#Field> ;
-                                               
+
                                                rdfs:range [ rdf:type :Restriction ;
                                                             :onProperty :topDataProperty ;
                                                             :someValuesFrom xsd:string
@@ -165,9 +165,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#field_paper_num
 
 <http://www.semanticweb.org/acemap#field_paper_num> rdf:type :ObjectProperty ;
-                                               
+
                                                rdfs:domain <http://www.semanticweb.org/acemap#Field> ;
-                                               
+
                                                rdfs:range [ rdf:type :Restriction ;
                                                             :onProperty :topDataProperty ;
                                                             :someValuesFrom xsd:int
@@ -176,9 +176,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#field_reference_count
 
 <http://www.semanticweb.org/acemap#field_reference_count> rdf:type :ObjectProperty ;
-                                               
+
                                                rdfs:domain <http://www.semanticweb.org/acemap#Field> ;
-                                               
+
                                                rdfs:range [ rdf:type :Restriction ;
                                                             :onProperty :topDataProperty ;
                                                             :someValuesFrom xsd:int
@@ -188,9 +188,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#field_is_part_of
 
 <http://www.semanticweb.org/acemap#field_is_part_of> rdf:type :ObjectProperty ;
-                                               
+
                                                rdfs:domain <http://www.semanticweb.org/acemap#Field> ;
-                                               
+
                                                rdfs:range [ rdf:type :Restriction ;
                                                             :onProperty :topDataProperty ;
                                                             :someValuesFrom xsd:string
@@ -200,9 +200,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#conference_full_name
 
 <http://www.semanticweb.org/acemap#conference_full_name> rdf:type :ObjectProperty ;
-                                                           
+
                                                            rdfs:domain <http://www.semanticweb.org/acemap#Conference> ;
-                                                           
+
                                                            rdfs:range [ rdf:type :Restriction ;
                                                                         :onProperty :topDataProperty ;
                                                                         :someValuesFrom xsd:string
@@ -211,9 +211,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#journal_name
 
 <http://www.semanticweb.org/acemap#journal_name> rdf:type :ObjectProperty ;
-                                                           
+
                                                            rdfs:domain <http://www.semanticweb.org/acemap#Journal> ;
-                                                           
+
                                                            rdfs:range [ rdf:type :Restriction ;
                                                                         :onProperty :topDataProperty ;
                                                                         :someValuesFrom xsd:string
@@ -222,9 +222,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#conference_short_name
 
 <http://www.semanticweb.org/acemap#conference_short_name> rdf:type :ObjectProperty ;
-                                                           
+
                                                            rdfs:domain <http://www.semanticweb.org/acemap#Conference> ;
-                                                           
+
                                                            rdfs:range [ rdf:type :Restriction ;
                                                                         :onProperty :topDataProperty ;
                                                                         :someValuesFrom xsd:string
@@ -233,9 +233,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#insititute_name
 
 <http://www.semanticweb.org/acemap#insititute_name> rdf:type :ObjectProperty ;
-                                                                 
+
                                                                  rdfs:domain <http://www.semanticweb.org/acemap#Institute> ;
-                                                                 
+
                                                                  rdfs:range [ rdf:type :Restriction ;
                                                                               :onProperty :topDataProperty ;
                                                                               :someValuesFrom xsd:string
@@ -246,9 +246,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#is_part_of_affiliation
 
 <http://www.semanticweb.org/acemap#is_part_of_affiliation> rdf:type :ObjectProperty ;
-                                                       
+
                                                        rdfs:domain <http://www.semanticweb.org/acemap#Institute> ;
-                                                       
+
                                                        rdfs:range <http://www.semanticweb.org/acemap#Affiliation> .
 
 
@@ -256,9 +256,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#institute_name
 
 <http://www.semanticweb.org/acemap#institute_name> rdf:type :ObjectProperty ;
-                                                   
+
                                                    rdfs:domain <http://www.semanticweb.org/acemap#Institute> ;
-                                                   
+
                                                    rdfs:range [ rdf:type :Restriction ;
                                                                 :onProperty :topDataProperty ;
                                                                 :someValuesFrom xsd:string
@@ -270,9 +270,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_is_written_by
 
 <http://www.semanticweb.org/acemap#paper_is_written_by> rdf:type :ObjectProperty ;
-                                                  
+
                                                   rdfs:range <http://www.semanticweb.org/acemap#Author> ;
-                                                  
+
                                                   rdfs:domain <http://www.semanticweb.org/acemap#Paper> .
 
 
@@ -280,9 +280,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#journal_name
 
 <http://www.semanticweb.org/acemap#journal_name> rdf:type :ObjectProperty ;
-                                                 
+
                                                  rdfs:domain <http://www.semanticweb.org/acemap#Journal> ;
-                                                 
+
                                                  rdfs:range [ rdf:type :Restriction ;
                                                               :onProperty :topDataProperty ;
                                                               :someValuesFrom xsd:string
@@ -294,9 +294,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_cit_paper
 
 <http://www.semanticweb.org/acemap#paper_cit_paper> rdf:type :ObjectProperty ;
-                                                    
+
                                                     rdfs:domain <http://www.semanticweb.org/acemap#Paper> ;
-                                                    
+
                                                     rdfs:range <http://www.semanticweb.org/acemap#Paper> .
 
 
@@ -304,9 +304,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_citation_count
 
 <http://www.semanticweb.org/acemap#paper_citation_count> rdf:type :ObjectProperty ;
-                                                         
+
                                                          rdfs:domain <http://www.semanticweb.org/acemap#Paper> ;
-                                                         
+
                                                          rdfs:range [ rdf:type :Restriction ;
                                                                       :onProperty :topDataProperty ;
                                                                       :someValuesFrom xsd:int
@@ -317,9 +317,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_cs_relevant
 
 <http://www.semanticweb.org/acemap#paper_cs_relevant> rdf:type :ObjectProperty ;
-                                                      
+
                                                       rdfs:domain <http://www.semanticweb.org/acemap#Paper> ;
-                                                      
+
                                                       rdfs:range [ rdf:type :Restriction ;
                                                                    :onProperty :topDataProperty ;
                                                                    :someValuesFrom xsd:boolean
@@ -330,9 +330,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_future_rank
 
 <http://www.semanticweb.org/acemap#paper_future_rank> rdf:type :ObjectProperty ;
-                                                      
+
                                                       rdfs:domain <http://www.semanticweb.org/acemap#Paper> ;
-                                                      
+
                                                       rdfs:range [ rdf:type :Restriction ;
                                                                    :onProperty :topDataProperty ;
                                                                    :someValuesFrom xsd:int
@@ -343,9 +343,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_is_in_field
 
 <http://www.semanticweb.org/acemap#paper_is_in_field> rdf:type :ObjectProperty ;
-                                                      
+
                                                       rdfs:range <http://www.semanticweb.org/acemap#Field> ;
-                                                      
+
                                                       rdfs:domain <http://www.semanticweb.org/acemap#Paper> .
 
 
@@ -353,9 +353,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_keyword
 
 <http://www.semanticweb.org/acemap#paper_keyword> rdf:type :ObjectProperty ;
-                                                  
+
                                                   rdfs:domain <http://www.semanticweb.org/acemap#Paper> ;
-                                                  
+
                                                   rdfs:range [ rdf:type :Restriction ;
                                                                :onProperty :topDataProperty ;
                                                                :someValuesFrom xsd:string
@@ -366,9 +366,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_publish_date
 
 <http://www.semanticweb.org/acemap#paper_publish_date> rdf:type :ObjectProperty ;
-                                                       
+
                                                        rdfs:domain <http://www.semanticweb.org/acemap#Paper> ;
-                                                       
+
                                                        rdfs:range [ rdf:type :Restriction ;
                                                                     :onProperty :topDataProperty ;
                                                                     :someValuesFrom xsd:date
@@ -379,9 +379,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_publish_on
 
 <http://www.semanticweb.org/acemap#paper_publish_on> rdf:type :ObjectProperty ;
-                                                     
+
                                                      rdfs:domain <http://www.semanticweb.org/acemap#Paper> ;
-                                                     
+
                                                      rdfs:range <http://www.semanticweb.org/acemap#Venue> .
 
 
@@ -389,9 +389,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_rank
 
 <http://www.semanticweb.org/acemap#paper_rank> rdf:type :ObjectProperty ;
-                                               
+
                                                rdfs:domain <http://www.semanticweb.org/acemap#Paper> ;
-                                               
+
                                                rdfs:range [ rdf:type :Restriction ;
                                                             :onProperty :topDataProperty ;
                                                             :someValuesFrom xsd:int
@@ -404,9 +404,9 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#paper_sci_citation
 
 <http://www.semanticweb.org/acemap#paper_sci_citation> rdf:type :ObjectProperty ;
-                                                       
+
                                                        rdfs:domain <http://www.semanticweb.org/acemap#Paper> ;
-                                                       
+
                                                        rdfs:range [ rdf:type :Restriction ;
                                                                     :onProperty :topDataProperty ;
                                                                     :someValuesFrom xsd:int
@@ -442,7 +442,7 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#Conference
 
 <http://www.semanticweb.org/acemap#Conference> rdf:type :Class ;
-                                               
+
                                                rdfs:subClassOf <http://www.semanticweb.org/acemap#Venue> .
 
 
@@ -462,7 +462,7 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/acemap#Journal
 
 <http://www.semanticweb.org/acemap#Journal> rdf:type :Class ;
-                                            
+
                                             rdfs:subClassOf <http://www.semanticweb.org/acemap#Venue> .
 
 
@@ -481,4 +481,3 @@ xsd:date rdf:type rdfs:Datatype .
 
 
 ###  Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net
-
