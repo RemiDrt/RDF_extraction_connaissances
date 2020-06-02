@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #coding=utf-8
 from rdflib import Graph, RDF, URIRef
-from rdflib.namespace import XSD , FOAF
+from rdflib.namespace import XSD , FOAF, Namespace
 
 def Sommets(texte) :
     """

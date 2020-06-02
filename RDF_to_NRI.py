@@ -12,7 +12,7 @@ expertGraphe["pub_aut"] = { "sommets" : ["pub", "aut"], "relations": "auteur", "
 expertGraphe["aut_pub_citees"] = { "sommets" : ["pub", "aut"], "relations": "citation", "attributs": ["an", "them"] }
 expertGraphe["pub_aut_cites"] = { "sommets" : ["pub", "aut"], "relations": "citation", "attributs": ["an", "them"] }
 print(expertGraphe)
-#dictionnaire de acemap pour répertorié les différents types et prédicats qui nous interesse
+#dictionnaire de acemap pour répertorier les différents types et prédicats qui nous interesse
 acemap = dict()
 acemap["coauteurs"]
 acemap["citations"]
@@ -23,3 +23,21 @@ acemap["citation_e"]
 acemap["pub_aut"]
 acemap["aut_pub_citees"]
 acemap["pub_aut_cites"]
+acemap["types"] = { "aut" : "ace:Author", "pub" : "ace:Paper", "an" : "xsd:date", "them" : "ace:Field" }
+acemap["uri"] = { "ace" : "http://www.semanticweb.org/acemap#"}
+
+ace = Namespace(acemap["uri"]["ace"])
+
+def ExtraireAuteurs(graphe) :
+    """
+    Extrait les identifiants des auteurs des auteurs de acemap
+    retourne un liste de tous les identifiants
+    """
+
+    auteurs = dict()
+    auteurs = graphe.subjects(RDF.type, ace.Author)
+    for auteur in auteurs :
+        objet = graphe.objects(auteur, ace.author_name)
+        id = auteur.split("#")[1]
+        auteurs[id] = objet
+
