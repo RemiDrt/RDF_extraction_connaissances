@@ -28,16 +28,5 @@ acemap["uri"] = { "ace" : "http://www.semanticweb.org/acemap#"}
 
 ace = Namespace(acemap["uri"]["ace"])
 
-def ExtraireAuteurs(graphe) :
-    """
-    Extrait les identifiants des auteurs des auteurs de acemap
-    retourne un liste de tous les identifiants
-    """
 
-    auteurs = dict()
-    auteurs = graphe.subjects(RDF.type, ace.Author)
-    for auteur in auteurs :
-        objet = graphe.objects(auteur, ace.author_name)
-        id = auteur.split("#")[1]
-        auteurs[id] = objet
 

@@ -102,7 +102,7 @@ def getGrapheRDF(ttlFile) :
     cet objet contient tout les triplets du fichier
     """
     graphe = Graph()
-    graphe.parse(ttlFile, format="turtle")
+    graphe.parse(location=ttlFile, format="turtle")
     return graphe
 
 def AfficherTriplets(graphe):
@@ -117,24 +117,6 @@ def AfficherTriplets(graphe):
 
 ace = Namespace("http://www.semanticweb.org/acemap#")
 
-def ExtraireAuteurs(graphe) :
-    """
-    Extrait les identifiants des auteurs et leurs noms présents dans acemap
-    retourne un liste de tableau avec un id d'auteur puis son nom
-    """
-
-    auteurs_ID = []
-    auteurs = graphe.subjects(RDF.type, ace.Author)
-    i = 0
-    for auteur in auteurs :
-        noms = graphe.objects(auteur, ace.author_name)
-        auteurs_ID.append([])
-        auteurs_ID[i].append(auteur)
-        for nom in noms :
-            auteurs_ID[i].append(nom)
-        i += 1
-    return auteurs_ID
-
 def AjouterPrefixe(prefixe, chaine) :
     """
     Fonction qui ajouter un préfixe à une chaine de caractère et remplace les " " par des "_"
@@ -144,3 +126,35 @@ def AjouterPrefixe(prefixe, chaine) :
     pref = prefixe + "_"
     new_chaine = pref + chaine.replace(" ", "_")
     return new_chaine
+
+def ExtraireAuteurs(graphe) :
+    """
+    Extrait les identifiants des auteurs et leurs noms présents dans acemap
+    prend en paramètre un objet graphe de la RDFlib
+    retourne une dictionnaire qui associe authorID à son nom
+    """
+
+    IDToAuthors = dict()
+    auteurs = graphe.subjects(RDF.type, ace.Author)
+    for auteur in auteurs :
+        noms = graphe.objects(auteur, ace.author_name)
+        for nom in noms :
+            IDToAuthors[auteur] = nom
+    return IDToAuthors
+
+def ExtraireConceptes(graphe, auteurs):
+    """
+    Extrait les demaines des auteurs
+    prend en paramètre un objet graphe de rdflib et un liste d'id d'autheurs sous forme d'URI
+    retourne un dictionnaire associant à un authorID tous les FieldID auxquelles il est rataché
+    { authorID : [fieldID, fieldID, fieldID], authorID : [fieldID, ...] ... }
+    """
+    AuthIDToFieldID = dict()
+    for auteur in auteurs :
+        domaines = graphe.objects(auteur, ace.Field)
+        AuthIDToFieldID[auteur] = []
+        for domaine in domaines :
+            AuthIDToFieldID[auteur].append(domaine)
+    return AuthIDToFieldID
+
+
