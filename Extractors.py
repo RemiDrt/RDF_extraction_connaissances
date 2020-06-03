@@ -114,3 +114,33 @@ def AfficherTriplets(graphe):
         print(predicat)
         print(objet)
         print("\n---------------------")
+
+ace = Namespace("http://www.semanticweb.org/acemap#")
+
+def ExtraireAuteurs(graphe) :
+    """
+    Extrait les identifiants des auteurs et leurs noms présents dans acemap
+    retourne un liste de tableau avec un id d'auteur puis son nom
+    """
+
+    auteurs_ID = []
+    auteurs = graphe.subjects(RDF.type, ace.Author)
+    i = 0
+    for auteur in auteurs :
+        noms = graphe.objects(auteur, ace.author_name)
+        auteurs_ID.append([])
+        auteurs_ID[i].append(auteur)
+        for nom in noms :
+            auteurs_ID[i].append(nom)
+        i += 1
+    return auteurs_ID
+
+def AjouterPrefixe(prefixe, chaine) :
+    """
+    Fonction qui ajouter un préfixe à une chaine de caractère et remplace les " " par des "_"
+    retourne une chaine de caractères avec le préfixe placé devant
+    exemple : AjouterPrefixe("AUTH", "Albert Einstein") retourne "AUTH_Albert_Einstein"
+    """
+    pref = prefixe + "_"
+    new_chaine = pref + chaine.replace(" ", "_")
+    return new_chaine
