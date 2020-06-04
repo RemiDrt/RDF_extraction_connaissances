@@ -144,17 +144,59 @@ def ExtraireAuteurs(graphe) :
 
 def ExtraireConceptes(graphe, auteurs):
     """
-    Extrait les demaines des auteurs
+    Extrait les domaines des auteurs
     prend en paramètre un objet graphe de rdflib et un liste d'id d'autheurs sous forme d'URI
     retourne un dictionnaire associant à un authorID tous les FieldID auxquelles il est rataché
     { authorID : [fieldID, fieldID, fieldID], authorID : [fieldID, ...] ... }
     """
-    AuthIDToFieldID = dict()
+    authIDToFieldID = dict()
     for auteur in auteurs :
         domaines = graphe.objects(auteur, ace.Field)
-        AuthIDToFieldID[auteur] = []
+        authIDToFieldID[auteur] = []
         for domaine in domaines :
-            AuthIDToFieldID[auteur].append(domaine)
-    return AuthIDToFieldID
+            authIDToFieldID[auteur].append(domaine)
+    return authIDToFieldID
+
+def ExtrairesDate(graphe, auteurs):
+    """
+    Extrait les dates de publication d'un auteur.
+    prend en paramètre un graphe rdf et une liste d'authorID sous forme d'URI
+    retourne un dictionnaire associant des authorID à des dates de publication 
+    { authorID : [date, date, date], authorID : [date, ...] ... }
+    """
+    authIDToYears = dict()
+    for auteur in auteurs :
+        authIDToYears[auteur] = []
+        #on va générer la liste de toutes les publication qui ont été ecrite par l'auteur en question
+        publications = graphe.subjects(ace.paper_is_written_by, auteur)
+        for publication in publications :
+            dates = graphe.objects(publication, ace.paper_publish_date)
+            for date in dates :
+                authIDToYears[auteur].append(date)
+    return authIDToYears
+
+def ExtraireAuteursPubli(graphe) :
+    """
+    Extrait les auteurs pour toutes les publication
+    prend en parametre un graphe rdf
+    retourne un dictionnaire qui associe les paperID a tous ses authorID
+    { paperID : [authorID, authoID, authorID], paperID : [authorID, ...] ... }
+    """
+    paperIDToAuthorID = dict()
+    publications = graphe.subjects(RDF.type, ace.Paper)
+    for publication in publications :
+        auteurs = graphe.objects(publication, ace.paper_is_written_by)
+        paperIDToAuthorID[publication] = []
+        for auteur in auteurs :
+            paperIDToAuthorID[publication].append(auteur)
+    return paperIDToAuthorID
+
+def YearFromDate(date) :
+    """
+    Extrait l'année d'un date qui est au format xsd.date (YYYY-MM-DD)
+    Retourne la chaine de caractère correspondant à l'année de la date
+    """
+    return date[:4]
+    
 
 
