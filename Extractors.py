@@ -32,7 +32,7 @@ def Itemsets(texte) :
     while texte[i][0] != "#" :
         tab1 = texte[i].split() #on sépare avec l'espace pour avoir d'un coté le numéros de sommet et de l'autre les numéros d'attributs
         nSommet = int(tab1[0])
-        if len(tab1) > 1 : #attention aussi si on se retrouve avec un sommet sans attribut la vase tab[1] n'existe pas faudra la vérifier
+        if len(tab1) > 1 : #attention aussi si on se retrouve avec un sommet sans attribut la case tab[1] n'existe pas faudra la vérifier
             listAttributs = tab1[1].split(",") #attention listAttribut est un liste de numéros mais ce sont des String
         else :
             listAttributs = [] #un tableau vide
@@ -127,7 +127,41 @@ def AjouterPrefixe(prefixe, chaine) :
     new_chaine = pref + chaine.replace(" ", "_")
     return new_chaine
 
+def YearFromDate(date) :
+    """
+    Extrait l'année d'un date qui est au format xsd.date (YYYY-MM-DD)
+    Retourne la chaine de caractère correspondant à l'année de la date
+    """
+    return date[:4]  
+
+
 def ExtraireAuteurs(graphe) :
+    """
+    Extrait tous les id d'auteurs dans un tableau
+    prends un paramètre un graphe de rdflib
+    retourne un tableau avec tous les id des auteurs
+    """
+    auteurs = []
+    authors = graphe.subjects(RDF.type, ace.Author)
+    for author in authors :
+        auteurs.append(author)
+    return auteurs
+
+
+def ExtrairePublication(graphe) :
+    """
+    Extrait tous les id de publication dans un tableau
+    prends un paramètre un graphe de rdflib
+    retourne un tableau avec tous les id des publications
+    """
+    publi = []
+    papers = graphe.subjects(RDF.type, ace.Paper)
+    for paper in papers :
+        publi.append(paper)
+    return publi
+
+
+def ExtraireNomAuteurs(graphe, auteurs) :
     """
     Extrait les identifiants des auteurs et leurs noms présents dans acemap
     prend en paramètre un objet graphe de la RDFlib
@@ -135,7 +169,6 @@ def ExtraireAuteurs(graphe) :
     """
 
     IDToAuthors = dict()
-    auteurs = graphe.subjects(RDF.type, ace.Author)
     for auteur in auteurs :
         noms = graphe.objects(auteur, ace.author_name)
         for nom in noms :
@@ -175,7 +208,7 @@ def ExtrairesDate(graphe, auteurs):
                 authIDToYears[auteur].append(date)
     return authIDToYears
 
-def ExtraireAuteursPubli(graphe) :
+def ExtraireAuteursPubli(graphe, publications) :
     """
     Extrait les auteurs pour toutes les publication
     prend en parametre un graphe rdf
@@ -183,7 +216,6 @@ def ExtraireAuteursPubli(graphe) :
     { paperID : [authorID, authoID, authorID], paperID : [authorID, ...] ... }
     """
     paperIDToAuthorID = dict()
-    publications = graphe.subjects(RDF.type, ace.Paper)
     for publication in publications :
         auteurs = graphe.objects(publication, ace.paper_is_written_by)
         paperIDToAuthorID[publication] = []
@@ -191,12 +223,26 @@ def ExtraireAuteursPubli(graphe) :
             paperIDToAuthorID[publication].append(auteur)
     return paperIDToAuthorID
 
-def YearFromDate(date) :
+
+def Coauteurs(PaperToAuthor, auteurs, publications):
     """
-    Extrait l'année d'un date qui est au format xsd.date (YYYY-MM-DD)
-    Retourne la chaine de caractère correspondant à l'année de la date
+    Crée  un dictionnaire associant chaque auteur à ses coauteurs
+    prend en paramètre un dictionnaire associant les publication à leurs auteurs (cf ExtraireAuteursPubli), un tableau des auteurs et un tableau des publications
+    retourne un dictionnaire sous la forme { authID : [authID, authID ...] , authID : ......}
     """
-    return date[:4]
+    coaut = dict()
+    for auteur in auteurs :
+        coaut[auteur] = []
+        for publication in publications :
+            if auteur in PaperToAuthor[publication] :
+                for aut in PaperToAuthor[publication] :
+                    if (aut != auteur) and (aut not in coaut[auteur]) :
+                        coaut[auteur].append(aut)
+    return coaut
+                
+
+
+
     
 
 
