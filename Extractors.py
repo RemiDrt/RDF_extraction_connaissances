@@ -189,11 +189,24 @@ def ExtraireConceptes(graphe, auteurs):
         for domaine in domaines :
             authIDToFieldID[auteur].append(domaine)
     return authIDToFieldID
+def AuthorWritePaper(graphe, auteurs):
+    """
+    Extrait les papiers qu'un auteur a écrit
+    prend en paramètre la liste des auteurs et le graphe de rdflib
+    retourne un dictionnaire associant un auteur a toutes ces publication
+    """
+    authWritePaper = dict()
+    for auteur in auteurs :
+        authWritePaper[auteur] = []
+        papers = graphe.subject(ace.paper_is_written_by, auteur) 
+        for paper in papers :
+            authWritePaper[auteur].append(paper)
+    return authWritePaper
 
-def ExtrairesDate(graphe, auteurs):
+def ExtrairesDate(graphe, authorWritePaper, auteurs):
     """
     Extrait les dates de publication d'un auteur.
-    prend en paramètre un graphe rdf et une liste d'authorID sous forme d'URI
+    prend en paramètre un graphe rdf une liste d'authorID sous forme d'URI et un dictionnaire qui associe un auteurs a ces publication
     retourne un dictionnaire associant des authorID à des dates de publication 
     { authorID : [date, date, date], authorID : [date, ...] ... }
     """
@@ -201,8 +214,7 @@ def ExtrairesDate(graphe, auteurs):
     for auteur in auteurs :
         authIDToYears[auteur] = []
         #on va générer la liste de toutes les publication qui ont été ecrite par l'auteur en question
-        publications = graphe.subjects(ace.paper_is_written_by, auteur)
-        for publication in publications :
+        for publication in authorWritePaper[auteur] :
             dates = graphe.objects(publication, ace.paper_publish_date)
             for date in dates :
                 authIDToYears[auteur].append(date)
@@ -223,6 +235,24 @@ def ExtraireAuteursPubli(graphe, publications) :
             paperIDToAuthorID[publication].append(auteur)
     return paperIDToAuthorID
 
+def ExtrairePubliCit(graphe, publications) :
+    """
+    Extrait les publication cités par des publciation
+    prend en paramètre la liste des publication
+    retourne un dictionnaire associé un publication a toutes les publication qu'elle cite
+    { paperID : [paperID, paperID ...] , paperID : ......}
+    """
+    paperCit = dict()
+    for publication in publication :
+        paperCit[publication] = []
+        cites = graphe.objects(publication, ace.paper_cit_paper)
+        for cite in cites :
+            paperCit[publication] = cite
+    return paperCit
+
+
+def AuthorToPaper()
+
 
 def Coauteurs(PaperToAuthor, auteurs, publications):
     """
@@ -239,6 +269,9 @@ def Coauteurs(PaperToAuthor, auteurs, publications):
                     if (aut != auteur) and (aut not in coaut[auteur]) :
                         coaut[auteur].append(aut)
     return coaut
+
+def Citation(PaperCitPaper, auteurs, PaperToAuthor) :
+
                 
 
 
