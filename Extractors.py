@@ -115,7 +115,6 @@ def AfficherTriplets(graphe):
         print(objet)
         print("\n---------------------")
 
-ace = Namespace("http://www.semanticweb.org/acemap#")
 
 def AjouterPrefixe(prefixe, chaine) :
     """
@@ -148,7 +147,7 @@ def ExtraireAuteurs(graphe) :
     return auteurs
 
 
-def ExtrairePublication(graphe) :
+def ExtrairePublications(graphe) :
     """
     Extrait tous les id de publication dans un tableau
     prends un paramètre un graphe de rdflib
@@ -159,6 +158,19 @@ def ExtrairePublication(graphe) :
     for paper in papers :
         publi.append(paper)
     return publi
+
+
+def ExtraireConceptes(graphe) :
+    """
+    Extrait tous les id de thématiques dans un talbeau
+    prend en paramètres un graphe de rdflib
+    retourne un tableau avec tous les id des thématiques/field/domaines/concepts (CONC)
+    """
+    them = []
+    fields = graphe.subjects(RDF.type, ace.Field)
+    for field in fields : 
+        them.append(field)
+    return them
 
 
 def ExtraireNomAuteurs(graphe, auteurs) :
@@ -175,7 +187,53 @@ def ExtraireNomAuteurs(graphe, auteurs) :
             IDToAuthors[auteur] = nom
     return IDToAuthors
 
-def ExtraireConceptes(graphe, auteurs):
+
+def ExtraireNomConceptes(graphe, conceptes) :
+    """
+    Extrait les nom des différents conceptes/domaines/field et les associes à leurs ID
+    prend en parametre un gaphe rdflib et la liste des id des conceptes
+    retourne un dictionnaire associant un fieldid a son nom
+    """
+    IDToField = dict()
+    for concepte in conceptes :
+        noms = graphe.objects(concepte, ace.field_name)
+        for nom in noms : 
+            IDToField[concepte] = nom
+    return IDToField
+
+
+def PaperToYear(graphe, publications) :
+    """
+    Extrait les dates et les associ a leurs publication
+    prend en paramètre un graphe rdflib et la liste des publication
+    retourne un dicitonnaire associant publicationID à sa date de publication (jespere qu'il en a qu'une seul)
+    exemple : { paperID : date, paperID : date ....... }
+    """
+    paperToYear = dict()
+    for publication in publications :
+        dates = graphe.objects(publication, ace.paper_publish_date)
+        for date in dates :
+            paperToYear[publication] = date
+    return paperToYear
+
+
+def PaperToField(graphe, publications) :
+    """
+    Extrait les domaines des publications
+    prend en paramètre un objet graphe de rdflib et un liste d'id de publication sous forme d'URI
+    retourne un dictionnaire associant à un paperID tous les FieldID auxquelles il est rataché
+    { paperID : [fieldID, fieldID, fieldID], paperID : [fieldID, ...] ... }
+    """
+    paperToField = dict()
+    for publication in publications :
+        domaines = graphe.objects(publication, ace.paper_is_in_field)
+        paperToField[publication] = []
+        for domaine in domaines :
+            paperToField[publication].append(domaine)
+    return paperToField
+
+
+def AuthorToField(graphe, auteurs):
     """
     Extrait les domaines des auteurs
     prend en paramètre un objet graphe de rdflib et un liste d'id d'autheurs sous forme d'URI
@@ -184,21 +242,24 @@ def ExtraireConceptes(graphe, auteurs):
     """
     authIDToFieldID = dict()
     for auteur in auteurs :
-        domaines = graphe.objects(auteur, ace.Field)
+        domaines = graphe.objects(auteur, ace.author_is_in_field)
         authIDToFieldID[auteur] = []
         for domaine in domaines :
             authIDToFieldID[auteur].append(domaine)
     return authIDToFieldID
+
+
 def AuthorWritePaper(graphe, auteurs):
     """
     Extrait les papiers qu'un auteur a écrit
     prend en paramètre la liste des auteurs et le graphe de rdflib
     retourne un dictionnaire associant un auteur a toutes ces publication
+    { authorID : [paperID, paperID, paperID], authorID : [paperID, ...] ... }
     """
     authWritePaper = dict()
     for auteur in auteurs :
         authWritePaper[auteur] = []
-        papers = graphe.subject(ace.paper_is_written_by, auteur) 
+        papers = graphe.subjects(ace.paper_is_written_by, auteur) 
         for paper in papers :
             authWritePaper[auteur].append(paper)
     return authWritePaper
@@ -235,6 +296,7 @@ def ExtraireAuteursPubli(graphe, publications) :
             paperIDToAuthorID[publication].append(auteur)
     return paperIDToAuthorID
 
+
 def ExtrairePubliCit(graphe, publications) :
     """
     Extrait les publication cités par des publciation
@@ -243,36 +305,66 @@ def ExtrairePubliCit(graphe, publications) :
     { paperID : [paperID, paperID ...] , paperID : ......}
     """
     paperCit = dict()
-    for publication in publication :
+    for publication in publications :
         paperCit[publication] = []
         cites = graphe.objects(publication, ace.paper_cit_paper)
         for cite in cites :
-            paperCit[publication] = cite
+            paperCit[publication].append(cite)
     return paperCit
 
+def AuthToPaperCit(paperCitPaper, paperToAuthor, publications, auteurs) :
+    """
+    Crée un dictionnaire associant un auteur au publication qu'il a cité
+    prend en paramètres le dictionnaire avec les publication et leur citation, le dictionnaire des publication et de leurs auteurs, le tableau des publications
+    renvoit un dictionnaire des auteurs et de leur citation
+    { authorID : [paperID, paperID, ...] , ... }
+    """
+    authToPaperCit = dict()
+    for auteur in auteurs :
+        authToPaperCit[auteur] = []
+    for publication in publications :
+        paperCits = paperCitPaper[publication]
+        for paperCit in paperCits :
+            authors = paperToAuthor[publication]
+            for author in authors :
+                if not (paperCit in authToPaperCit[author]) :
+                    authToPaperCit[author].append(paperCit)
+    return authToPaperCit
 
-def AuthorToPaper()
 
-
-def Coauteurs(PaperToAuthor, auteurs, publications):
+def Coauteurs(paperToAuthor, auteurs, authorToPaper):
     """
     Crée  un dictionnaire associant chaque auteur à ses coauteurs
-    prend en paramètre un dictionnaire associant les publication à leurs auteurs (cf ExtraireAuteursPubli), un tableau des auteurs et un tableau des publications
+    prend en paramètre un dictionnaire associant les publication à leurs auteurs (cf ExtraireAuteursPubli), un tableau des auteurs et un dictionnaire associant les auteurs a leurs publication
     retourne un dictionnaire sous la forme { authID : [authID, authID ...] , authID : ......}
     """
     coaut = dict()
     for auteur in auteurs :
         coaut[auteur] = []
-        for publication in publications :
-            if auteur in PaperToAuthor[publication] :
-                for aut in PaperToAuthor[publication] :
-                    if (aut != auteur) and (aut not in coaut[auteur]) :
-                        coaut[auteur].append(aut)
+    for auteur in auteurs :
+        for publication in authorToPaper[auteur] :
+            for aut in paperToAuthor[publication] :
+                if (aut != auteur) and (not (aut in coaut[auteur])) :
+                    coaut[auteur].append(aut)
+                    if( not auteur in coaut[aut]) :
+                        coaut[aut].append(auteur)
     return coaut
 
-def Citation(PaperCitPaper, auteurs, PaperToAuthor) :
-
-                
+def Citation(authorCitPaper, auteurs, paperToAuthor) :
+    """
+    Crée un dictionnaire associant chaque auteur aux auteurs qu'il a cité
+    prend en parametres un dictionnaire associant un auteur aux publication qu'il a cité, un talbeau d'auteurs, un dictionnaire associant des publications à leurs auteurs
+    retourne un dictionnaire associant un auteur aux auteurs qu'il a cité
+    exemple : { authID : [authID, authID ...] , authID : ......}
+    """
+    citAuteur = dict()
+    for auteur in auteurs :
+        citAuteur[auteur] = []
+        for publiCit in authorCitPaper[auteur] :
+            for authorCit in paperToAuthor[publiCit] :
+                if not authorCit in citAuteur[auteur] :
+                    citAuteur[auteur].append(authorCit)
+    return citAuteur                
 
 
 
