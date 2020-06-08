@@ -347,6 +347,66 @@ def FieldToPaper(graphe, domaines) :
             fieldToPaper[domaine].append(publication)
     return fieldToPaper
 
+def FieldToAuthor(graphe, domaines) :
+    """
+    Crée un dictionnaire associant un domaines aux auteurs qui sont dans celui-ci
+    prend en paramètres un graphe rdflib et la listes des domaines
+    retourne un dictionnaire associant un domaines à ses auteurs 
+    { fieldID : [authorID, authorID ...] , fieldID : ......}
+    """
+    fieldToAuth = dict()
+    for domaine in domaines : 
+        fieldToAuth[domaine] = []
+        auteurs = graphe.subjects(ace.author_is_in_field, domaine)
+        for auteur in auteurs : 
+            fieldToAuth[domaine].append(auteur)
+    return fieldToAuth
+
+def FieldToDate(domaines, fieldToPaper, paperToDate) :
+    """
+    Crée un dictionnaire associant un domaines aux dates de publications des publications qui sont dans ce domaine
+    prend en paramètres la liste des domaine, un dictionnaire associant un domaine à ces publication, un dictionnaire associant une publication à sa date de publication
+    retourne un dictionnaire associant un domaines à ses dates de publications
+    { fieldID : [date, date ...] , fieldID : ......}
+    """
+    fieldToDate = dict()
+    for domaine in domaines : 
+        fieldToDate[domaine] = []
+        for publication in fieldToPaper[domaine] : 
+            fieldToDate[domaine].append(paperToDate[publication])
+    return fieldToDate
+
+def PaperCitField(publications, paperCitPaper, paperToField) :
+    """
+    Crée un dictionnaire associant une publication au domaine des publication quelle cite
+    prend en paramètre un dictionnaire associant publication aux publications qu'il cite, un dictionnaire associant une publication a ces domaines
+    retourne un dictionnaire associant une publication aux domaines des publications qu'elle cite
+    { paperID : [fieldID, fielID ...] , paperID : ......}
+    """
+    paperCitField = dict()
+    for publication in publications :
+        paperCitField[publication] = []
+        for paperCited in paperCitPaper[publication] :
+            for field in paperToField[paperCited] :
+                if field not in paperCitField[publication] :
+                    paperCitField[publication].append(field)
+    return paperCitField
+
+def FieldCitPaper(domaines, fieldToPaper, paperCitPaper) :
+    """
+    Crée un dictionnaire associant un domaines aux papier qui sont cités dans ce domaine
+    prend en paramètres la liste des domaines, un dictionnaire associant les domaines et ses publications associés, un dictionnaire associant des publications et les pulications quelle à cité
+    retourne un dictionnaire associant domaine et ses publications cités
+    { fieldID : [paperID, paperID ...] , fieldID : ......}
+    """
+    fieldCitPaper = dict()
+    for domaine in domaines :
+        fieldCitPaper[domaine] = []
+        for paper in fieldToPaper[domaine] :
+            for paperCit in paperCitPaper[paper] :
+                if not paperCit in fieldCitPaper[domaine] :
+                    fieldCitPaper[domaine].append(paperCit)
+    return fieldCitPaper
 
 
 def Coauteurs(paperToAuthor, auteurs, authorToPaper):
@@ -424,3 +484,20 @@ def CoOccurrence(domaines, paperToField, fieldToPaper) :
                     if not domaine in coOccurrence[commonField] :
                         coOccurrence[commonField].append(domaine)
     return coOccurrence
+
+
+def CitationE(domaines, fieldCitPaper, paperToField):
+    """
+    Crée un dictionnaire associant un domaines au domaines qu'il cite
+    prend en paramètres la liste des domaines, un dictionnaire associant domaine et ses publication, un dictionnaire associant une publication aux publications qu'elle cite
+    renvoit un dictionnaire associant un domaine avec les domaines qu'il cite
+    { fieldID : [fieldID, fieldID ...] , fieldID : ......}
+    """
+    citationE = dict()
+    for domaine in domaines :
+        citationE[domaine] = []
+        for paperCited in fieldCitPaper[domaine] :
+            for fieldCited in paperToField[paperCited] :
+                if not fieldCited in citationE[domaine] : 
+                    citationE[domaine].append(fieldCited)
+    return citationE
