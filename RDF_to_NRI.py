@@ -24,7 +24,7 @@ acemap["pub_aut"]
 acemap["aut_pub_citees"]
 acemap["pub_aut_cites"]
 acemap["types"] = { "aut" : "ace:Author", "pub" : "ace:Paper", "an" : "xsd:date", "them" : "ace:Field" }
-acemap["uri"] = { "ace" : "http://www.semanticweb.org/acemap#"}
+acemap["uri"] = { "ace" : "http://www.semanticweb.org/acemap#" }
 
 ace = Namespace(acemap["uri"]["ace"])
 

@@ -332,6 +332,23 @@ def AuthToPaperCit(paperCitPaper, paperToAuthor, publications, auteurs) :
     return authToPaperCit
 
 
+def FieldToPaper(graphe, domaines) :
+    """
+    Crée  un dictionnaire associant chaque domaine les publications de celui-ci
+    prend un parametre un graphe de rdflib, et la liste des domaines
+    retourne un dictionnaire associant un domaines au publications qui s'y rapportent 
+    { fieldID : [paperID, paperID ...] , fieldID : ......}
+    """
+    fieldToPaper = dict()
+    for domaine in domaines :
+        fieldToPaper[domaine] = []
+        publications = graphe.subjects(ace.paper_is_in_field, domaine)
+        for publication in publications : 
+            fieldToPaper[domaine].append(publication)
+    return fieldToPaper
+
+
+
 def Coauteurs(paperToAuthor, auteurs, authorToPaper):
     """
     Crée  un dictionnaire associant chaque auteur à ses coauteurs
@@ -349,6 +366,7 @@ def Coauteurs(paperToAuthor, auteurs, authorToPaper):
                     if( not auteur in coaut[aut]) :
                         coaut[aut].append(auteur)
     return coaut
+
 
 def Citation(authorCitPaper, auteurs, paperToAuthor) :
     """
@@ -387,5 +405,22 @@ def Copublication(publications, paperToAuthor, authToPaper) :
     return copubli
 
     
-
-
+def CoOccurrence(domaines, paperToField, fieldToPaper) :
+    """
+    crée un dictionnaire associant une domaine aux domaines avec lesquelles il a des publications en commun
+    prend en paramètres la liste des domaines, un dictionnaire associant une publications à ces domaines, un dictionnaire associant un domaine aux publication qui sont dans celui-ci
+    retourne un dictionnaire associant un domaines aux domaines qui ont des publications communes avec lui
+    { fieldID : [fieldID, fieldID ...] , fieldID : ......}
+    """
+    coOccurrence = dict()
+    for domaine in domaines :
+        coOccurrence[domaine] = []
+    for domaine in domaines :
+        publications = fieldToPaper[domaine]
+        for publication in publications :
+            for commonField in paperToField[publication] :
+                if commonField != domaine and not commonField in coOccurrence[domaine] :
+                    coOccurrence[domaine].append(commonField)
+                    if not domaine in coOccurrence[commonField] :
+                        coOccurrence[commonField].append(domaine)
+    return coOccurrence
