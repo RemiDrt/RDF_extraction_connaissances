@@ -367,6 +367,24 @@ def Citation(authorCitPaper, auteurs, paperToAuthor) :
     return citAuteur                
 
 
+def Copublication(publications, paperToAuthor, authToPaper) :
+    """
+    Crée un dictionnaire associant une publication aux autres publication ayant été écrite par le même auteurs
+    prend en paramètre la liste des publicaiton, un dictionnaire associant un auteur à ces publication, un dictionnaire associant une publication à ces auteurs
+    retourne un dictionnaire qui associe une publication aux publications écrites par le même auteur
+    { paperID : [paperID, paperID ...] , paperID : ......}
+    """
+    copubli = dict()
+    for publication in publications :
+        copubli[publication] = []
+    for publication in publications :
+        for author in paperToAuthor[publication] :
+            for paper in authToPaper[author] :
+                if (paper != publication) and not (paper in copubli[publication])   :
+                    copubli[publication].append(paper)
+                    if not publication in copubli[paper] :
+                        copubli[paper].append(publication)
+    return copubli
 
     
 
