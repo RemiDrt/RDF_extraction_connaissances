@@ -312,6 +312,22 @@ def ExtrairePubliCit(graphe, publications) :
             paperCit[publication].append(cite)
     return paperCit
 
+def PaperCitAuthor(publications, paperCitpaper, paperToAuthor) :
+    """ 
+    Crée un dictionnaire associant une publications aux auteurs qu'elle a cité
+    prend en paramètres la lsite des publication, un dictionnaire associant une publications aux publications qu'elle cite, un dictionnaire associant une publications à ses auteurs
+    retourne un dictionnaire associant es publications aux auteurs qu'elles citent
+    { paperID : [authID, authID ...] , paperID : ......}
+    """
+    paperCitAuthor = dict()
+    for publication in publications :
+        paperCitAuthor[publication] = []
+        for paperCited in paperCitpaper[publication] :
+            for authCited in paperToAuthor[paperCited] :
+                if not authCited in paperCitAuthor[publication] :
+                    paperCitAuthor[publication].append(authCited)
+    return paperCitAuthor
+
 def AuthToPaperCit(paperCitPaper, paperToAuthor, publications, auteurs) :
     """
     Crée un dictionnaire associant un auteur au publication qu'il a cité
@@ -501,3 +517,48 @@ def CitationE(domaines, fieldCitPaper, paperToField):
                 if not fieldCited in citationE[domaine] : 
                     citationE[domaine].append(fieldCited)
     return citationE
+
+def PublicationsAuteurs(authToPaper, paperToAuth):
+    """
+    Crée un dictionnaire associant des auteurs à leurs oeuvre et des oeuvres à leurs auteurs (on essaye de représenter les liens d'un graphe bipartis)
+    prend en paramètre un dictionnaire associant les auteurs à leurs oeuvres, un dictionnaire associant les oeuvres à leurs auteurs
+    retourne un dictionnaire composé des 2 dictionnaires en paramètres 
+    {
+        "authToPaper" : { authorID : [paperID, paperID, ...], authorID : ... },
+        "paperToAuth" : { paperID : [authorID, authoID, ...], paperID : ... }
+    }
+    """
+    publications_Auteurs = dict()
+    publications_Auteurs["auToPaper"] = authToPaper
+    publications_Auteurs["paperToAuth"] = paperToAuth
+    return publications_Auteurs
+
+def AuteurPublicationCitees(authToPaperCit, publications) :
+    """
+    Crée un dictionnaire associant des auteurs aux publications qu'ils ont citées (graphe bi parti orienté aut->pubCitées)
+    prend en paramètre un tableau associant les auteurs aux publications qu'ils ont citées, une listes des publications
+    retourne dictionnaire associant des auteurs aux publications et liste les publications
+    {
+        "authToPaperCit" : { authorID : [paperID, paperID, ...], authorID : ... },
+        "papers" : [paperID, ..., .....]
+    }
+    """
+    auteurPublicationCitees = dict()
+    auteurPublicationCitees["authToPaperCit"] = authToPaperCit
+    auteurPublicationCitees["papers"] = publications
+    return auteurPublicationCitees
+
+def PublicationAuteurCites(auteurs, paperToAuthorCit) :
+    """
+    Crée un dictionnaire associant des publications aux auteurs qu'elles ont cités (graphe bi parti orienté pub->auteurCit)
+    prend en paramètre un dictionnaire associant les publications aux auteurs qu'elles ont cités, une listes des auteurs
+    retourne dictionnaire associant des publications aux auteurs et la liste les auteurs
+    {
+        "paperToAuthorCit" : { paperID : [authorID, authorID, ...], paperID : ... },
+        "authors" : [authID, ..., .....]
+    }
+    """
+    publicationAuteurCites = dict()
+    publicationAuteurCites["paperToAuthorCit"] = paperToAuthorCit
+    publicationAuteurCites["authors"] = auteurs
+    return publicationAuteurCites
