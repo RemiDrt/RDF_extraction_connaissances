@@ -202,19 +202,19 @@ def IDToField(graphe, conceptes) :
     return IDToField
 
 
-def PaperToYear(graphe, publications) :
+def PaperToDate(graphe, publications) :
     """
-    Extrait les dates et les associ a leurs publication
+    Extrait les dates et les associé a leurs publication
     prend en paramètre un graphe rdflib et la liste des publication
     retourne un dicitonnaire associant publicationID à sa date de publication (jespere qu'il en a qu'une seul)
     exemple : { paperID : date, paperID : date ....... }
     """
-    paperToYear = dict()
+    PaperToDate = dict()
     for publication in publications :
         dates = graphe.objects(publication, ace.paper_publish_date)
         for date in dates :
-            paperToYear[publication] = date
-    return paperToYear
+            PaperToDate[publication] = date
+    return PaperToDate
 
 
 def PaperToField(graphe, publications) :
