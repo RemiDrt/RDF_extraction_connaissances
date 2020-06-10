@@ -173,7 +173,7 @@ def ExtraireConceptes(graphe) :
     return them
 
 
-def ExtraireNomAuteurs(graphe, auteurs) :
+def IDToAuthor(graphe, auteurs) :
     """
     Extrait les identifiants des auteurs et leurs noms présents dans acemap
     prend en paramètre un objet graphe de la RDFlib
@@ -188,7 +188,7 @@ def ExtraireNomAuteurs(graphe, auteurs) :
     return IDToAuthors
 
 
-def ExtraireNomConceptes(graphe, conceptes) :
+def IDToField(graphe, conceptes) :
     """
     Extrait les nom des différents conceptes/domaines/field et les associes à leurs ID
     prend en parametre un gaphe rdflib et la liste des id des conceptes
@@ -249,7 +249,7 @@ def AuthorToField(graphe, auteurs):
     return authIDToFieldID
 
 
-def AuthorWritePaper(graphe, auteurs):
+def AuthorToPaper(graphe, auteurs):
     """
     Extrait les papiers qu'un auteur a écrit
     prend en paramètre la liste des auteurs et le graphe de rdflib
@@ -264,7 +264,7 @@ def AuthorWritePaper(graphe, auteurs):
             authWritePaper[auteur].append(paper)
     return authWritePaper
 
-def ExtrairesDate(graphe, authorWritePaper, auteurs):
+def AuthorToDate(graphe, auteurs, authorWritePaper):
     """
     Extrait les dates de publication d'un auteur.
     prend en paramètre un graphe rdf une liste d'authorID sous forme d'URI et un dictionnaire qui associe un auteurs a ces publication
@@ -281,7 +281,7 @@ def ExtrairesDate(graphe, authorWritePaper, auteurs):
                 authIDToYears[auteur].append(date)
     return authIDToYears
 
-def ExtraireAuteursPubli(graphe, publications) :
+def PaperToAuthor(graphe, publications) :
     """
     Extrait les auteurs pour toutes les publication
     prend en parametre un graphe rdf
@@ -297,7 +297,7 @@ def ExtraireAuteursPubli(graphe, publications) :
     return paperIDToAuthorID
 
 
-def ExtrairePubliCit(graphe, publications) :
+def PaperCitPaper(graphe, publications) :
     """
     Extrait les publication cités par des publciation
     prend en paramètre la liste des publication
@@ -312,7 +312,7 @@ def ExtrairePubliCit(graphe, publications) :
             paperCit[publication].append(cite)
     return paperCit
 
-def PaperCitAuthor(publications, paperCitpaper, paperToAuthor) :
+def PaperCitAuthor(publications, paperToAuthor, paperCitpaper) :
     """ 
     Crée un dictionnaire associant une publications aux auteurs qu'elle a cité
     prend en paramètres la lsite des publication, un dictionnaire associant une publications aux publications qu'elle cite, un dictionnaire associant une publications à ses auteurs
@@ -328,24 +328,24 @@ def PaperCitAuthor(publications, paperCitpaper, paperToAuthor) :
                     paperCitAuthor[publication].append(authCited)
     return paperCitAuthor
 
-def AuthToPaperCit(paperCitPaper, paperToAuthor, publications, auteurs) :
+def AuthorCitPaper(auteurs, publications, paperToAuthor, paperCitPaper) :
     """
     Crée un dictionnaire associant un auteur au publication qu'il a cité
     prend en paramètres le dictionnaire avec les publication et leur citation, le dictionnaire des publication et de leurs auteurs, le tableau des publications
     renvoit un dictionnaire des auteurs et de leur citation
     { authorID : [paperID, paperID, ...] , ... }
     """
-    authToPaperCit = dict()
+    authorCitPaper = dict()
     for auteur in auteurs :
-        authToPaperCit[auteur] = []
+        authorCitPaper[auteur] = []
     for publication in publications :
         paperCits = paperCitPaper[publication]
         for paperCit in paperCits :
             authors = paperToAuthor[publication]
             for author in authors :
-                if not (paperCit in authToPaperCit[author]) :
-                    authToPaperCit[author].append(paperCit)
-    return authToPaperCit
+                if not (paperCit in authorCitPaper[author]) :
+                    authorCitPaper[author].append(paperCit)
+    return authorCitPaper
 
 
 def FieldToPaper(graphe, domaines) :
@@ -392,7 +392,7 @@ def FieldToDate(domaines, fieldToPaper, paperToDate) :
             fieldToDate[domaine].append(paperToDate[publication])
     return fieldToDate
 
-def PaperCitField(publications, paperCitPaper, paperToField) :
+def PaperCitField(publications, paperToField, paperCitPaper) :
     """
     Crée un dictionnaire associant une publication au domaine des publication quelle cite
     prend en paramètre un dictionnaire associant publication aux publications qu'il cite, un dictionnaire associant une publication a ces domaines
@@ -425,7 +425,7 @@ def FieldCitPaper(domaines, fieldToPaper, paperCitPaper) :
     return fieldCitPaper
 
 
-def Coauteurs(paperToAuthor, auteurs, authorToPaper):
+def Coauteurs(auteurs, paperToAuthor, authorToPaper):
     """
     Crée  un dictionnaire associant chaque auteur à ses coauteurs
     prend en paramètre un dictionnaire associant les publication à leurs auteurs (cf ExtraireAuteursPubli), un tableau des auteurs et un dictionnaire associant les auteurs a leurs publication
@@ -444,7 +444,7 @@ def Coauteurs(paperToAuthor, auteurs, authorToPaper):
     return coaut
 
 
-def Citation(authorCitPaper, auteurs, paperToAuthor) :
+def Citation(auteurs, paperToAuthor, authorCitPaper) :
     """
     Crée un dictionnaire associant chaque auteur aux auteurs qu'il a cité
     prend en parametres un dictionnaire associant un auteur aux publication qu'il a cité, un talbeau d'auteurs, un dictionnaire associant des publications à leurs auteurs
@@ -461,7 +461,7 @@ def Citation(authorCitPaper, auteurs, paperToAuthor) :
     return citAuteur                
 
 
-def Copublication(publications, paperToAuthor, authToPaper) :
+def Copublication(publications, paperToAuthor, authorToPaper) :
     """
     Crée un dictionnaire associant une publication aux autres publication ayant été écrite par le même auteurs
     prend en paramètre la liste des publicaiton, un dictionnaire associant un auteur à ces publication, un dictionnaire associant une publication à ces auteurs
@@ -473,7 +473,7 @@ def Copublication(publications, paperToAuthor, authToPaper) :
         copubli[publication] = []
     for publication in publications :
         for author in paperToAuthor[publication] :
-            for paper in authToPaper[author] :
+            for paper in authorToPaper[author] :
                 if (paper != publication) and not (paper in copubli[publication])   :
                     copubli[publication].append(paper)
                     if not publication in copubli[paper] :
@@ -502,7 +502,7 @@ def CoOccurrence(domaines, paperToField, fieldToPaper) :
     return coOccurrence
 
 
-def CitationE(domaines, fieldCitPaper, paperToField):
+def CitationE(domaines, paperToField, fieldCitPaper):
     """
     Crée un dictionnaire associant un domaines au domaines qu'il cite
     prend en paramètres la liste des domaines, un dictionnaire associant domaine et ses publication, un dictionnaire associant une publication aux publications qu'elle cite
@@ -518,47 +518,47 @@ def CitationE(domaines, fieldCitPaper, paperToField):
                     citationE[domaine].append(fieldCited)
     return citationE
 
-def PublicationsAuteurs(authToPaper, paperToAuth):
+def PublicationsAuteurs(authorToPaper, paperToAuth):
     """
     Crée un dictionnaire associant des auteurs à leurs oeuvre et des oeuvres à leurs auteurs (on essaye de représenter les liens d'un graphe bipartis)
     prend en paramètre un dictionnaire associant les auteurs à leurs oeuvres, un dictionnaire associant les oeuvres à leurs auteurs
     retourne un dictionnaire composé des 2 dictionnaires en paramètres 
     {
-        "authToPaper" : { authorID : [paperID, paperID, ...], authorID : ... },
+        "authorToPaper" : { authorID : [paperID, paperID, ...], authorID : ... },
         "paperToAuth" : { paperID : [authorID, authoID, ...], paperID : ... }
     }
     """
     publications_Auteurs = dict()
-    publications_Auteurs["auToPaper"] = authToPaper
+    publications_Auteurs["authorToPaper"] = authorToPaper
     publications_Auteurs["paperToAuth"] = paperToAuth
     return publications_Auteurs
 
-def AuteurPublicationCitees(authToPaperCit, publications) :
+def AuteurPublicationCitees(publications, authorCitPaper) :
     """
     Crée un dictionnaire associant des auteurs aux publications qu'ils ont citées (graphe bi parti orienté aut->pubCitées)
     prend en paramètre un tableau associant les auteurs aux publications qu'ils ont citées, une listes des publications
     retourne dictionnaire associant des auteurs aux publications et liste les publications
     {
-        "authToPaperCit" : { authorID : [paperID, paperID, ...], authorID : ... },
+        "authorCitPaper" : { authorID : [paperID, paperID, ...], authorID : ... },
         "papers" : [paperID, ..., .....]
     }
     """
     auteurPublicationCitees = dict()
-    auteurPublicationCitees["authToPaperCit"] = authToPaperCit
+    auteurPublicationCitees["authorCitPaper"] = authorCitPaper
     auteurPublicationCitees["papers"] = publications
     return auteurPublicationCitees
 
-def PublicationAuteurCites(auteurs, paperToAuthorCit) :
+def PublicationAuteurCites(auteurs, paperCitAuthor) :
     """
     Crée un dictionnaire associant des publications aux auteurs qu'elles ont cités (graphe bi parti orienté pub->auteurCit)
     prend en paramètre un dictionnaire associant les publications aux auteurs qu'elles ont cités, une listes des auteurs
     retourne dictionnaire associant des publications aux auteurs et la liste les auteurs
     {
-        "paperToAuthorCit" : { paperID : [authorID, authorID, ...], paperID : ... },
+        "paperCitAuthor" : { paperID : [authorID, authorID, ...], paperID : ... },
         "authors" : [authID, ..., .....]
     }
     """
     publicationAuteurCites = dict()
-    publicationAuteurCites["paperToAuthorCit"] = paperToAuthorCit
+    publicationAuteurCites["paperCitAuthor"] = paperCitAuthor
     publicationAuteurCites["authors"] = auteurs
     return publicationAuteurCites
