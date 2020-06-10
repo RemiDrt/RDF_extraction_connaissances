@@ -24,6 +24,7 @@ def Itemsets(texte) :
     Fonction qui donne l'itemsets d'un fichier NRI
     Prend en paramètre la liste des lignes du fichier (créée avec readlines())
     Retourne un tableau associatif/dictionnaire des sommet->attributs
+    {sommet : [attribut, .., attribut], sommet : ...}
     """
     itemsets = dict()
     #on commence a la 4eme ligne
@@ -46,7 +47,8 @@ def Graphe(texte) :
     Fonction qui donne le graphe d'un fichier NRI
     Prend en paramètre la liste des lignes du fichier (créée avec readlines())
     Retourne un tableau associatif/dictionnaire des sommet->sommets liés
-    Pas besoin de représenté les liaisons qui n'y sont pas donc c'est la même forme que l'itemsets
+    Pas besoin de représenter les liaisons qui n'y sont pas donc c'est la même forme que l'itemsets
+    {sommet : [sommet, .., sommet], sommet : ...}
     """
     #pour connaitre la ligne du début : c'est après le #
     #ligne 1 est un commentaire
@@ -132,6 +134,47 @@ def YearFromDate(date) :
     Retourne la chaine de caractère correspondant à l'année de la date
     """
     return date[:4]  
+
+def ListerAnnees(dictionnaire)
+    """
+    Fonction qui permet d'extraire les années associés à des sommets sans répétitions
+    prend en paramètre un dictionnaire associatifs type { sommet : année/[année, ..], sommet :}
+    retourne un liste de toutes les années des sommets sans répetition
+    """
+    attributs = []
+    for key in dictionnaire.keys() :
+        #si l'attributs n'est pas sous forme de list
+        if not isinstance(dictionnaire[key], list) :
+            #s'il est pas déjà dans le tableau :
+            annee = YearFromDate(dictionnaire[key])
+            if not annee in attributs :
+                attributs.append(anne)
+        else :
+            for date in dictionnaire[key] :
+                annee = YearFromDate(date)
+                if not annee in attributs : 
+                    attributs.append(annee)
+
+    return attributs
+def ListerAttributs(dictionnaire):
+    """
+    Fonction qui permet d'extraire les attributs associés à des sommets sans répétitions
+    prend en paramètre un dictionnaire associatifs type { sommet : attribut/[attribut, ..], sommet :}
+    retourne un liste de tous les attributs des sommets sans répetition
+    """
+    attributs = []
+    for key in dictionnaire.keys() :
+        #si l'attributs n'est pas sous forme de list
+        if not isinstance(dictionnaire[key], list) :
+            #s'il est pas déjà dans le tableau :
+            if not dictionnaire[key] in attributs :
+                attributs.append(dictionnaire[key])
+        else :
+            for attribut in dictionnaire[key] :
+                if not attribut in attributs : 
+                    attributs.append(attribut)
+
+    return attributs
 
 
 def ExtraireAuteurs(graphe) :
@@ -264,7 +307,7 @@ def AuthorToPaper(graphe, auteurs):
             authWritePaper[auteur].append(paper)
     return authWritePaper
 
-def AuthorToDate(graphe, auteurs, authorWritePaper):
+def AuthorToDate(graphe, auteurs, authorToPaper):
     """
     Extrait les dates de publication d'un auteur.
     prend en paramètre un graphe rdf une liste d'authorID sous forme d'URI et un dictionnaire qui associe un auteurs a ces publication
@@ -275,7 +318,7 @@ def AuthorToDate(graphe, auteurs, authorWritePaper):
     for auteur in auteurs :
         authIDToYears[auteur] = []
         #on va générer la liste de toutes les publication qui ont été ecrite par l'auteur en question
-        for publication in authorWritePaper[auteur] :
+        for publication in authorToPaper[auteur] :
             dates = graphe.objects(publication, ace.paper_publish_date)
             for date in dates :
                 authIDToYears[auteur].append(date)
@@ -562,3 +605,75 @@ def PublicationAuteurCites(auteurs, paperCitAuthor) :
     publicationAuteurCites["paperCitAuthor"] = paperCitAuthor
     publicationAuteurCites["authors"] = auteurs
     return publicationAuteurCites
+
+
+def CréerCoauteurs(graphe) :
+    """
+    Crée la structure NRI du graphe des coauteurs.
+    Prend en paramètres un graphe.
+    Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
+    """
+    NRICoauteurs = dict()
+    itemsets = dict()
+    index = dict()
+
+    IDAuthors = ExtraireAuteurs(graphe)
+    IDPapers = ExtrairePublications(graphe)
+    IDField = ExtraireConceptes(graphe)
+    paperToAuthor = PaperToAuthor(graphe, IDPapers)
+    authorToPaper = AuthorToPaper(graphe, IDAuthors)
+    authorToField = AuthorToField(graphe, IDAuthors)
+    authorToDate = AuthorToDate(graphe, IDAuthors, authorToPaper)
+    nomAuteurs = IDToAuthor(graphe, IDAuthors)
+    nomField = IDToField(graphe, IDField)
+    grapheCoauteurs = Coauteurs(IDAuthors, paperToAuthor, authorToPaper)
+
+    years = ListerAnnees(authorToDate)
+    fields = ListerAttributs(authorToField)
+    items = dates + fields
+    
+    listeNomAuteurs = []
+    listeNomField = []
+
+
+    #construction de l'itemSet (on en profite tant qu'on boucles pour retenir l'index des différents élements et les nom des auteurs  )
+    i = 0
+    lgItems = len(items)
+    while i < lgItems :
+        item = items[i]
+        index[item] = i
+        i += 1
+
+    i = 0
+    lgAuteurs = len(IDAuthors)
+    while i < lgAuteurs :
+        auteur = IDAuthors[i]
+        index[auteur] = i
+        listeNomAuteurs.append(nomAuteurs[auteur])
+        itemsets[auteur] = authorToDate[auteur] + authorToField[auteur]
+        i += 1
+
+
+    i = 0
+    lgFields = len(fields)
+    while i < lgFields :
+        field = fields[i]
+        listeNomField.append(nomField[field])
+        i += 1
+    #pour aller chercher le nom du doaine on fait son index - longueur de years
+
+    NRICoauteurs["Objets"] = IDAuthors
+    NRICoauteurs["Items"] = items
+    NRICoauteurs["Itemsets"] = itemsets
+    NRICoauteurs["Graphe"] = grapheCoauteurs
+     
+    # a ce moment on a un dico avec des objets composé de la liste des ID d'auteurs
+    # des items la liste des years concaténé a la liste des ID fields
+    # un itemsets avec un Id auteurs associés à 
+
+    #il faudrait mtn changé objets par leurs nom et pareil pour item
+    #et changer pour itemsets et graphe les id par les indices
+    return NRICoauteurs
+
+
+
