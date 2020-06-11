@@ -2,6 +2,7 @@
 #coding=utf-8
 from rdflib import Graph, RDF, URIRef
 from rdflib.namespace import XSD , FOAF, Namespace
+ace = Namespace("http://www.semanticweb.org/acemap#")
 
 def Sommets(texte) :
     """
@@ -117,23 +118,7 @@ def AfficherTriplets(graphe):
         print(objet)
         print("\n---------------------")
 
-
-def AjouterPrefixe(prefixe, chaine) :
-    """
-    Fonction qui ajouter un préfixe à une chaine de caractère et remplace les " " par des "_"
-    retourne une chaine de caractères avec le préfixe placé devant
-    exemple : AjouterPrefixe("AUTH", "Albert Einstein") retourne "AUTH_Albert_Einstein"
-    """
-    pref = prefixe + "_"
-    new_chaine = pref + chaine.replace(" ", "_")
-    return new_chaine
-
-def YearFromDate(date) :
-    """
-    Extrait l'année d'un date qui est au format xsd.date (YYYY-MM-DD)
-    Retourne la chaine de caractère correspondant à l'année de la date
-    """
-    return date[:4]  
+ 
 
 def ListerAnnees(dictionnaire) :
     """
@@ -156,25 +141,7 @@ def ListerAnnees(dictionnaire) :
                     attributs.append(annee)
 
     return attributs
-def ListerAttributs(dictionnaire):
-    """
-    Fonction qui permet d'extraire les attributs associés à des sommets sans répétitions
-    prend en paramètre un dictionnaire associatifs type { sommet : attribut/[attribut, ..], sommet :}
-    retourne un liste de tous les attributs des sommets sans répetition
-    """
-    attributs = []
-    for key in dictionnaire.keys() :
-        #si l'attributs n'est pas sous forme de list
-        if not isinstance(dictionnaire[key], list) :
-            #s'il est pas déjà dans le tableau :
-            if not dictionnaire[key] in attributs :
-                attributs.append(dictionnaire[key])
-        else :
-            for attribut in dictionnaire[key] :
-                if not attribut in attributs : 
-                    attributs.append(attribut)
 
-    return attributs
 
 
 def ExtraireAuteurs(graphe) :
@@ -611,7 +578,112 @@ def PublicationAuteurCites(auteurs, paperCitAuthor) :
     return publicationAuteurCites
 
 
-def CréerCoauteurs(graphe) :
+def AjouterPrefixe(prefixe, chaine) :
+    """
+    Fonction qui ajoute un préfixe à une chaine de caractère et remplace les " " par des "_"
+    retourne une chaine de caractères avec le préfixe placé devant
+    exemple : AjouterPrefixe("AUTH", "Albert Einstein") retourne "AUTH_Albert_Einstein"
+    """
+    pref = prefixe + "_"
+    new_chaine = pref + chaine.replace(" ", "_")
+    return new_chaine
+
+def AjouterPrefixes(prefixe, liste) :
+    """
+    Fonction qui ajouter un prefixe à chaque elements d'un liste de str (remplace les " " par des "_").
+    Prend en paramètre un préfixe et une liste
+    modifie chaque élements de la liste
+    """
+    i = 0
+    lgListe = len(liste)
+    while i < lgListe :
+        liste[i] = AjouterPrefixe(prefixe, liste[i])
+        i += 1
+
+
+def YearFromDate(date) :
+    """
+    Extrait l'année d'un date qui est au format xsd.date (YYYY-MM-DD)
+    Retourne la chaine de caractère correspondant à l'année de la date
+    """
+    return date[:4] 
+
+
+def ListerAttributs(dictionnaire):
+    """
+    Fonction qui permet d'extraire les attributs associés à des sommets sans répétitions
+    prend en paramètre un dictionnaire associatifs type { sommet : attribut/[attribut, ..], sommet :}
+    retourne un liste de tous les attributs des sommets sans répetition
+    """
+    attributs = []
+    for key in dictionnaire.keys() :
+        #si l'attributs n'est pas sous forme de list
+        if not isinstance(dictionnaire[key], list) :
+            #s'il est pas déjà dans le tableau :
+            if not dictionnaire[key] in attributs :
+                attributs.append(dictionnaire[key])
+        else :
+            for attribut in dictionnaire[key] :
+                if not attribut in attributs : 
+                    attributs.append(attribut)
+
+    return attributs
+
+def IndexerElements(index, listeElements) :
+    """
+    Fonction qui répertorie/associe l'index d'un élement d'une liste dans un dictionnaire.
+    Prend en paremètres le dictionnaire qui répertorie les index et une liste d'élements.
+    Ajouter les index des éléments de la liste au dictionnaire des index
+    """
+    i = 0
+    lgListe = len(listeElements)
+    while i < lgListe :
+        index[listeElements[i]] = i 
+        i += 1
+
+def CreerGrapheIndex(listeSommets, graphe, index) :
+    """
+    Crée un dictionnaire ne contenant que des index liée à d'autres index
+    prend en parametres la liste des sommets du graphe, un dictionnaire représentant le graphe, un dictionnaire avec les index des dfférents élements.
+    Retourne le dictionnaire du graphe composé des index
+    """
+    grapheIndex = dict()
+    for element in listeSommets :
+        indexElement = index[element]
+        grapheIndex[indexElement] = []
+        for lien in graphe[element] :
+            grapheIndex[indexElement].append(index[lien])
+    return grapheIndex
+
+def CreerItemsetsIndex(listeSommets, itemsets, index) :
+    """
+    Crée un dictionnaire ne contenant que des index liées à d'autres index.
+    Prend en paramètres la liste des sommets d'un graphe, un dictionnaire représentant l'itemsets, un dictionnaire des index des éléments.
+    Retourne le dictionnaire de l'itemsets composé des index
+    """
+    itemsetsIndex = dict()
+    for sommet in listeSommets :
+        indexSommet = index[sommet]
+        itemsetsIndex[indexSommet] = []
+        for lien in itemsets[sommet] :
+            itemsetsIndex[indexSommet].append(index[lien])
+    return itemsetsIndex
+
+def ListerNoms(listeID, dico) :
+    """
+    Crée un liste de nom à partir d'une liste d'id et d'un dictionnaire associant ID et nom
+    prend en paramètres un liste d'ID et le dictionnaire associatif
+    retourne une liste de nom qui sont dans le même ordre que les ID (le nom 1 correspond à l'ID 1 etcetc)
+    """
+    listeNom = []
+    i = 0
+    lgListe = len(listeID)
+    while i < lgListe :
+        listeNom.append(dico[listeID[i]])
+        i += 1
+    return listeNom
+
+def CreerCoauteurs(graphe) :
     """
     Crée la structure NRI du graphe des coauteurs.
     Prend en paramètres un graphe.
@@ -627,49 +699,43 @@ def CréerCoauteurs(graphe) :
     paperToAuthor = PaperToAuthor(graphe, IDPapers)
     authorToPaper = AuthorToPaper(graphe, IDAuthors)
     authorToField = AuthorToField(graphe, IDAuthors)
-    AuthorToYear = AuthorToYear(graphe, IDAuthors, authorToPaper)
+    authorToYear = AuthorToYear(graphe, IDAuthors, authorToPaper)
     nomAuteurs = IDToAuthor(graphe, IDAuthors)
     nomField = IDToField(graphe, IDField)
     grapheCoauteurs = Coauteurs(IDAuthors, paperToAuthor, authorToPaper)
 
-    years = ListerAnnees(AuthorToYear)
+    years = ListerAnnees(authorToYear)
     fields = ListerAttributs(authorToField)
-    items = dates + fields
+    items = years + fields
     
-    listeNomAuteurs = []
-    listeNomField = []
+    listeNomAuteurs = ListerNoms(IDAuthors, nomAuteurs)
+    listeNomField = ListerNoms(IDField, nomField)
 
+    IndexerElements(index, IDAuthors)
+    IndexerElements(index, items)
 
-    #construction de l'itemSet (on en profite tant qu'on boucles pour retenir l'index des différents élements et les nom des auteurs  )
+    AjouterPrefixes("AUTH", listeNomAuteurs)
+    AjouterPrefixes("Year", years)
+    AjouterPrefixes("CONC", listeNomField)
+
+    items = years + listeNomField
+
+    #construire l'itemset :
     i = 0
-    lgItems = len(items)
-    while i < lgItems :
-        item = items[i]
-        index[item] = i
-        i += 1
-
-    i = 0
-    lgAuteurs = len(IDAuthors)
-    while i < lgAuteurs :
+    lgListe = len(IDAuthors)
+    while i < lgListe :
         auteur = IDAuthors[i]
-        index[auteur] = i
-        listeNomAuteurs.append(nomAuteurs[auteur])
-        itemsets[auteur] = AuthorToYear[auteur] + authorToField[auteur]
+        itemsets[auteur] = authorToYear[auteur] + authorToField[auteur] #on sait que ce sont 2 tableaux donc on peut les concatener
         i += 1
 
+    #mtn il faudrait changer les noms dans itemsets et graphe par les id
+    #il faudrait aussi ajouter aux nom d'item un préfixe
+    # il faut indexer avant de changer les noms/ajouter les prefixes
 
-    i = 0
-    lgFields = len(fields)
-    while i < lgFields :
-        field = fields[i]
-        listeNomField.append(nomField[field])
-        i += 1
-    #pour aller chercher le nom du doaine on fait son index - longueur de years
-
-    NRICoauteurs["Objets"] = IDAuthors
+    NRICoauteurs["Objets"] = listeNomAuteurs
     NRICoauteurs["Items"] = items
-    NRICoauteurs["Itemsets"] = itemsets
-    NRICoauteurs["Graphe"] = grapheCoauteurs
+    NRICoauteurs["Itemsets"] = CreerItemsetsIndex(IDAuthors, itemsets, index)
+    NRICoauteurs["Graphe"] = CreerGrapheIndex(IDAuthors, grapheCoauteurs, index)
      
     # a ce moment on a un dico avec des objets composé de la liste des ID d'auteurs
     # des items la liste des years concaténé a la liste des ID fields
@@ -678,6 +744,3 @@ def CréerCoauteurs(graphe) :
     #il faudrait mtn changé objets par leurs nom et pareil pour item
     #et changer pour itemsets et graphe les id par les indices
     return NRICoauteurs
-
-
-
