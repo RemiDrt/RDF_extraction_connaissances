@@ -135,7 +135,7 @@ def YearFromDate(date) :
     """
     return date[:4]  
 
-def ListerAnnees(dictionnaire)
+def ListerAnnees(dictionnaire) :
     """
     Fonction qui permet d'extraire les années associés à des sommets sans répétitions
     prend en paramètre un dictionnaire associatifs type { sommet : année/[année, ..], sommet :}
@@ -148,7 +148,7 @@ def ListerAnnees(dictionnaire)
             #s'il est pas déjà dans le tableau :
             annee = YearFromDate(dictionnaire[key])
             if not annee in attributs :
-                attributs.append(anne)
+                attributs.append(annee)
         else :
             for date in dictionnaire[key] :
                 annee = YearFromDate(date)
@@ -245,19 +245,20 @@ def IDToField(graphe, conceptes) :
     return IDToField
 
 
-def PaperToDate(graphe, publications) :
+def PaperToYear(graphe, publications) :
     """
-    Extrait les dates et les associé a leurs publication
+    Extrait les années et les associe a leurs publications
     prend en paramètre un graphe rdflib et la liste des publication
-    retourne un dicitonnaire associant publicationID à sa date de publication (jespere qu'il en a qu'une seul)
-    exemple : { paperID : date, paperID : date ....... }
+    retourne un dicitonnaire associant publicationID à son année de publication (jespere qu'il en a qu'une seul)
+    exemple : { paperID : year, paperID : year ....... }
     """
-    PaperToDate = dict()
+    PaperToYear = dict()
     for publication in publications :
         dates = graphe.objects(publication, ace.paper_publish_date)
         for date in dates :
-            PaperToDate[publication] = date
-    return PaperToDate
+            year = YearFromDate(date)
+            PaperToYear[publication] = year
+    return PaperToYear
 
 
 def PaperToField(graphe, publications) :
@@ -307,12 +308,12 @@ def AuthorToPaper(graphe, auteurs):
             authWritePaper[auteur].append(paper)
     return authWritePaper
 
-def AuthorToDate(graphe, auteurs, authorToPaper):
+def AuthorToYear(graphe, auteurs, authorToPaper):
     """
-    Extrait les dates de publication d'un auteur.
+    Extrait les années de publication d'un auteur.
     prend en paramètre un graphe rdf une liste d'authorID sous forme d'URI et un dictionnaire qui associe un auteurs a ces publication
-    retourne un dictionnaire associant des authorID à des dates de publication 
-    { authorID : [date, date, date], authorID : [date, ...] ... }
+    retourne un dictionnaire associant des authorID à des années de publication 
+    { authorID : [year, year, year], authorID : [year, ...] ... }
     """
     authIDToYears = dict()
     for auteur in auteurs :
@@ -321,7 +322,9 @@ def AuthorToDate(graphe, auteurs, authorToPaper):
         for publication in authorToPaper[auteur] :
             dates = graphe.objects(publication, ace.paper_publish_date)
             for date in dates :
-                authIDToYears[auteur].append(date)
+                year = YearFromDate(date)
+                if not year in authIDToYears[auteur] :
+                    authIDToYears[auteur].append(year)
     return authIDToYears
 
 def PaperToAuthor(graphe, publications) :
@@ -421,19 +424,20 @@ def FieldToAuthor(graphe, domaines) :
             fieldToAuth[domaine].append(auteur)
     return fieldToAuth
 
-def FieldToDate(domaines, fieldToPaper, paperToDate) :
+def FieldToYear(domaines, fieldToPaper, PaperToYear) :
     """
-    Crée un dictionnaire associant un domaines aux dates de publications des publications qui sont dans ce domaine
-    prend en paramètres la liste des domaine, un dictionnaire associant un domaine à ces publication, un dictionnaire associant une publication à sa date de publication
-    retourne un dictionnaire associant un domaines à ses dates de publications
-    { fieldID : [date, date ...] , fieldID : ......}
+    Crée un dictionnaire associant un domaines aux années de publications des publications qui sont dans ce domaine
+    prend en paramètres la liste des domaine, un dictionnaire associant un domaine à ces publication, un dictionnaire associant une publication à son année de publication
+    retourne un dictionnaire associant un domaines à ses années de publications
+    { fieldID : [year, year ...] , fieldID : ......}
     """
-    fieldToDate = dict()
+    FieldToYear = dict()
     for domaine in domaines : 
-        fieldToDate[domaine] = []
-        for publication in fieldToPaper[domaine] : 
-            fieldToDate[domaine].append(paperToDate[publication])
-    return fieldToDate
+        FieldToYear[domaine] = []
+        for publication in fieldToPaper[domaine] :
+            if not PaperToYear[publication] in FieldToYear[domaine] :
+                FieldToYear[domaine].append(PaperToYear[publication])
+    return FieldToYear
 
 def PaperCitField(publications, paperToField, paperCitPaper) :
     """
@@ -623,12 +627,12 @@ def CréerCoauteurs(graphe) :
     paperToAuthor = PaperToAuthor(graphe, IDPapers)
     authorToPaper = AuthorToPaper(graphe, IDAuthors)
     authorToField = AuthorToField(graphe, IDAuthors)
-    authorToDate = AuthorToDate(graphe, IDAuthors, authorToPaper)
+    AuthorToYear = AuthorToYear(graphe, IDAuthors, authorToPaper)
     nomAuteurs = IDToAuthor(graphe, IDAuthors)
     nomField = IDToField(graphe, IDField)
     grapheCoauteurs = Coauteurs(IDAuthors, paperToAuthor, authorToPaper)
 
-    years = ListerAnnees(authorToDate)
+    years = ListerAnnees(AuthorToYear)
     fields = ListerAttributs(authorToField)
     items = dates + fields
     
@@ -650,7 +654,7 @@ def CréerCoauteurs(graphe) :
         auteur = IDAuthors[i]
         index[auteur] = i
         listeNomAuteurs.append(nomAuteurs[auteur])
-        itemsets[auteur] = authorToDate[auteur] + authorToField[auteur]
+        itemsets[auteur] = AuthorToYear[auteur] + authorToField[auteur]
         i += 1
 
 
