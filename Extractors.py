@@ -211,6 +211,20 @@ def IDToField(graphe, conceptes) :
             IDToField[concepte] = nom
     return IDToField
 
+def IDToPaper(graphe, publications) :
+    """
+    Extrait les titres des publications
+    prend en paramètre un objet graphe de la RDFlib et la liste des publications
+    retourne une dictionnaire qui associe paperID à son tite
+    """
+
+    IDToPaper = dict()
+    for paper in publications :
+        titres = graphe.objects(paper, ace.paper_title)
+        for titre in titres :
+            IDToPaper[paper] = titre
+    return IDToPaper
+
 
 def PaperToYear(graphe, publications) :
     """
@@ -683,6 +697,15 @@ def ListerNoms(listeID, dico) :
         i += 1
     return listeNom
 
+def IDFromURI(URI):
+    """
+    Extrait l'id de l'uri d'un element
+    prend en paramètre l'uri
+    retourne l'id de l'uri (le numéro de fin) sous forme de str
+    exemple IDFromURI("http://www.semanticweb.org/acemap#001")=>001
+    """
+    return URI.split("#")[1]
+
 def CreerCoauteurs(graphe) :
     """
     Crée la structure NRI du graphe des coauteurs.
@@ -728,19 +751,90 @@ def CreerCoauteurs(graphe) :
         itemsets[auteur] = authorToYear[auteur] + authorToField[auteur] #on sait que ce sont 2 tableaux donc on peut les concatener
         i += 1
 
-    #mtn il faudrait changer les noms dans itemsets et graphe par les id
-    #il faudrait aussi ajouter aux nom d'item un préfixe
-    # il faut indexer avant de changer les noms/ajouter les prefixes
-
     NRICoauteurs["Objets"] = listeNomAuteurs
     NRICoauteurs["Items"] = items
     NRICoauteurs["Itemsets"] = CreerItemsetsIndex(IDAuthors, itemsets, index)
     NRICoauteurs["Graphe"] = CreerGrapheIndex(IDAuthors, grapheCoauteurs, index)
      
-    # a ce moment on a un dico avec des objets composé de la liste des ID d'auteurs
-    # des items la liste des years concaténé a la liste des ID fields
-    # un itemsets avec un Id auteurs associés à 
-
-    #il faudrait mtn changé objets par leurs nom et pareil pour item
-    #et changer pour itemsets et graphe les id par les indices
     return NRICoauteurs
+
+def CreerCitations(graphe) :
+    """
+    Crée la structure NRI du graphe des citations (entre auteurs).
+    Prend en paramètres un graphe.
+    Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
+    """
+    NRICitations = dict()
+    itemsets = dict()
+    index = dict()
+
+    IDAuthors = ExtraireAuteurs(graphe)
+    IDPapers = ExtrairePublications(graphe)
+    IDField = ExtraireConceptes(graphe)
+    
+    paperToAuthor = PaperToAuthor(graphe, IDPapers)
+    paperCitPaper = PaperCitPaper(graphe, IDPapers)
+    authorCitPaper = AuthorCitPaper(IDAuthors, IDPapers, paperToAuthor, paperCitPaper)
+    citations = Citation(IDAuthors, paperToAuthor, authorCitPaper)
+
+    authorToField = AuthorToField(graphe, IDAuthors)
+    authorToYear = AuthorToYear(graphe, IDAuthors, AuthorToPaper(graphe, IDAuthors))
+
+    nomAuteurs = IDToAuthor(graphe, IDAuthors)
+    nomField = IDToField(graphe, IDField)
+
+    years = ListerAnnees(authorToYear)
+    fields = ListerAttributs(authorToField)
+    items = years + fields
+    
+    listeNomAuteurs = ListerNoms(IDAuthors, nomAuteurs)
+    listeNomField = ListerNoms(IDField, nomField)
+
+    IndexerElements(index, IDAuthors)
+    IndexerElements(index, items)
+
+    AjouterPrefixes("AUTH", listeNomAuteurs)
+    AjouterPrefixes("Year", years)
+    AjouterPrefixes("CONC", listeNomField)
+
+    items = years + listeNomField
+
+    #construire l'itemset :
+    i = 0
+    lgListe = len(IDAuthors)
+    while i < lgListe :
+        auteur = IDAuthors[i]
+        itemsets[auteur] = authorToYear[auteur] + authorToField[auteur] #on sait que ce sont 2 tableaux donc on peut les concatener
+        i += 1
+
+    NRICitations["Objets"] = listeNomAuteurs
+    NRICitations["Items"] = items
+    NRICitations["Itemsets"] = CreerItemsetsIndex(IDAuthors, itemsets, index)
+    NRICitations["Graphe"] = CreerGrapheIndex(IDAuthors, citations, index)
+
+    return NRICitations
+
+def CreerCopublications(graphe) :
+    """
+    Crée la structure NRI du graphe des copublications.
+    Prend en paramètres un graphe.
+    Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
+    """
+    NRICopublication = dict()
+    itemsets = dict()
+    index = dict()
+
+    IDAuthors = ExtraireAuteurs(graphe)
+    IDPapers = ExtrairePublications(graphe)
+    IDToField = ExtraireConceptes(graphe)
+
+    paperToAuthor = PaperToAuthor(graphe, IDPapers)
+    authorToPaper = AuthorToPaper(graphe, IDAuthors)
+    copublications = Copublication(IDPapers, paperToAuthor, authorToPaper)
+
+    paperToYear = PaperToYear(graphe, IDPapers)
+    paperToField = PaperToField(graphe, IDPapers)
+
+    years = ListerAnnees(paperToYear)
+    fields = ListerAttributs(paperToField)
+    
