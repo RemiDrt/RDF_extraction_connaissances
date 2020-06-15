@@ -1,5 +1,73 @@
 from Extractors import *
 
+def ExportTTLtoNRI(destination, NRI):
+    """
+    Fonction qui exporte un dictionnaire NRI dans un fichier TTL.
+    Prend en paramètres un fichier de destination et un dictionnaire type d'une structure NRI
+    """
+    contenu = "#généré par le stagiaire\n" 
+
+    #d'abord les sommets
+    ln = len(NRI["Objets"])
+    i = 0
+    while i < ln :
+        if i != 0 :
+            contenu += " | "
+        contenu += NRI["Objets"][i]
+        i +=  1
+    contenu += "\n"
+
+    #ensuite les objets
+    i = 0
+    ln = len(NRI["Items"])
+    while i < ln :
+        if i != 0 :
+            contenu += " | "
+        contenu += NRI["Items"][i]
+        i +=  1
+    contenu += "\n"
+
+    #ensuite l'itemsets
+    i = 0
+    itemsets = NRI["Itemsets"]
+    keys = itemsets.keys()
+    ln = len(keys)
+    while i < ln :
+        contenu += str(i) + " "
+        tab = itemsets[i]
+        lnTab = len(tab)
+        j = 0
+        while j < lnTab :
+            if j != 0 :
+                contenu += ","
+            contenu += str(tab[j])
+            j += 1
+        contenu += "\n"
+        i += 1
+
+    contenu += "#\n"
+
+    #enfin le graphe
+    i = 0
+    graphe = NRI["Graphe"]
+    keys = graphe.keys()
+    ln = len(keys)
+    while i < ln :
+        contenu += str(i) + " "
+        tab = graphe[i]
+        lnTab = len(tab)
+        j = 0
+        while j < lnTab :
+            if j != 0 :
+                contenu += ","
+            contenu += str(tab[j])
+            j += 1
+        contenu += "\n"
+        i += 1
+
+    file = open(destination, "w", encoding="utf-8")
+    file.write(contenu)
+    file.close()
 
 graphe = Graph()
 ##bloc pour de selection des fichier a upload dans le graphe graphe.parse(file, format)
@@ -64,6 +132,8 @@ graphe.add((paper3, ace.paper_publish_date, Literal("2020-02-07", datatype=XSD.d
 
 NRI = CreerAutPubCitees(graphe)
 print(NRI)
+
+ExportTTLtoNRI("premierTest.ttl", NRI)
 
 
 print("done !\n----------------------------")
