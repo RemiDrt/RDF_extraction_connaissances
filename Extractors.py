@@ -1,7 +1,8 @@
 #!/usr/bin/python
 #coding=utf-8
-from rdflib import Graph, RDF, URIRef
+from rdflib import Graph, RDF, URIRef, Literal
 from rdflib.namespace import XSD , FOAF, Namespace
+
 ace = Namespace("http://www.semanticweb.org/acemap#")
 
 def Sommets(texte) :
@@ -557,8 +558,8 @@ def PublicationsAuteurs(authorToPaper, paperToAuth):
     }
     """
     publications_Auteurs = dict()
-    publications_Auteurs["authorToPaper"] = authorToPaper
-    publications_Auteurs["paperToAuth"] = paperToAuth
+    publications_Auteurs.update(authorToPaper)
+    publications_Auteurs.update(paperToAuth)
     return publications_Auteurs
 
 def AuteurPublicationCitees(publications, authorCitPaper) :
@@ -572,8 +573,10 @@ def AuteurPublicationCitees(publications, authorCitPaper) :
     }
     """
     auteurPublicationCitees = dict()
-    auteurPublicationCitees["authorCitPaper"] = authorCitPaper
-    auteurPublicationCitees["papers"] = publications
+    for publication in publications : 
+        auteurPublicationCitees[publication] = []
+    auteurPublicationCitees.update(authorCitPaper)
+
     return auteurPublicationCitees
 
 def PublicationAuteurCites(auteurs, paperCitAuthor) :
@@ -587,8 +590,9 @@ def PublicationAuteurCites(auteurs, paperCitAuthor) :
     }
     """
     publicationAuteurCites = dict()
-    publicationAuteurCites["paperCitAuthor"] = paperCitAuthor
-    publicationAuteurCites["authors"] = auteurs
+    publicationAuteurCites.update(paperCitAuthor)
+    for auteur in auteurs :
+        publicationAuteurCites[auteur] = []
     return publicationAuteurCites
 
 
@@ -706,13 +710,34 @@ def IDFromURI(URI):
     """
     return URI.split("#")[1]
 
+def ListerID(listeID) :
+    """
+    Crée un liste avec seulement l'id de l'URI pour chaque URI de la liste
+    prend en paramètres une liste
+    retourne une liste de numéros ID
+    """
+    liste = []
+    for element in listeID :
+        liste.append(IDFromURI(element))
+    return liste
+
+def Union(lst1, lst2):
+    """
+    Fait l'union entre 2 liste (union mathématique U).
+    Prend en paramètres 2 listes.
+    Retourne l'union des 2 listes dans un liste
+    exemple : Union([a, b], [b, c]) = [a, b, c]
+    """
+    lst = list(set(lst1) | set(lst2))
+    return lst
+
 def CreerCoauteurs(graphe) :
     """
     Crée la structure NRI du graphe des coauteurs.
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    NRICoauteurs = dict()
+    nri = dict()
     itemsets = dict()
     index = dict()
 
@@ -751,12 +776,12 @@ def CreerCoauteurs(graphe) :
         itemsets[auteur] = authorToYear[auteur] + authorToField[auteur] #on sait que ce sont 2 tableaux donc on peut les concatener
         i += 1
 
-    NRICoauteurs["Objets"] = listeNomAuteurs
-    NRICoauteurs["Items"] = items
-    NRICoauteurs["Itemsets"] = CreerItemsetsIndex(IDAuthors, itemsets, index)
-    NRICoauteurs["Graphe"] = CreerGrapheIndex(IDAuthors, grapheCoauteurs, index)
+    nri["Objets"] = listeNomAuteurs
+    nri["Items"] = items
+    nri["Itemsets"] = CreerItemsetsIndex(IDAuthors, itemsets, index)
+    nri["Graphe"] = CreerGrapheIndex(IDAuthors, grapheCoauteurs, index)
      
-    return NRICoauteurs
+    return nri
 
 def CreerCitations(graphe) :
     """
@@ -764,7 +789,7 @@ def CreerCitations(graphe) :
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    NRICitations = dict()
+    nri = dict()
     itemsets = dict()
     index = dict()
 
@@ -807,12 +832,12 @@ def CreerCitations(graphe) :
         itemsets[auteur] = authorToYear[auteur] + authorToField[auteur] #on sait que ce sont 2 tableaux donc on peut les concatener
         i += 1
 
-    NRICitations["Objets"] = listeNomAuteurs
-    NRICitations["Items"] = items
-    NRICitations["Itemsets"] = CreerItemsetsIndex(IDAuthors, itemsets, index)
-    NRICitations["Graphe"] = CreerGrapheIndex(IDAuthors, citations, index)
+    nri["Objets"] = listeNomAuteurs
+    nri["Items"] = items
+    nri["Itemsets"] = CreerItemsetsIndex(IDAuthors, itemsets, index)
+    nri["Graphe"] = CreerGrapheIndex(IDAuthors, citations, index)
 
-    return NRICitations
+    return nri
 
 def CreerCopublications(graphe) :
     """
@@ -820,13 +845,12 @@ def CreerCopublications(graphe) :
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    NRICopublication = dict()
+    nri = dict()
     itemsets = dict()
     index = dict()
 
     IDAuthors = ExtraireAuteurs(graphe)
     IDPapers = ExtrairePublications(graphe)
-    IDToField = ExtraireConceptes(graphe)
 
     paperToAuthor = PaperToAuthor(graphe, IDPapers)
     authorToPaper = AuthorToPaper(graphe, IDAuthors)
@@ -837,4 +861,435 @@ def CreerCopublications(graphe) :
 
     years = ListerAnnees(paperToYear)
     fields = ListerAttributs(paperToField)
+    authors = ListerAttributs(paperToAuthor)
+
+    items = authors + years + fields
+    listeNomsAuteurs = ListerNoms(authors, IDToAuthor(graphe, authors))
+    listeNomsFields = ListerNoms(fields, IDToField(graphe, fields))
+    listeIDPapers = ListerID(IDPapers)
+
+    IndexerElements(index, items)
+    IndexerElements(index, IDPapers)
+
+    AjouterPrefixes("AUTH", listeNomsAuteurs)
+    AjouterPrefixes("Year", years)
+    AjouterPrefixes("CONC", listeNomsFields)
+    AjouterPrefixes("PAPE", listeIDPapers)
+
+    items = listeNomsAuteurs + years + listeNomsFields
+
+    #construire l'itemset :
+    i = 0
+    lgListe = len(IDPapers)
+    while i < lgListe :
+        paper = IDPapers[i]
+        #paperToYeaur[paper] n'est pas un tableau on peut pas le concatener comme ca
+        year = []
+        year.append(paperToYear[paper])
+        itemsets[paper] = paperToAuthor[paper] + year + paperToField[paper]
+        i += 1
     
+    nri["Objets"] = listeIDPapers
+    nri["Items"] = items
+    nri["Itemsets"] = CreerItemsetsIndex(IDPapers, itemsets, index)
+    nri["Graphe"] = CreerGrapheIndex(IDPapers, copublications, index)
+
+    return nri
+
+
+def CreerCitationsP(graphe):
+    """
+    Crée la structure NRI du graphe des citation (entre publications).
+    Prend en paramètres un graphe.
+    Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
+    """
+    nri = dict()
+    itemsets = dict()
+    index = dict()
+
+    IDPapers = ExtrairePublications(graphe)
+    paperCitPaper = PaperCitPaper(graphe, IDPapers)
+
+    paperToAuthor = PaperToAuthor(graphe, IDPapers)
+    paperToYear = PaperToYear(graphe, IDPapers)
+    paperToField = PaperToField(graphe, IDPapers)
+
+    auteurs = ListerAttributs(paperToAuthor)
+    fields = ListerAttributs(paperToField)
+    years = ListerAnnees(paperToYear)
+
+    items = auteurs + years + fields
+
+    listeNomsAuteurs = ListerNoms(auteurs, IDToAuthor(graphe, auteurs))
+    listeNomsFields = ListerNoms(fields, IDToField(graphe, fields))
+    listeIDPapers = ListerID(IDPapers)
+
+    IndexerElements(index, items)
+    IndexerElements(index, IDPapers)
+
+    AjouterPrefixes("AUTH", listeNomsAuteurs)
+    AjouterPrefixes("Year", years)
+    AjouterPrefixes("CONC", listeNomsFields)
+    AjouterPrefixes("PAPE", listeIDPapers)
+
+    items = listeNomsAuteurs + years + listeNomsFields
+
+    #construire l'itemset :
+    i = 0
+    lgListe = len(IDPapers)
+    while i < lgListe :
+        paper = IDPapers[i]
+        #paperToYear[paper] n'est pas un tableau on peut pas le concatener comme ca
+        year = []
+        year.append(paperToYear[paper])
+        itemsets[paper] = paperToAuthor[paper] + year + paperToField[paper]
+        i += 1
+    
+    nri["Objets"] = listeIDPapers
+    nri["Items"] = items
+    nri["Itemsets"] = CreerItemsetsIndex(IDPapers, itemsets, index)
+    nri["Graphe"] = CreerGrapheIndex(IDPapers, paperCitPaper, index)
+
+    return nri
+
+def CreerCooccurence(graphe) :
+    """
+    Crée la structure NRI du graphe de cooccurence.
+    Prend en paramètres un graphe.
+    Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
+    """
+    nri = dict()
+    itemsets = dict()
+    index = dict()   
+
+    IDField = ExtraireConceptes(graphe)
+    IDPaper = ExtrairePublications(graphe)
+
+    paperToField = PaperToField(graphe, IDPaper)
+    fieldToPaper = FieldToPaper(graphe, IDField)
+    coocurrence = CoOccurrence(IDField, paperToField, fieldToPaper)
+
+
+    fieldToAuthor = FieldToAuthor(graphe, IDField)
+    paperToYear = PaperToYear(graphe, IDPaper)
+    fieldToYear = FieldToYear(IDField, fieldToPaper, paperToYear)
+
+    auteurs = ListerAttributs(fieldToAuthor)
+    years = ListerAnnees(fieldToYear)
+
+    items = auteurs + years
+
+    listeNomAuteurs = ListerNoms(auteurs, IDToAuthor(graphe, auteurs))
+    listeNomFields = ListerNoms(IDField, IDToField(graphe, IDField))
+
+    IndexerElements(index, items)
+    IndexerElements(index, IDField)
+
+    AjouterPrefixes("AUTH", listeNomAuteurs)
+    AjouterPrefixes("Year", years)
+    AjouterPrefixes("CONC", listeNomFields)
+
+    items = listeNomAuteurs + years
+
+    #construire l'itemset :
+    i = 0
+    lgListe = len(IDField)
+    while i < lgListe :
+        field = IDField[i]
+        itemsets[field] = fieldToAuthor[field] + fieldToYear[field]
+        i += 1
+    
+    nri["Objets"] = listeNomFields
+    nri["Items"] = items
+    nri["Itemsets"] = CreerItemsetsIndex(IDField, itemsets, index)
+    nri["Graphe"] = CreerGrapheIndex(IDField, coocurrence, index)
+
+    return nri
+
+def CreerCitationsE(graphe) :
+    """
+    Crée la structure NRI du graphe de citation (entre les thématiques).
+    Prend en paramètres un graphe.
+    Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
+    """
+    nri = dict()
+    itemsets = dict()
+    index = dict()   
+
+    IDField = ExtraireConceptes(graphe)
+    IDPaper = ExtrairePublications(graphe)
+
+    paperToField = PaperToField(graphe, IDPaper)
+    fieldToPaper = FieldToPaper(graphe, IDField)
+    paperCitPaper = PaperCitPaper(graphe, IDPaper)
+    fieldCitPaper = FieldCitPaper(IDField, fieldToPaper, paperCitPaper)
+    citationsE = CitationE(IDField, paperToField, fieldCitPaper)
+
+    fieldToAuthor = FieldToAuthor(graphe, IDField)
+    paperToYear = PaperToYear(graphe, IDPaper)
+    fieldToYear = FieldToYear(IDField, fieldToPaper, paperToYear)
+
+    auteurs = ListerAttributs(fieldToAuthor)
+    years = ListerAnnees(fieldToYear)
+
+    items = auteurs + years
+
+    listeNomAuteurs = ListerNoms(auteurs, IDToAuthor(graphe, auteurs))
+    listeNomFields = ListerNoms(IDField, IDToField(graphe, IDField))
+
+    IndexerElements(index, items)
+    IndexerElements(index, IDField)
+
+    AjouterPrefixes("AUTH", listeNomAuteurs)
+    AjouterPrefixes("Year", years)
+    AjouterPrefixes("CONC", listeNomFields)
+
+    items = listeNomAuteurs + years
+
+    #construire l'itemset :
+    i = 0
+    lgListe = len(IDField)
+    while i < lgListe :
+        field = IDField[i]
+        itemsets[field] = fieldToAuthor[field] + fieldToYear[field]
+        i += 1
+    
+    nri["Objets"] = listeNomFields
+    nri["Items"] = items
+    nri["Itemsets"] = CreerItemsetsIndex(IDField, itemsets, index)
+    nri["Graphe"] = CreerGrapheIndex(IDField, citationsE, index)
+
+    return nri
+
+def CreerPubAut(graphe) :
+    """
+    Crée la structure NRI du graphe bipartis entre les auteurs et leurs publications.
+    Prend en paramètres un graphe.
+    Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
+    """
+    nri = dict()
+    itemsets = dict()
+    index = dict() 
+
+
+    IDAuthors = ExtraireAuteurs(graphe)
+    IDPapers = ExtrairePublications(graphe)
+    authToPaper = AuthorToPaper(graphe, IDAuthors)
+    paperToAuth = PaperToAuthor(graphe, IDPapers)
+    publicationsAuteurs = PublicationsAuteurs(authToPaper, paperToAuth)
+
+    #attributs
+    authorToYear = AuthorToYear(graphe, IDAuthors, authToPaper)
+    authorToField = AuthorToField(graphe, IDAuthors)
+    paperToYear = PaperToYear(graphe, IDPapers)
+    paperToField = PaperToField(graphe, IDPapers)
+
+    aYears = ListerAnnees(authorToYear)
+    pYears = ListerAnnees(paperToYear)
+    aField = ListerAttributs(authorToField)
+    pField = ListerAttributs(paperToField)
+
+    fields = Union(aField, pField)
+
+    sommets = IDPapers + IDAuthors
+
+    listeNomAuteurs = ListerNoms(IDAuthors, IDToAuthor(graphe, IDAuthors))
+    listeIDPapers = ListerID(IDPapers)
+    listeNomFields = ListerNoms(fields, IDToField(graphe, fields))
+
+    AjouterPrefixes("A_Year", aYears)
+    AjouterPrefixes("P_Year", pYears)
+
+    items = aYears + pYears + fields
+
+    IndexerElements(index, sommets)
+    IndexerElements(index, items)
+
+    AjouterPrefixes("AUTH", listeNomAuteurs)
+    AjouterPrefixes("PAPE", listeIDPapers)
+    AjouterPrefixes("CONC", listeNomFields)
+
+    items = aYears + pYears + listeNomFields
+    NomSommets = listeIDPapers + listeNomAuteurs
+
+    #construire l'itemsets partie publications :
+    i = 0
+    lgListe = len(IDPapers)
+    while i < lgListe :
+        publi = IDPapers[i]
+        year = []
+        year.append(AjouterPrefixe("P_Year", paperToYear[publi]))
+        itemsets[publi] = year + paperToField[publi]
+        i += 1
+    #construire l'itemsets partie auteurs :
+    i = 0
+    lgListe = len(IDAuthors)
+    while i < lgListe :
+        auteur = IDAuthors[i]
+        AjouterPrefixes("A_Year", authorToYear[auteur])
+        itemsets[auteur] = authorToYear[auteur] + authorToField[auteur]
+        i += 1
+    #print(publicationsAuteurs)
+    nri["Objets"] = NomSommets
+    nri["Items"] = items
+    nri["Itemsets"] = CreerItemsetsIndex(sommets, itemsets, index)
+    nri["Graphe"] = CreerGrapheIndex(sommets, publicationsAuteurs, index)
+    return nri
+
+
+def CreerAutPubCitees(graphe) :
+    """
+    Crée la structure NRI du graphe bipartis des auteurs vers les publications qu'ils citent.
+    Prend en paramètres un graphe.
+    Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
+    """
+    nri = dict()
+    itemsets = dict()
+    index = dict() 
+
+
+    IDAuthors = ExtraireAuteurs(graphe)
+    IDPapers = ExtrairePublications(graphe)
+    authToPaper = AuthorToPaper(graphe, IDAuthors)
+
+
+    paperToAuthor = PaperToAuthor(graphe, IDPapers)
+    paperCitPaper = PaperCitPaper(graphe, IDPapers)
+    authorCitPaper = AuthorCitPaper(IDAuthors, IDPapers, paperToAuthor, paperCitPaper)
+    auteurPublicationCitees = AuteurPublicationCitees(IDPapers, authorCitPaper)
+
+    #attributs
+    authorToYear = AuthorToYear(graphe, IDAuthors, authToPaper)
+    authorToField = AuthorToField(graphe, IDAuthors)
+    paperToYear = PaperToYear(graphe, IDPapers)
+    paperToField = PaperToField(graphe, IDPapers)
+
+    aYears = ListerAnnees(authorToYear)
+    pYears = ListerAnnees(paperToYear)
+    aField = ListerAttributs(authorToField)
+    pField = ListerAttributs(paperToField)
+
+    fields = Union(aField, pField)
+
+    sommets = IDPapers + IDAuthors
+
+    listeNomAuteurs = ListerNoms(IDAuthors, IDToAuthor(graphe, IDAuthors))
+    listeIDPapers = ListerID(IDPapers)
+    listeNomFields = ListerNoms(fields, IDToField(graphe, fields))
+
+    AjouterPrefixes("A_Year", aYears)
+    AjouterPrefixes("P_Year", pYears)
+
+    items = aYears + pYears + fields
+
+    IndexerElements(index, sommets)
+    IndexerElements(index, items)
+
+    AjouterPrefixes("AUTH", listeNomAuteurs)
+    AjouterPrefixes("PAPE", listeIDPapers)
+    AjouterPrefixes("CONC", listeNomFields)
+
+    items = aYears + pYears + listeNomFields
+    NomSommets = listeIDPapers + listeNomAuteurs
+
+    #construire l'itemsets partie publications :
+    i = 0
+    lgListe = len(IDPapers)
+    while i < lgListe :
+        publi = IDPapers[i]
+        year = []
+        year.append(AjouterPrefixe("P_Year", paperToYear[publi]))
+        itemsets[publi] = year + paperToField[publi]
+        i += 1
+    #construire l'itemsets partie auteurs :
+    i = 0
+    lgListe = len(IDAuthors)
+    while i < lgListe :
+        auteur = IDAuthors[i]
+        AjouterPrefixes("A_Year", authorToYear[auteur])
+        itemsets[auteur] = authorToYear[auteur] + authorToField[auteur]
+        i += 1
+
+    nri["Objets"] = NomSommets
+    nri["Items"] = items
+    nri["Itemsets"] = CreerItemsetsIndex(sommets, itemsets, index)
+    nri["Graphe"] = CreerGrapheIndex(sommets, auteurPublicationCitees, index)
+    return nri
+
+def CreerPubAutCites(graphe) :
+    """
+    Crée la structure NRI du graphe bipartis des publications vers les auteurs qu'elles citent.
+    Prend en paramètres un graphe.
+    Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
+    """
+    nri = dict()
+    itemsets = dict()
+    index = dict() 
+
+
+    IDAuthors = ExtraireAuteurs(graphe)
+    IDPapers = ExtrairePublications(graphe)
+    authToPaper = AuthorToPaper(graphe, IDAuthors)
+
+    paperToAuthor = PaperToAuthor(graphe, IDPapers)
+    paperCitPaper = PaperCitPaper(graphe, IDPapers)
+    paperCitAuthor = PaperCitAuthor(IDPapers, paperToAuthor, paperCitPaper)
+    pubAuteursCites = PublicationAuteurCites(IDAuthors, paperCitAuthor)
+
+    #attributs
+    authorToYear = AuthorToYear(graphe, IDAuthors, authToPaper)
+    authorToField = AuthorToField(graphe, IDAuthors)
+    paperToYear = PaperToYear(graphe, IDPapers)
+    paperToField = PaperToField(graphe, IDPapers)
+
+    aYears = ListerAnnees(authorToYear)
+    pYears = ListerAnnees(paperToYear)
+    aField = ListerAttributs(authorToField)
+    pField = ListerAttributs(paperToField)
+
+    fields = Union(aField, pField)
+
+    sommets = IDPapers + IDAuthors
+
+    listeNomAuteurs = ListerNoms(IDAuthors, IDToAuthor(graphe, IDAuthors))
+    listeIDPapers = ListerID(IDPapers)
+    listeNomFields = ListerNoms(fields, IDToField(graphe, fields))
+
+    AjouterPrefixes("A_Year", aYears)
+    AjouterPrefixes("P_Year", pYears)
+
+    items = aYears + pYears + fields
+
+    IndexerElements(index, sommets)
+    IndexerElements(index, items)
+
+    AjouterPrefixes("AUTH", listeNomAuteurs)
+    AjouterPrefixes("PAPE", listeIDPapers)
+    AjouterPrefixes("CONC", listeNomFields)
+
+    items = aYears + pYears + listeNomFields
+    NomSommets = listeIDPapers + listeNomAuteurs
+
+    #construire l'itemsets partie publications :
+    i = 0
+    lgListe = len(IDPapers)
+    while i < lgListe :
+        publi = IDPapers[i]
+        year = []
+        year.append(AjouterPrefixe("P_Year", paperToYear[publi]))
+        itemsets[publi] = year + paperToField[publi]
+        i += 1
+    #construire l'itemsets partie auteurs :
+    i = 0
+    lgListe = len(IDAuthors)
+    while i < lgListe :
+        auteur = IDAuthors[i]
+        AjouterPrefixes("A_Year", authorToYear[auteur])
+        itemsets[auteur] = authorToYear[auteur] + authorToField[auteur]
+        i += 1
+
+    nri["Objets"] = NomSommets
+    nri["Items"] = items
+    nri["Itemsets"] = CreerItemsetsIndex(sommets, itemsets, index)
+    nri["Graphe"] = CreerGrapheIndex(sommets, pubAuteursCites, index)
+    return nri
