@@ -1,5 +1,7 @@
 #!/usr/bin/python
 #coding=utf-8
+import json
+import re
 from rdflib import Graph, RDF, URIRef, Literal
 from rdflib.namespace import XSD , FOAF, Namespace
 
@@ -119,7 +121,24 @@ def AfficherTriplets(graphe):
         print(objet)
         print("\n---------------------")
 
- 
+def ExportToJSON(dictionnaire, file) :
+    """
+    Fonction qui exporte un dictionnaire dans un fichier JSON.
+    Prend en paramètres le dictionnaire et le fichier/son chemin si on veut le mettre dans un endroit en particulier.
+    On pourrait utiliser cette fonction avec n'importe quelle structure supportée par le module json de python, lais de base on l'utilisera pour des dictionnaire.
+    """
+    with open(file, "w", encoding = "utf-8") as JSON_File :
+        json.dump(dictionnaire, JSON_File, indent=2)
+
+def ImportFromJSON(file) :
+    """
+    Fonction qui importe un objet d'un fichier JSON, pour voir les différents types possible à importer, se référer a la doc json de python
+    prend en paramètres un fichier/son chemon
+    retourne l'objet importé (de préférence un dictionnaire)
+    """
+    with open(file, encoding="utf-8") as JSON_File :
+        objet = json.load(JSON_File)
+    return objet
 
 def ListerAnnees(dictionnaire) :
     """
@@ -145,6 +164,87 @@ def ListerAnnees(dictionnaire) :
 
 
 
+
+def TabURI(tabs):
+    """
+    Corrige un tableau d'URI qui à été importé de JSON, change ces string en objets URIRef
+    prend en paramètre la liste de string
+    Retourne un liste d'URIRefs
+    """
+    tableau = []
+    for author in tabs :
+        tableau.append(URIRef(author))
+    return tableau
+
+def SimpleDictURI(dico_JSON):
+    """
+    Fonction qui change les String d'un dictionnaire en URIRef
+    prend en paramètre un dictionnaire
+    Retourne un dictionnaire avec les clé changé en URIRef et les valeurs changés en URIRefs
+    """
+    dico = {}
+    items = dico_JSON.items()
+    for key, val in items :
+        dico[URIRef(key)] = URIRef(val)
+    return dico
+
+def ComplexDictURI(dico_JSON):
+    """
+    Fonction qui change les String d'un dictionnaire en URIRef
+    prend en paramètre un dictionnaire
+    Retourne un dictionnaire avec les clé changé en URIRef et les tableaux changés en URIRefs
+    """
+    dico = {}
+    items = dico_JSON.items()
+    for key, vals in items :
+        tab = []
+        for val in vals :
+            tab.append(URIRef(val))
+        dico[URIRef(key)] = tab
+    return dico
+
+def IsURI(texte):
+    """
+    Fonction pour repérer si un texte est une URI dans nos talbeau (il doit commencer par http:)
+    prend en paramètre la chaine de caractère 
+    retourne True si cest une URI false sinon 
+    """
+    x = re.search("^https?", texte)
+    if x :
+        return True
+    return False   
+
+def ImportFromJSONStruc(file) :
+    """
+    Fonction qui importe un objet JSON d'un fichier et le corrige le changement de type avec les URI
+    Si la structure devait contenir des uri qui sont devenu des str, elles seront changés (ne change pas les year et les literal xsd.string car ce n'est pas utilisés comme des clés par la suite)
+    retourne la structure json (dictionnaire ou liste) avec des objets urirefs s'il y en avait avant l'export
+    """
+    objet = ImportFromJSON(file)
+    if isinstance(objet, list) :
+        objet = TabURI(objet)
+    else :
+        items = objet.items()
+        objet = dict()
+        for key, vals in items :
+            valeur = vals
+            if IsURI(key) :
+                print(key)
+                print("isURI")
+                cle = URIRef(key)
+            else :
+                cle = key
+                print(cle)
+                print("not URI")
+            if isinstance(vals, list) :
+                if IsURI(vals[0]) :
+                    valeur = TabURI(vals)
+            else :
+                if IsURI(vals) :
+                    valeur = URIRef(vals)
+            objet[cle] = valeur
+    return objet
+
 def ExtraireAuteurs(graphe) :
     """
     Extrait tous les id d'auteurs dans un tableau
@@ -156,6 +256,7 @@ def ExtraireAuteurs(graphe) :
     for author in authors :
         auteurs.append(author)
     return auteurs
+
 
 
 def ExtrairePublications(graphe) :

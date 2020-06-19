@@ -1,0 +1,10 @@
+{
+  "http://www.semanticweb.org/acemap#020": [
+    "http://www.semanticweb.org/acemap#010"
+  ],
+  "http://www.semanticweb.org/acemap#010": [],
+  "http://www.semanticweb.org/acemap#030": [
+    "http://www.semanticweb.org/acemap#020",
+    "http://www.semanticweb.org/acemap#010"
+  ]
+}

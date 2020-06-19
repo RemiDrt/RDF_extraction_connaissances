@@ -8,22 +8,24 @@ def ExportTTLtoNRI(destination, NRI):
     contenu = "#généré par le stagiaire\n" 
 
     #d'abord les sommets
-    ln = len(NRI["Objets"])
+    sommets = NRI['Objets']
+    ln = len(sommets)
     i = 0
     while i < ln :
         if i != 0 :
             contenu += " | "
-        contenu += NRI["Objets"][i]
+        contenu += sommets[i]
         i +=  1
     contenu += "\n"
 
-    #ensuite les objets
+    #ensuite les attributs
     i = 0
-    ln = len(NRI["Items"])
+    attributs = NRI['Items']
+    ln = len(attributs)
     while i < ln :
         if i != 0 :
             contenu += " | "
-        contenu += NRI["Items"][i]
+        contenu += attributs[i]
         i +=  1
     contenu += "\n"
 
@@ -130,11 +132,24 @@ graphe.add((paper2, ace.paper_publish_date, Literal("2018-05-12", datatype=XSD.d
 graphe.add((paper3, ace.paper_publish_date, Literal("2020-02-07", datatype=XSD.date)))
 #Selection du graphe à produire :
 
+NRI = CreerCoauteurs(graphe)
+ExportTTLtoNRI("CoAuteurs_XP1.nri", NRI)
+NRI = CreerCitations(graphe)
+ExportTTLtoNRI("Citations_XP2.nri", NRI)
+NRI = CreerCopublications(graphe)
+ExportTTLtoNRI("Copublications_XP3.nri", NRI)
+NRI = CreerCitationsP(graphe)
+ExportTTLtoNRI("CitationsP_XP4.nri", NRI)
+NRI = CreerCooccurence(graphe)
+ExportTTLtoNRI("Cooccurence_XP5.nri", NRI)
+NRI = CreerCitationsE(graphe)
+ExportTTLtoNRI("CitationsE_XP6.nri", NRI)
+NRI = CreerPubAut(graphe)
+ExportTTLtoNRI("PubAut_bi_XP7.nri", NRI)
 NRI = CreerAutPubCitees(graphe)
-print(NRI)
-
-ExportTTLtoNRI("premierTest.ttl", NRI)
-
+ExportTTLtoNRI("AutPubCitees_bi_XP8.nri", NRI)
+NRI = CreerPubAutCites(graphe)
+ExportTTLtoNRI("PubAutCites_bi_XP9.nri", NRI)
 
 print("done !\n----------------------------")
 
