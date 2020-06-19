@@ -79,22 +79,31 @@ def Graphe(texte) :
         i += 1
     return graph
 
+def CreerNRI(objets, items, itemsets, graphe):
+    """
+    Fonction qui construit un dictionnaire NRI avec ces valeurs en paramètres
+    prend en paramètre une liste d'items, une liste d'objets, un dictionnaire d'itemsets, un dictionnaire de graphe
+    retourne un dictionnaire NRI
+    exemple : nri = CreerNRI(items, objets, itemsets, graphe) => {"Graphe" : graphe, "Objets": objet, "Items": items, "Itemsets": itemsets}
+    """
+    nri = dict()
+    nri["Objets"] = objets
+    nri["Items"] = items
+    nri["Itemsets"] = itemsets
+    nri["Graphe"] = graphe
+    return nri
+    
 def NRI(texte) :
     """
     Fonction qui créer un dictionnaire au format NRI à partir d'un fichier NRI
     Prend en paramètre la liste des lignes du fichier (créée avec readlines())
     Retourne un dictionnaire qui associe à chaque élément NRI ses données
     """
-    nri = dict()
     sommets = Sommets(texte)
     attributs = Attributs(texte)
     itemsets = Itemsets(texte)
     graphe = Graphe(texte)
-    nri["Graphe"] = graphe
-    nri["Objets"] = sommets
-    nri["Items"] = attributs
-    nri["Itemsets"] = itemsets
-    return nri
+    return CreerNRI(sommets, attributs, itemsets, graphe)
 
 def AfficherNRI(dico):
     """
@@ -229,15 +238,11 @@ def ImportFromJSONStruc(file) :
         for key, vals in items :
             valeur = vals
             if IsURI(key) :
-                print(key)
-                print("isURI")
                 cle = URIRef(key)
             else :
                 cle = key
-                print(cle)
-                print("not URI")
             if isinstance(vals, list) :
-                if IsURI(vals[0]) :
+                if len(vals) > 0 and IsURI(vals[0]) :
                     valeur = TabURI(vals)
             else :
                 if IsURI(vals) :
@@ -832,26 +837,22 @@ def Union(lst1, lst2):
     lst = list(set(lst1) | set(lst2))
     return lst
 
-def CreerCoauteurs(graphe) :
+def CreerCoauteurs() :
     """
     Crée la structure NRI du graphe des coauteurs.
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    nri = dict()
     itemsets = dict()
     index = dict()
 
-    IDAuthors = ExtraireAuteurs(graphe)
-    IDPapers = ExtrairePublications(graphe)
-    IDField = ExtraireConceptes(graphe)
-    paperToAuthor = PaperToAuthor(graphe, IDPapers)
-    authorToPaper = AuthorToPaper(graphe, IDAuthors)
-    authorToField = AuthorToField(graphe, IDAuthors)
-    authorToYear = AuthorToYear(graphe, IDAuthors, authorToPaper)
-    nomAuteurs = IDToAuthor(graphe, IDAuthors)
-    nomField = IDToField(graphe, IDField)
-    grapheCoauteurs = Coauteurs(IDAuthors, paperToAuthor, authorToPaper)
+    IDAuthors = ImportFromJSONStruc("JSON_struct/Authors.json")
+    IDField = ImportFromJSONStruc("JSON_struct/Fields.json")
+    authorToField = ImportFromJSONStruc("JSON_struct/AuthorToField.json")
+    authorToYear = ImportFromJSONStruc("JSON_struct/AuthorToYear.json")
+    nomAuteurs = ImportFromJSONStruc("JSON_struct/IDToAuthor.json")
+    nomField = ImportFromJSONStruc("JSON_struct/IDToField.json")
+    grapheCoauteurs = ImportFromJSONStruc("JSON_struct/Coauteurs.json")
 
     years = ListerAnnees(authorToYear)
     fields = ListerAttributs(authorToField)
@@ -876,38 +877,28 @@ def CreerCoauteurs(graphe) :
         auteur = IDAuthors[i]
         itemsets[auteur] = authorToYear[auteur] + authorToField[auteur] #on sait que ce sont 2 tableaux donc on peut les concatener
         i += 1
-
-    nri["Objets"] = listeNomAuteurs
-    nri["Items"] = items
-    nri["Itemsets"] = CreerItemsetsIndex(IDAuthors, itemsets, index)
-    nri["Graphe"] = CreerGrapheIndex(IDAuthors, grapheCoauteurs, index)
      
-    return nri
+    return CreerNRI(listeNomAuteurs, items, CreerItemsetsIndex(IDAuthors, itemsets, index), CreerGrapheIndex(IDAuthors, grapheCoauteurs, index))
 
-def CreerCitations(graphe) :
+def CreerCitations() :
     """
     Crée la structure NRI du graphe des citations (entre auteurs).
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    nri = dict()
     itemsets = dict()
     index = dict()
 
-    IDAuthors = ExtraireAuteurs(graphe)
-    IDPapers = ExtrairePublications(graphe)
-    IDField = ExtraireConceptes(graphe)
+    IDAuthors = ImportFromJSONStruc("JSON_struct/Authors.json")
+    IDField = ImportFromJSONStruc("JSON_struct/Fields.json")
     
-    paperToAuthor = PaperToAuthor(graphe, IDPapers)
-    paperCitPaper = PaperCitPaper(graphe, IDPapers)
-    authorCitPaper = AuthorCitPaper(IDAuthors, IDPapers, paperToAuthor, paperCitPaper)
-    citations = Citation(IDAuthors, paperToAuthor, authorCitPaper)
+    citations = ImportFromJSONStruc("JSON_struct/Citation.json")
 
-    authorToField = AuthorToField(graphe, IDAuthors)
-    authorToYear = AuthorToYear(graphe, IDAuthors, AuthorToPaper(graphe, IDAuthors))
+    authorToField = ImportFromJSONStruc("JSON_struct/AuthorToField.json")
+    authorToYear = ImportFromJSONStruc("JSON_struct/AuthorToYear.json")
 
-    nomAuteurs = IDToAuthor(graphe, IDAuthors)
-    nomField = IDToField(graphe, IDField)
+    nomAuteurs = ImportFromJSONStruc("JSON_struct/IDToAuthor.json")
+    nomField = ImportFromJSONStruc("JSON_struct/IDToField.json")
 
     years = ListerAnnees(authorToYear)
     fields = ListerAttributs(authorToField)
@@ -933,40 +924,32 @@ def CreerCitations(graphe) :
         itemsets[auteur] = authorToYear[auteur] + authorToField[auteur] #on sait que ce sont 2 tableaux donc on peut les concatener
         i += 1
 
-    nri["Objets"] = listeNomAuteurs
-    nri["Items"] = items
-    nri["Itemsets"] = CreerItemsetsIndex(IDAuthors, itemsets, index)
-    nri["Graphe"] = CreerGrapheIndex(IDAuthors, citations, index)
+    return CreerNRI(listeNomAuteurs, items, CreerItemsetsIndex(IDAuthors, itemsets, index), CreerGrapheIndex(IDAuthors, citations, index))
 
-    return nri
-
-def CreerCopublications(graphe) :
+def CreerCopublications() :
     """
     Crée la structure NRI du graphe des copublications.
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    nri = dict()
     itemsets = dict()
     index = dict()
 
-    IDAuthors = ExtraireAuteurs(graphe)
-    IDPapers = ExtrairePublications(graphe)
+    IDPapers = ImportFromJSONStruc("JSON_struct/Papers.json")
 
-    paperToAuthor = PaperToAuthor(graphe, IDPapers)
-    authorToPaper = AuthorToPaper(graphe, IDAuthors)
-    copublications = Copublication(IDPapers, paperToAuthor, authorToPaper)
+    paperToAuthor = ImportFromJSONStruc("JSON_struct/PaperToAuthor.json")
+    copublications = ImportFromJSONStruc("JSON_struct/Copublication.json")
 
-    paperToYear = PaperToYear(graphe, IDPapers)
-    paperToField = PaperToField(graphe, IDPapers)
+    paperToYear = ImportFromJSONStruc("JSON_struct/PaperToYear.json")
+    paperToField = ImportFromJSONStruc("JSON_struct/PaperToField.json")
 
     years = ListerAnnees(paperToYear)
     fields = ListerAttributs(paperToField)
     authors = ListerAttributs(paperToAuthor)
 
     items = authors + years + fields
-    listeNomsAuteurs = ListerNoms(authors, IDToAuthor(graphe, authors))
-    listeNomsFields = ListerNoms(fields, IDToField(graphe, fields))
+    listeNomsAuteurs = ListerNoms(authors, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
+    listeNomsFields = ListerNoms(fields, ImportFromJSONStruc("JSON_struct/IDToField.json"))
     listeIDPapers = ListerID(IDPapers)
 
     IndexerElements(index, items)
@@ -989,31 +972,25 @@ def CreerCopublications(graphe) :
         year.append(paperToYear[paper])
         itemsets[paper] = paperToAuthor[paper] + year + paperToField[paper]
         i += 1
-    
-    nri["Objets"] = listeIDPapers
-    nri["Items"] = items
-    nri["Itemsets"] = CreerItemsetsIndex(IDPapers, itemsets, index)
-    nri["Graphe"] = CreerGrapheIndex(IDPapers, copublications, index)
 
-    return nri
+    return CreerNRI(listeIDPapers, items, CreerItemsetsIndex(IDPapers, itemsets, index), CreerGrapheIndex(IDPapers, copublications, index))
 
 
-def CreerCitationsP(graphe):
+def CreerCitationsP():
     """
     Crée la structure NRI du graphe des citation (entre publications).
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    nri = dict()
     itemsets = dict()
     index = dict()
 
-    IDPapers = ExtrairePublications(graphe)
-    paperCitPaper = PaperCitPaper(graphe, IDPapers)
+    IDPapers = ImportFromJSONStruc("JSON_struct/Papers.json")
+    paperCitPaper = ImportFromJSONStruc("JSON_struct/PaperCitPaper.json")
 
-    paperToAuthor = PaperToAuthor(graphe, IDPapers)
-    paperToYear = PaperToYear(graphe, IDPapers)
-    paperToField = PaperToField(graphe, IDPapers)
+    paperToAuthor = ImportFromJSONStruc("JSON_struct/PaperToAuthor.json")
+    paperToYear = ImportFromJSONStruc("JSON_struct/PaperToYear.json")
+    paperToField = ImportFromJSONStruc("JSON_struct/PaperToField.json")
 
     auteurs = ListerAttributs(paperToAuthor)
     fields = ListerAttributs(paperToField)
@@ -1021,8 +998,8 @@ def CreerCitationsP(graphe):
 
     items = auteurs + years + fields
 
-    listeNomsAuteurs = ListerNoms(auteurs, IDToAuthor(graphe, auteurs))
-    listeNomsFields = ListerNoms(fields, IDToField(graphe, fields))
+    listeNomsAuteurs = ListerNoms(auteurs, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
+    listeNomsFields = ListerNoms(fields, ImportFromJSONStruc("JSON_struct/IDToField.json"))
     listeIDPapers = ListerID(IDPapers)
 
     IndexerElements(index, items)
@@ -1045,43 +1022,33 @@ def CreerCitationsP(graphe):
         year.append(paperToYear[paper])
         itemsets[paper] = paperToAuthor[paper] + year + paperToField[paper]
         i += 1
-    
-    nri["Objets"] = listeIDPapers
-    nri["Items"] = items
-    nri["Itemsets"] = CreerItemsetsIndex(IDPapers, itemsets, index)
-    nri["Graphe"] = CreerGrapheIndex(IDPapers, paperCitPaper, index)
 
-    return nri
+    return CreerNRI(listeIDPapers, items, CreerItemsetsIndex(IDPapers, itemsets, index), CreerGrapheIndex(IDPapers, paperCitPaper, index))
 
-def CreerCooccurence(graphe) :
+def CreerCooccurence() :
     """
     Crée la structure NRI du graphe de cooccurence.
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    nri = dict()
     itemsets = dict()
     index = dict()   
 
-    IDField = ExtraireConceptes(graphe)
-    IDPaper = ExtrairePublications(graphe)
+    IDField = ImportFromJSONStruc("JSON_struct/Fields.json")
 
-    paperToField = PaperToField(graphe, IDPaper)
-    fieldToPaper = FieldToPaper(graphe, IDField)
-    coocurrence = CoOccurrence(IDField, paperToField, fieldToPaper)
+    coocurrence = ImportFromJSONStruc("JSON_struct/CoOccurrence.json")
 
 
-    fieldToAuthor = FieldToAuthor(graphe, IDField)
-    paperToYear = PaperToYear(graphe, IDPaper)
-    fieldToYear = FieldToYear(IDField, fieldToPaper, paperToYear)
+    fieldToAuthor = ImportFromJSONStruc("JSON_struct/FieldToAuthors.json")
+    fieldToYear = ImportFromJSONStruc("JSON_struct/FieldToYear.json")
 
     auteurs = ListerAttributs(fieldToAuthor)
     years = ListerAnnees(fieldToYear)
 
     items = auteurs + years
 
-    listeNomAuteurs = ListerNoms(auteurs, IDToAuthor(graphe, auteurs))
-    listeNomFields = ListerNoms(IDField, IDToField(graphe, IDField))
+    listeNomAuteurs = ListerNoms(auteurs, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
+    listeNomFields = ListerNoms(IDField, ImportFromJSONStruc("JSON_struct/IDToField.json"))
 
     IndexerElements(index, items)
     IndexerElements(index, IDField)
@@ -1099,44 +1066,32 @@ def CreerCooccurence(graphe) :
         field = IDField[i]
         itemsets[field] = fieldToAuthor[field] + fieldToYear[field]
         i += 1
-    
-    nri["Objets"] = listeNomFields
-    nri["Items"] = items
-    nri["Itemsets"] = CreerItemsetsIndex(IDField, itemsets, index)
-    nri["Graphe"] = CreerGrapheIndex(IDField, coocurrence, index)
+    return CreerNRI(listeNomFields, items, CreerItemsetsIndex(IDField, itemsets, index), CreerGrapheIndex(IDField, coocurrence, index))
 
-    return nri
 
-def CreerCitationsE(graphe) :
+def CreerCitationsE() :
     """
     Crée la structure NRI du graphe de citation (entre les thématiques).
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    nri = dict()
     itemsets = dict()
     index = dict()   
 
-    IDField = ExtraireConceptes(graphe)
-    IDPaper = ExtrairePublications(graphe)
+    IDField = ImportFromJSONStruc("JSON_struct/Fields.json")
 
-    paperToField = PaperToField(graphe, IDPaper)
-    fieldToPaper = FieldToPaper(graphe, IDField)
-    paperCitPaper = PaperCitPaper(graphe, IDPaper)
-    fieldCitPaper = FieldCitPaper(IDField, fieldToPaper, paperCitPaper)
-    citationsE = CitationE(IDField, paperToField, fieldCitPaper)
+    citationsE = ImportFromJSONStruc("JSON_struct/CitationE.json")
 
-    fieldToAuthor = FieldToAuthor(graphe, IDField)
-    paperToYear = PaperToYear(graphe, IDPaper)
-    fieldToYear = FieldToYear(IDField, fieldToPaper, paperToYear)
+    fieldToAuthor = ImportFromJSONStruc("JSON_struct/FieldToAuthors.json")
+    fieldToYear = ImportFromJSONStruc("JSON_struct/FieldToYear.json")
 
     auteurs = ListerAttributs(fieldToAuthor)
     years = ListerAnnees(fieldToYear)
 
     items = auteurs + years
 
-    listeNomAuteurs = ListerNoms(auteurs, IDToAuthor(graphe, auteurs))
-    listeNomFields = ListerNoms(IDField, IDToField(graphe, IDField))
+    listeNomAuteurs = ListerNoms(auteurs, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
+    listeNomFields = ListerNoms(IDField, ImportFromJSONStruc("JSON_struct/IDToField.json"))
 
     IndexerElements(index, items)
     IndexerElements(index, IDField)
@@ -1154,36 +1109,28 @@ def CreerCitationsE(graphe) :
         field = IDField[i]
         itemsets[field] = fieldToAuthor[field] + fieldToYear[field]
         i += 1
-    
-    nri["Objets"] = listeNomFields
-    nri["Items"] = items
-    nri["Itemsets"] = CreerItemsetsIndex(IDField, itemsets, index)
-    nri["Graphe"] = CreerGrapheIndex(IDField, citationsE, index)
 
-    return nri
+    return CreerNRI(listeNomFields, items, CreerItemsetsIndex(IDField, itemsets, index), CreerGrapheIndex(IDField, citationsE, index))
 
-def CreerPubAut(graphe) :
+def CreerPubAut() :
     """
     Crée la structure NRI du graphe bipartis entre les auteurs et leurs publications.
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    nri = dict()
     itemsets = dict()
     index = dict() 
 
 
-    IDAuthors = ExtraireAuteurs(graphe)
-    IDPapers = ExtrairePublications(graphe)
-    authToPaper = AuthorToPaper(graphe, IDAuthors)
-    paperToAuth = PaperToAuthor(graphe, IDPapers)
-    publicationsAuteurs = PublicationsAuteurs(authToPaper, paperToAuth)
+    IDAuthors = ImportFromJSONStruc("JSON_struct/Authors.json")
+    IDPapers = ImportFromJSONStruc("JSON_struct/Papers.json")
+    publicationsAuteurs = ImportFromJSONStruc("JSON_struct/PublicationAuteurs.json")
 
     #attributs
-    authorToYear = AuthorToYear(graphe, IDAuthors, authToPaper)
-    authorToField = AuthorToField(graphe, IDAuthors)
-    paperToYear = PaperToYear(graphe, IDPapers)
-    paperToField = PaperToField(graphe, IDPapers)
+    authorToYear = ImportFromJSONStruc("JSON_struct/AuthorToYear.json")
+    authorToField = ImportFromJSONStruc("JSON_struct/AuthorToField.json")
+    paperToYear = ImportFromJSONStruc("JSON_struct/PaperToYear.json")
+    paperToField = ImportFromJSONStruc("JSON_struct/PaperToField.json")
 
     aYears = ListerAnnees(authorToYear)
     pYears = ListerAnnees(paperToYear)
@@ -1194,9 +1141,9 @@ def CreerPubAut(graphe) :
 
     sommets = IDPapers + IDAuthors
 
-    listeNomAuteurs = ListerNoms(IDAuthors, IDToAuthor(graphe, IDAuthors))
+    listeNomAuteurs = ListerNoms(IDAuthors, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
     listeIDPapers = ListerID(IDPapers)
-    listeNomFields = ListerNoms(fields, IDToField(graphe, fields))
+    listeNomFields = ListerNoms(fields, ImportFromJSONStruc("JSON_struct/IDToField.json"))
 
     AjouterPrefixes("A_Year", aYears)
     AjouterPrefixes("P_Year", pYears)
@@ -1230,40 +1177,29 @@ def CreerPubAut(graphe) :
         AjouterPrefixes("A_Year", authorToYear[auteur])
         itemsets[auteur] = authorToYear[auteur] + authorToField[auteur]
         i += 1
-    #print(publicationsAuteurs)
-    nri["Objets"] = NomSommets
-    nri["Items"] = items
-    nri["Itemsets"] = CreerItemsetsIndex(sommets, itemsets, index)
-    nri["Graphe"] = CreerGrapheIndex(sommets, publicationsAuteurs, index)
-    return nri
+    return CreerNRI(NomSommets, items, CreerItemsetsIndex(sommets, itemsets, index), CreerGrapheIndex(sommets, publicationsAuteurs, index))
 
 
-def CreerAutPubCitees(graphe) :
+def CreerAutPubCitees() :
     """
     Crée la structure NRI du graphe bipartis des auteurs vers les publications qu'ils citent.
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    nri = dict()
     itemsets = dict()
     index = dict() 
 
 
-    IDAuthors = ExtraireAuteurs(graphe)
-    IDPapers = ExtrairePublications(graphe)
-    authToPaper = AuthorToPaper(graphe, IDAuthors)
+    IDAuthors = ImportFromJSONStruc("JSON_struct/Authors.json")
+    IDPapers = ImportFromJSONStruc("JSON_struct/Papers.json")
 
-
-    paperToAuthor = PaperToAuthor(graphe, IDPapers)
-    paperCitPaper = PaperCitPaper(graphe, IDPapers)
-    authorCitPaper = AuthorCitPaper(IDAuthors, IDPapers, paperToAuthor, paperCitPaper)
-    auteurPublicationCitees = AuteurPublicationCitees(IDPapers, authorCitPaper)
+    auteurPublicationCitees = ImportFromJSONStruc("JSON_struct/AuteurPublicationCitees.json")
 
     #attributs
-    authorToYear = AuthorToYear(graphe, IDAuthors, authToPaper)
-    authorToField = AuthorToField(graphe, IDAuthors)
-    paperToYear = PaperToYear(graphe, IDPapers)
-    paperToField = PaperToField(graphe, IDPapers)
+    authorToYear = ImportFromJSONStruc("JSON_struct/AuthorToYear.json")
+    authorToField = ImportFromJSONStruc("JSON_struct/AuthorToField.json")
+    paperToYear = ImportFromJSONStruc("JSON_struct/PaperToYear.json")
+    paperToField = ImportFromJSONStruc("JSON_struct/PaperToField.json")
 
     aYears = ListerAnnees(authorToYear)
     pYears = ListerAnnees(paperToYear)
@@ -1274,9 +1210,9 @@ def CreerAutPubCitees(graphe) :
 
     sommets = IDPapers + IDAuthors
 
-    listeNomAuteurs = ListerNoms(IDAuthors, IDToAuthor(graphe, IDAuthors))
+    listeNomAuteurs = ListerNoms(IDAuthors, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
     listeIDPapers = ListerID(IDPapers)
-    listeNomFields = ListerNoms(fields, IDToField(graphe, fields))
+    listeNomFields = ListerNoms(fields, ImportFromJSONStruc("JSON_struct/IDToField.json"))
 
     AjouterPrefixes("A_Year", aYears)
     AjouterPrefixes("P_Year", pYears)
@@ -1311,37 +1247,28 @@ def CreerAutPubCitees(graphe) :
         itemsets[auteur] = authorToYear[auteur] + authorToField[auteur]
         i += 1
 
-    nri["Objets"] = NomSommets
-    nri["Items"] = items
-    nri["Itemsets"] = CreerItemsetsIndex(sommets, itemsets, index)
-    nri["Graphe"] = CreerGrapheIndex(sommets, auteurPublicationCitees, index)
-    return nri
+    return CreerNRI(NomSommets, items, CreerItemsetsIndex(sommets, itemsets, index), CreerGrapheIndex(sommets, auteurPublicationCitees, index))
 
-def CreerPubAutCites(graphe) :
+def CreerPubAutCites() :
     """
     Crée la structure NRI du graphe bipartis des publications vers les auteurs qu'elles citent.
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
-    nri = dict()
     itemsets = dict()
     index = dict() 
 
 
-    IDAuthors = ExtraireAuteurs(graphe)
-    IDPapers = ExtrairePublications(graphe)
-    authToPaper = AuthorToPaper(graphe, IDAuthors)
+    IDAuthors = ImportFromJSONStruc("JSON_struct/Authors.json")
+    IDPapers = ImportFromJSONStruc("JSON_struct/Papers.json")
 
-    paperToAuthor = PaperToAuthor(graphe, IDPapers)
-    paperCitPaper = PaperCitPaper(graphe, IDPapers)
-    paperCitAuthor = PaperCitAuthor(IDPapers, paperToAuthor, paperCitPaper)
-    pubAuteursCites = PublicationAuteurCites(IDAuthors, paperCitAuthor)
+    pubAuteursCites = ImportFromJSONStruc("JSON_struct/PublicationAuteurCites.json")
 
     #attributs
-    authorToYear = AuthorToYear(graphe, IDAuthors, authToPaper)
-    authorToField = AuthorToField(graphe, IDAuthors)
-    paperToYear = PaperToYear(graphe, IDPapers)
-    paperToField = PaperToField(graphe, IDPapers)
+    authorToYear = ImportFromJSONStruc("JSON_struct/AuthorToYear.json")
+    authorToField = ImportFromJSONStruc("JSON_struct/AuthorToField.json")
+    paperToYear = ImportFromJSONStruc("JSON_struct/PaperToYear.json")
+    paperToField = ImportFromJSONStruc("JSON_struct/PaperToField.json")
 
     aYears = ListerAnnees(authorToYear)
     pYears = ListerAnnees(paperToYear)
@@ -1352,9 +1279,9 @@ def CreerPubAutCites(graphe) :
 
     sommets = IDPapers + IDAuthors
 
-    listeNomAuteurs = ListerNoms(IDAuthors, IDToAuthor(graphe, IDAuthors))
+    listeNomAuteurs = ListerNoms(IDAuthors, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
     listeIDPapers = ListerID(IDPapers)
-    listeNomFields = ListerNoms(fields, IDToField(graphe, fields))
+    listeNomFields = ListerNoms(fields, ImportFromJSONStruc("JSON_struct/IDToField.json"))
 
     AjouterPrefixes("A_Year", aYears)
     AjouterPrefixes("P_Year", pYears)
@@ -1388,9 +1315,4 @@ def CreerPubAutCites(graphe) :
         AjouterPrefixes("A_Year", authorToYear[auteur])
         itemsets[auteur] = authorToYear[auteur] + authorToField[auteur]
         i += 1
-
-    nri["Objets"] = NomSommets
-    nri["Items"] = items
-    nri["Itemsets"] = CreerItemsetsIndex(sommets, itemsets, index)
-    nri["Graphe"] = CreerGrapheIndex(sommets, pubAuteursCites, index)
-    return nri
+    return CreerNRI(NomSommets, items, CreerItemsetsIndex(sommets, itemsets, index), CreerGrapheIndex(sommets, pubAuteursCites, index))
