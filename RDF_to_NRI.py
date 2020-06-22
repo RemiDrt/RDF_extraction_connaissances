@@ -1,5 +1,75 @@
 from Extractors import *
 
+def ExportTTLtoNRI(destination, NRI):
+    """
+    Fonction qui exporte un dictionnaire NRI dans un fichier TTL.
+    Prend en paramètres un fichier de destination et un dictionnaire type d'une structure NRI
+    """
+    contenu = "#généré par le stagiaire\n" 
+
+    #d'abord les sommets
+    sommets = NRI['Objets']
+    ln = len(sommets)
+    i = 0
+    while i < ln :
+        if i != 0 :
+            contenu += " | "
+        contenu += sommets[i]
+        i +=  1
+    contenu += "\n"
+
+    #ensuite les attributs
+    i = 0
+    attributs = NRI['Items']
+    ln = len(attributs)
+    while i < ln :
+        if i != 0 :
+            contenu += " | "
+        contenu += attributs[i]
+        i +=  1
+    contenu += "\n"
+
+    #ensuite l'itemsets
+    i = 0
+    itemsets = NRI["Itemsets"]
+    keys = itemsets.keys()
+    ln = len(keys)
+    while i < ln :
+        contenu += str(i) + " "
+        tab = itemsets[i]
+        lnTab = len(tab)
+        j = 0
+        while j < lnTab :
+            if j != 0 :
+                contenu += ","
+            contenu += str(tab[j])
+            j += 1
+        contenu += "\n"
+        i += 1
+
+    contenu += "#\n"
+
+    #enfin le graphe
+    i = 0
+    graphe = NRI["Graphe"]
+    keys = graphe.keys()
+    ln = len(keys)
+    while i < ln :
+        contenu += str(i) + " "
+        tab = graphe[i]
+        lnTab = len(tab)
+        j = 0
+        while j < lnTab :
+            if j != 0 :
+                contenu += ","
+            contenu += str(tab[j])
+            j += 1
+        contenu += "\n"
+        i += 1
+
+    file = open(destination, "w", encoding="utf-8")
+    file.write(contenu)
+    file.close()
 
 graphe = Graph()
 ##bloc pour de selection des fichier a upload dans le graphe graphe.parse(file, format)
@@ -62,9 +132,24 @@ graphe.add((paper2, ace.paper_publish_date, Literal("2018-05-12", datatype=XSD.d
 graphe.add((paper3, ace.paper_publish_date, Literal("2020-02-07", datatype=XSD.date)))
 #Selection du graphe à produire :
 
+NRI = CreerCoauteurs(graphe)
+ExportTTLtoNRI("CoAuteurs_XP1.nri", NRI)
+NRI = CreerCitations(graphe)
+ExportTTLtoNRI("Citations_XP2.nri", NRI)
+NRI = CreerCopublications(graphe)
+ExportTTLtoNRI("Copublications_XP3.nri", NRI)
+NRI = CreerCitationsP(graphe)
+ExportTTLtoNRI("CitationsP_XP4.nri", NRI)
+NRI = CreerCooccurence(graphe)
+ExportTTLtoNRI("Cooccurence_XP5.nri", NRI)
+NRI = CreerCitationsE(graphe)
+ExportTTLtoNRI("CitationsE_XP6.nri", NRI)
+NRI = CreerPubAut(graphe)
+ExportTTLtoNRI("PubAut_bi_XP7.nri", NRI)
 NRI = CreerAutPubCitees(graphe)
-print(NRI)
-
+ExportTTLtoNRI("AutPubCitees_bi_XP8.nri", NRI)
+NRI = CreerPubAutCites(graphe)
+ExportTTLtoNRI("PubAutCites_bi_XP9.nri", NRI)
 
 print("done !\n----------------------------")
 
