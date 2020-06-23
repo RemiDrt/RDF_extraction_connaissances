@@ -305,6 +305,7 @@ def IDToAuthor(graphe, auteurs) :
     return IDToAuthors
 
 
+
 def IDToField(graphe, conceptes) :
     """
     Extrait les nom des différents conceptes/domaines/field et les associes à leurs ID
@@ -332,6 +333,19 @@ def IDToPaper(graphe, publications) :
             IDToPaper[paper] = titre
     return IDToPaper
 
+def InverserDicoSimple(file):
+    """
+    Fonction qui inverse les clé et les valeurs d'un dictionnaire.
+    Prend le dictionnaire importé dans le fichier en paramètre et inverse les clés et les valeurs
+    Retourne un dictionnaire (utilisé pour associé les noms avec les id, les clés deviennent les noms)
+    """
+    dicoS = ImportFromJSON(file)
+    items = dicoS.items()
+    dicoR = dict()
+    for cle, val in items :
+        dicoR[val] = cle
+    return dicoR
+    
 
 def PaperToYear(graphe, publications) :
     """
