@@ -15,4 +15,5 @@ NRICitations = ExtraireNRI(contenu)
 print(NRICitations)
 graphe = Graph()
 AnalyserNRI(graphe, NRICitations, "citationsp")
-ConvertToRDF(graphe, "convertedToRDF/test1.ttl")
+ConvertToRDF(graphe, "ConvertedToRDF/test1.ttl")
+

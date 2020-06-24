@@ -4,11 +4,6 @@ AuthorToID = ImportFromJSON("JSON_struct/AuthorToID.json")
 PaperToID = ImportFromJSON("JSON_struct/PaperToID.json")
 FieldToID = ImportFromJSON("JSON_struct/FieldToID.json")
 IDToPaper = ImportFromJSON("JSON_struct/IDToPaper.json")
-print(ace)
-print(type(ace))
-x = ace + "119"
-print(x)
-print(type(x))
 
 def AjouterTriplet(graphe, sujet, predicat, objet) :
     """
@@ -108,7 +103,6 @@ def AnalyserElements(graphe, NRI) :
     Prend en paramètres un graphe rdflib et un dictionnaire NRI.
     Analyse et ajoute les différents élément des liste dans le graphe
     """
-    print(NRI["Objets"])
     AnalyserSommets(graphe, NRI["Objets"])
     AnalyserSommets(graphe, NRI["Items"])
 
@@ -127,11 +121,11 @@ def AnalyserItemsets(graphe, NRI):
     dico = NRI["Itemsets"]
     items = dico.items()
     for sommet, valeurs in items :
-        #dans le dico itemsets il n'y a que des index pointant vers des elements de Objets ou Items (clé=>Objets Valeurs=>Items)
-        sujet = NRI["Objets"][sommet]
+        #dans le dico itemsets il n'y a que des index pointant vers des elements de Objets ou Items (clé=>Objets Valeurs=>Items), il faut juste convertir l'index en int
+        sujet = NRI["Objets"][int(sommet)]
         prefixeS = AnalyserSommet(sujet)
         for valeur in valeurs :
-            objet = NRI["Items"][valeur]
+            objet = NRI["Items"][int(valeur)]
             prefixeO = AnalyserSommet(objet)
             if prefixeS == "PAPE":#si c'est une publication :
                 idS = ace + ValeurSommet(sujet)
@@ -192,10 +186,10 @@ def AnalyserGraphe(graphe, NRI, relation):
     items = dico.items()
     if relation == "citationsp" : 
         for sommet, valeurs in items :
-            sujet = NRI["Objets"][sommet]
+            sujet = NRI["Objets"][int(sommet)]
             prefixeS = AnalyserSommet(sujet)
             for valeur in valeurs :
-                objet = NRI["Objets"][valeur]
+                objet = NRI["Objets"][int(valeur)]
                 prefixeO = AnalyserSommet(objet)
                 if prefixeS == "PAPE" and prefixeO == "PAPE":
                     idS = ace + ValeurSommet(sujet)
@@ -207,11 +201,11 @@ def AnalyserGraphe(graphe, NRI, relation):
 
     elif relation == "pubaut" : 
         for sommet, valeurs in items :
-            sujet = NRI["Objets"][sommet]
+            sujet = NRI["Objets"][int(sommet)]
             prefixeS = AnalyserSommet(sujet)
             if prefixeS == "PAPE" : 
                 for valeur in valeurs :
-                    objet = NRI["Objets"][valeur]
+                    objet = NRI["Objets"][int(valeur)]
                     prefixeO = AnalyserSommet(objet)
                     if prefixeO == "AUTH":
                         idS = ace + ValeurSommet(sujet)
