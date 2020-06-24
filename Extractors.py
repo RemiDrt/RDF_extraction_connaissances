@@ -13,7 +13,15 @@ def Sommets(texte) :
     Prend en paramètre la liste des lignes du fichier (créée avec readlines())
     Retourne un tableau des sommets
     """
-    return texte[1].split("|")
+    tabBrut = texte[1].split("|")
+    #il faut maitenant enlever les espaces et les caractère des saut de ligne
+    tabSaint = []
+    for txt in tabBrut :
+        chaine = txt.lstrip()#enlver les espaces au début de la chaine
+        chaine = chaine.rstrip()#enlever les espaces à la fin de la chaine
+        chaine = chaine.replace("\n", "") #enlève le caractère de saut de ligne s'il est là
+        tabSaint.append(chaine)
+    return tabSaint
 
 def Attributs(texte) :
     """
@@ -21,7 +29,15 @@ def Attributs(texte) :
     Prend en paramètre la liste des lignes du fichier (créée avec readlines())
     Retourne un tableau des attributs
     """
-    return texte[2].split("|")
+    tabBrut = texte[2].split("|")
+    #il faut maitenant enlever les espaces et les caractère des saut de ligne
+    tabSaint = []
+    for txt in tabBrut :
+        chaine = txt.lstrip()#enlver les espaces au début de la chaine
+        chaine = chaine.rstrip()#enlever les espaces à la fin de la chaine
+        chaine = chaine.replace("\n", "") #enlève le caractère de saut de ligne s'il est là
+        tabSaint.append(chaine)
+    return tabSaint
 
 def Itemsets(texte) :
     """
@@ -93,7 +109,7 @@ def CreerNRI(objets, items, itemsets, graphe):
     nri["Graphe"] = graphe
     return nri
     
-def NRI(texte) :
+def ExtraireNRI(texte) :
     """
     Fonction qui créer un dictionnaire au format NRI à partir d'un fichier NRI
     Prend en paramètre la liste des lignes du fichier (créée avec readlines())
@@ -305,6 +321,7 @@ def IDToAuthor(graphe, auteurs) :
     return IDToAuthors
 
 
+
 def IDToField(graphe, conceptes) :
     """
     Extrait les nom des différents conceptes/domaines/field et les associes à leurs ID
@@ -332,6 +349,19 @@ def IDToPaper(graphe, publications) :
             IDToPaper[paper] = titre
     return IDToPaper
 
+def InverserDicoSimple(file):
+    """
+    Fonction qui inverse les clé et les valeurs d'un dictionnaire.
+    Prend le dictionnaire importé dans le fichier en paramètre et inverse les clés et les valeurs
+    Retourne un dictionnaire (utilisé pour associé les noms avec les id, les clés deviennent les noms)
+    """
+    dicoS = ImportFromJSON(file)
+    items = dicoS.items()
+    dicoR = dict()
+    for cle, val in items :
+        dicoR[val] = cle
+    return dicoR
+    
 
 def PaperToYear(graphe, publications) :
     """

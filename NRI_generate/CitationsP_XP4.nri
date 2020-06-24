@@ -1,0 +1,10 @@
+#généré par le stagiaire
+PAPE_020 | PAPE_010 | PAPE_030
+AUTH_Waris_RADJI | AUTH_Colin_ESPINAS | AUTH_Remi_DURET | Year_2018 | Year_2015 | Year_2020 | CONC_Genie_Logiciel | CONC_Data_Science
+0 0,1,3,6,7
+1 2,4,6
+2 1,5,7,6
+#
+0 1
+1 
+2 0,1
