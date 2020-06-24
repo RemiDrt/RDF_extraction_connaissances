@@ -93,7 +93,7 @@ def CreerNRI(objets, items, itemsets, graphe):
     nri["Graphe"] = graphe
     return nri
     
-def NRI(texte) :
+def ExtraireNRI(texte) :
     """
     Fonction qui créer un dictionnaire au format NRI à partir d'un fichier NRI
     Prend en paramètre la liste des lignes du fichier (créée avec readlines())
