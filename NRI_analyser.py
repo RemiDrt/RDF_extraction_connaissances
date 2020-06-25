@@ -221,7 +221,7 @@ def AnalyserGraphe(graphe, NRI, relation):
                 print("incohérence sommet et relation")
                 print("relation : " + relation + " | sommet : " + str(sujet))
 
-    elif relation == "coauteurs" or relation == "citation" or relation == "copublication" or relation == "cooccurrences" or relation == "citatione" or relation == "autpubcitees" or relation == "pubautcites" :
+    elif relation == "coauteurs" or relation == "citations" or relation == "copublications" or relation == "cooccurrences" or relation == "citationse" or relation == "autpubcitees" or relation == "pubautcites" :
         print("aucune propriété aceKG n'est extrayable de ce graphe")
     else :
         print("erreur relation : veuillez verifier l'ortographe")

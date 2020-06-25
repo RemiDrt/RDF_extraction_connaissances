@@ -1,0 +1,42 @@
+@prefix ns1: <http://www.semanticweb.org/acemap#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns1:010 a ns1:Paper ;
+    ns1:paper_is_in_field ns1:100 ;
+    ns1:paper_is_written_by ns1:001 ;
+    ns1:paper_publish_date "2015-01-01"^^xsd:date ;
+    ns1:paper_title "Optisimation des applications de bureau"^^xsd:string .
+
+ns1:020 a ns1:Paper ;
+    ns1:paper_is_in_field ns1:100,
+        ns1:200 ;
+    ns1:paper_is_written_by ns1:002,
+        ns1:003 ;
+    ns1:paper_publish_date "2018-01-01"^^xsd:date ;
+    ns1:paper_title "Les algorithmes de data mining"^^xsd:string .
+
+ns1:030 a ns1:Paper ;
+    ns1:paper_is_in_field ns1:100,
+        ns1:200 ;
+    ns1:paper_is_written_by ns1:003 ;
+    ns1:paper_publish_date "2020-01-01"^^xsd:date ;
+    ns1:paper_title "Faire un framework complet"^^xsd:string .
+
+ns1:001 a ns1:Author ;
+    ns1:author_is_in_field ns1:100 ;
+    ns1:author_name "Remi DURET"^^xsd:string .
+
+ns1:002 a ns1:Author ;
+    ns1:author_is_in_field ns1:100,
+        ns1:200 ;
+    ns1:author_name "Waris RADJI"^^xsd:string .
+
+ns1:003 a ns1:Author ;
+    ns1:author_is_in_field ns1:100,
+        ns1:200 ;
+    ns1:author_name "Colin ESPINAS"^^xsd:string .
+
+ns1:200 a ns1:Field .
+
+ns1:100 a ns1:Field .
+

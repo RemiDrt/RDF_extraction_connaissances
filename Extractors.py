@@ -109,12 +109,14 @@ def CreerNRI(objets, items, itemsets, graphe):
     nri["Graphe"] = graphe
     return nri
     
-def ExtraireNRI(texte) :
+def ExtraireNRI(file) :
     """
     Fonction qui créer un dictionnaire au format NRI à partir d'un fichier NRI
-    Prend en paramètre la liste des lignes du fichier (créée avec readlines())
+    Prend en paramètre l'emplacement du fichier
     Retourne un dictionnaire qui associe à chaque élément NRI ses données
     """
+    with open(file, encoding="utf-8") as fichier :
+        texte = fichier.readlines()
     sommets = Sommets(texte)
     attributs = Attributs(texte)
     itemsets = Itemsets(texte)
@@ -646,7 +648,7 @@ def Copublication(publications, paperToAuthor, authorToPaper) :
     return copubli
 
     
-def CoOccurrence(domaines, paperToField, fieldToPaper) :
+def CoOccurrences(domaines, paperToField, fieldToPaper) :
     """
     crée un dictionnaire associant une domaine aux domaines avec lesquelles il a des publications en commun
     prend en paramètres la liste des domaines, un dictionnaire associant une publications à ces domaines, un dictionnaire associant un domaine aux publication qui sont dans celui-ci
@@ -1055,9 +1057,9 @@ def CreerCitationsP():
 
     return CreerNRI(listeIDPapers, items, CreerItemsetsIndex(IDPapers, itemsets, index), CreerGrapheIndex(IDPapers, paperCitPaper, index))
 
-def CreerCooccurence() :
+def CreerCooccurrences() :
     """
-    Crée la structure NRI du graphe de cooccurence.
+    Crée la structure NRI du graphe de cooccurrences.
     Prend en paramètres un graphe.
     Retourne un dictionnaire NRI avec les sommets, les items, itemsets et graphe.
     """
@@ -1066,7 +1068,7 @@ def CreerCooccurence() :
 
     IDField = ImportFromJSONStruc("JSON_struct/Fields.json")
 
-    coocurrence = ImportFromJSONStruc("JSON_struct/CoOccurrence.json")
+    coocurrence = ImportFromJSONStruc("JSON_struct/CoOccurrences.json")
 
 
     fieldToAuthor = ImportFromJSONStruc("JSON_struct/FieldToAuthors.json")
