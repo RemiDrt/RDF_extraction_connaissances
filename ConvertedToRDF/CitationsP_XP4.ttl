@@ -1,40 +1,40 @@
-@prefix ns1: <http://www.semanticweb.org/acemap#> .
+@prefix ace: <http://www.semanticweb.org/acemap#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ns1:030 a ns1:Paper ;
-    ns1:paper_cit_paper ns1:010,
-        ns1:020 ;
-    ns1:paper_is_in_field ns1:100,
-        ns1:200 ;
-    ns1:paper_is_written_by ns1:003 ;
-    ns1:paper_publish_date "2020-01-01"^^xsd:date ;
-    ns1:paper_title "Faire un framework complet"^^xsd:string .
+ace:030 a ace:Paper ;
+    ace:paper_cit_paper ace:010,
+        ace:020 ;
+    ace:paper_is_in_field ace:100,
+        ace:200 ;
+    ace:paper_is_written_by ace:003 ;
+    ace:paper_publish_date "2020-01-01"^^xsd:date ;
+    ace:paper_title "Faire un framework complet"^^xsd:string .
 
-ns1:001 a ns1:Author ;
-    ns1:author_name "Remi DURET"^^xsd:string .
+ace:001 a ace:Author ;
+    ace:author_name "Remi DURET"^^xsd:string .
 
-ns1:002 a ns1:Author ;
-    ns1:author_name "Waris RADJI"^^xsd:string .
+ace:002 a ace:Author ;
+    ace:author_name "Waris RADJI"^^xsd:string .
 
-ns1:020 a ns1:Paper ;
-    ns1:paper_cit_paper ns1:010 ;
-    ns1:paper_is_in_field ns1:100,
-        ns1:200 ;
-    ns1:paper_is_written_by ns1:002,
-        ns1:003 ;
-    ns1:paper_publish_date "2018-01-01"^^xsd:date ;
-    ns1:paper_title "Les algorithmes de data mining"^^xsd:string .
+ace:020 a ace:Paper ;
+    ace:paper_cit_paper ace:010 ;
+    ace:paper_is_in_field ace:100,
+        ace:200 ;
+    ace:paper_is_written_by ace:002,
+        ace:003 ;
+    ace:paper_publish_date "2018-01-01"^^xsd:date ;
+    ace:paper_title "Les algorithmes de data mining"^^xsd:string .
 
-ns1:003 a ns1:Author ;
-    ns1:author_name "Colin ESPINAS"^^xsd:string .
+ace:003 a ace:Author ;
+    ace:author_name "Colin ESPINAS"^^xsd:string .
 
-ns1:010 a ns1:Paper ;
-    ns1:paper_is_in_field ns1:100 ;
-    ns1:paper_is_written_by ns1:001 ;
-    ns1:paper_publish_date "2015-01-01"^^xsd:date ;
-    ns1:paper_title "Optisimation des applications de bureau"^^xsd:string .
+ace:010 a ace:Paper ;
+    ace:paper_is_in_field ace:100 ;
+    ace:paper_is_written_by ace:001 ;
+    ace:paper_publish_date "2015-01-01"^^xsd:date ;
+    ace:paper_title "Optisimation des applications de bureau"^^xsd:string .
 
-ns1:200 a ns1:Field .
+ace:200 a ace:Field .
 
-ns1:100 a ns1:Field .
+ace:100 a ace:Field .
 

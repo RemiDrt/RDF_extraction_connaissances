@@ -1,21 +1,21 @@
-@prefix ns1: <http://www.semanticweb.org/acemap#> .
+@prefix ace: <http://www.semanticweb.org/acemap#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ns1:001 a ns1:Author ;
-    ns1:author_is_in_field ns1:100 ;
-    ns1:author_name "Remi DURET"^^xsd:string .
+ace:001 a ace:Author ;
+    ace:author_is_in_field ace:100 ;
+    ace:author_name "Remi DURET"^^xsd:string .
 
-ns1:002 a ns1:Author ;
-    ns1:author_is_in_field ns1:100,
-        ns1:200 ;
-    ns1:author_name "Waris RADJI"^^xsd:string .
+ace:002 a ace:Author ;
+    ace:author_is_in_field ace:100,
+        ace:200 ;
+    ace:author_name "Waris RADJI"^^xsd:string .
 
-ns1:003 a ns1:Author ;
-    ns1:author_is_in_field ns1:100,
-        ns1:200 ;
-    ns1:author_name "Colin ESPINAS"^^xsd:string .
+ace:003 a ace:Author ;
+    ace:author_is_in_field ace:100,
+        ace:200 ;
+    ace:author_name "Colin ESPINAS"^^xsd:string .
 
-ns1:200 a ns1:Field .
+ace:200 a ace:Field .
 
-ns1:100 a ns1:Field .
+ace:100 a ace:Field .
 

@@ -7,60 +7,48 @@ def ConvertToRDF(graphe, file) :
     """
     graphe.serialize(destination=file, format="turtle", encoding="utf-8")
 
+def ConvertNRIToRDF(NRIFile, RDFFile, graphe, relation):
+    """
+    Fonction qui converti un fichier NRI en fichier RDF
+    Prend en paramètre un fichier NRI a convertir, un fichier RDF qui sera la destination, un graphe rdflib, et la relation du fichier NRI
+    analyse le fichier NRI et ajoute les triplet dans le graphe en fonction de la relation. Serialize le graphe le fichier de destination
+    """
+    global ace
+    NRI = ExtraireNRI(NRIFile)
+    graphe.bind("ace", ace)
+    AnalyserNRI(graphe, NRI, relation)
+    ConvertToRDF(graphe, RDFFile)
 
 if __name__ == "__main__":
-    NRI = ExtraireNRI("NRI_generate/CitationsP_XP4.nri")
-    print(NRI)
     graphe = Graph()
-    AnalyserNRI(graphe, NRI, "citationsp")
-    ConvertToRDF(graphe, "ConvertedToRDF/CitationsP_XP4.ttl")
+    ConvertNRIToRDF("NRI_generate/CitationsP_XP4.nri", "ConvertedToRDF/CitationsP_XP4.ttl", graphe, "citationsp")
 
     graphe = Graph()
-    NRI = ExtraireNRI("NRI_generate/CoAuteurs_XP1.nri")
-    print(NRI)
-    AnalyserNRI(graphe, NRI, "coauteurs")
-    ConvertToRDF(graphe, "ConvertedToRDF/CoAuteurs_XP1.ttl")
+    ConvertNRIToRDF("NRI_generate/CoAuteurs_XP1.nri", "ConvertedToRDF/CoAuteurs_XP1.ttl", graphe, "coauteurs")
 
     graphe = Graph()
-    NRI = ExtraireNRI("NRI_generate/Citations_XP2.nri")
-    print(NRI)
-    AnalyserNRI(graphe, NRI, "citations")
-    ConvertToRDF(graphe, "ConvertedToRDF/Citations_XP2.ttl")
+    ConvertNRIToRDF("NRI_generate/Citations_XP2.nri", "ConvertedToRDF/Citations_XP2.ttl", graphe, "citations")
 
     graphe = Graph()
-    NRI = ExtraireNRI("NRI_generate/Copublications_XP3.nri")
-    print(NRI)
-    AnalyserNRI(graphe, NRI, "copublications")
-    ConvertToRDF(graphe, "ConvertedToRDF/Copublications_XP3.ttl")
+    ConvertNRIToRDF("NRI_generate/Copublications_XP3.nri", "ConvertedToRDF/Copublications_XP3.ttl", graphe, "copublications")
+
 
     graphe = Graph()
-    NRI = ExtraireNRI("NRI_generate/Cooccurrences_XP5.nri")
-    print(NRI)
-    AnalyserNRI(graphe, NRI, "cooccurrences")
-    ConvertToRDF(graphe, "ConvertedToRDF/Cooccurrences_XP5.ttl")
+    ConvertNRIToRDF("NRI_generate/Cooccurrences_XP5.nri", "ConvertedToRDF/Cooccurrences_XP5.ttl", graphe, "cooccurrences")
+
 
     graphe = Graph()
-    NRI = ExtraireNRI("NRI_generate/CitationsE_XP6.nri")
-    print(NRI)
-    AnalyserNRI(graphe, NRI, "citationse")
-    ConvertToRDF(graphe, "ConvertedToRDF/CitationsE_XP6.ttl")
+    ConvertNRIToRDF("NRI_generate/CitationsE_XP6.nri", "ConvertedToRDF/CitationsE_XP6.ttl", graphe, "citationse")
+
 
     graphe = Graph()
-    NRI = ExtraireNRI("NRI_generate/PubAut_bi_XP7.nri")
-    print(NRI)
-    AnalyserNRI(graphe, NRI, "pubaut")
-    ConvertToRDF(graphe, "ConvertedToRDF/PubAut_bi_XP7.ttl")
+    ConvertNRIToRDF("NRI_generate/PubAut_bi_XP7.nri", "ConvertedToRDF/PubAut_bi_XP7.ttl", graphe, "pubaut")
+
 
     graphe = Graph()
-    NRI = ExtraireNRI("NRI_generate/AutPubCitees_bi_XP8.nri")
-    print(NRI)
-    AnalyserNRI(graphe, NRI, "autpubcitees")
-    ConvertToRDF(graphe, "ConvertedToRDF/AutPubCitees_bi_XP8.ttl")
+    ConvertNRIToRDF("NRI_generate/AutPubCitees_bi_XP8.nri", "ConvertedToRDF/AutPubCitees_bi_XP8.ttl", graphe, "autpubcitees")
 
     graphe = Graph()
-    NRI = ExtraireNRI("NRI_generate/PubAutCites_bi_XP9.nri")
-    print(NRI)
-    AnalyserNRI(graphe, NRI, "pubautcites")
-    ConvertToRDF(graphe, "ConvertedToRDF/PubAutCites_bi_XP9.ttl")
+    ConvertNRIToRDF("NRI_generate/PubAutCites_bi_XP9.nri", "ConvertedToRDF/PubAutCites_bi_XP9.ttl", graphe, "pubautcites")
 
     print("done !\n----------------------------")
