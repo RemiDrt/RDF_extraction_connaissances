@@ -318,6 +318,7 @@ def IDToAuthor(graphe, auteurs) :
     IDToAuthors = dict()
     for auteur in auteurs :
         noms = graphe.objects(auteur, ace.author_name)
+        IDToAuthors[auteur] = ""
         for nom in noms :
             IDToAuthors[auteur] = nom
     return IDToAuthors
@@ -333,6 +334,7 @@ def IDToField(graphe, conceptes) :
     IDToField = dict()
     for concepte in conceptes :
         noms = graphe.objects(concepte, ace.field_name)
+        IDToField[concepte] = ""
         for nom in noms : 
             IDToField[concepte] = nom
     return IDToField
@@ -347,6 +349,7 @@ def IDToPaper(graphe, publications) :
     IDToPaper = dict()
     for paper in publications :
         titres = graphe.objects(paper, ace.paper_title)
+        IDToPaper[paper] = ""
         for titre in titres :
             IDToPaper[paper] = titre
     return IDToPaper
@@ -375,6 +378,7 @@ def PaperToYear(graphe, publications) :
     PaperToYear = dict()
     for publication in publications :
         dates = graphe.objects(publication, ace.paper_publish_date)
+        PaperToYear[publication]=''
         for date in dates :
             year = YearFromDate(date)
             PaperToYear[publication] = year

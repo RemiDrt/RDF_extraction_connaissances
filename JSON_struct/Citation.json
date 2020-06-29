@@ -1,5 +1,4 @@
 {
-  "http://www.semanticweb.org/acemap#001": [],
   "http://www.semanticweb.org/acemap#002": [
     "http://www.semanticweb.org/acemap#001"
   ],
@@ -7,5 +6,6 @@
     "http://www.semanticweb.org/acemap#001",
     "http://www.semanticweb.org/acemap#003",
     "http://www.semanticweb.org/acemap#002"
-  ]
+  ],
+  "http://www.semanticweb.org/acemap#001": []
 }

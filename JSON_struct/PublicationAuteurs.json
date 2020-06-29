@@ -1,7 +1,4 @@
 {
-  "http://www.semanticweb.org/acemap#001": [
-    "http://www.semanticweb.org/acemap#010"
-  ],
   "http://www.semanticweb.org/acemap#002": [
     "http://www.semanticweb.org/acemap#020"
   ],
@@ -9,14 +6,17 @@
     "http://www.semanticweb.org/acemap#020",
     "http://www.semanticweb.org/acemap#030"
   ],
-  "http://www.semanticweb.org/acemap#020": [
-    "http://www.semanticweb.org/acemap#003",
-    "http://www.semanticweb.org/acemap#002"
+  "http://www.semanticweb.org/acemap#001": [
+    "http://www.semanticweb.org/acemap#010"
+  ],
+  "http://www.semanticweb.org/acemap#010": [
+    "http://www.semanticweb.org/acemap#001"
   ],
   "http://www.semanticweb.org/acemap#030": [
     "http://www.semanticweb.org/acemap#003"
   ],
-  "http://www.semanticweb.org/acemap#010": [
-    "http://www.semanticweb.org/acemap#001"
+  "http://www.semanticweb.org/acemap#020": [
+    "http://www.semanticweb.org/acemap#003",
+    "http://www.semanticweb.org/acemap#002"
   ]
 }

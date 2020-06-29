@@ -1,19 +1,20 @@
 from Extractors import *
+
 if __name__ == "__main__":
     graphe = Graph()
     ###parsing de tout aceKG dans le graphe 
     print("parsing de aceKG en cours veuillez patienter ...")
     """
-        graphe.parse(location = "TTLFiles/acemap.ttl", format = "turtle")
-        graphe.parse(location = "TTLFiles/affiliation.ttl", format = "turtle")
-        graphe.parse(location = "TTLFiles/author.ttl", format = "turtle")
-        graphe.parse(location = "TTLFiles/conference.ttl", format = "turtle")
-        graphe.parse(location = "TTLFiles/field.ttl", format = "turtle")
-        graphe.parse(location = "TTLFiles/institute.ttl", format = "turtle")
-        graphe.parse(location = "TTLFiles/journal.ttl", format = "turtle")
-        graphe.parse(location = "TTLFiles/paper.ttl", format = "turtle")
+    graphe.parse(location = "sampleAceKG/acemap.ttl", format = "turtle")
+    graphe.parse(location = "sampleAceKG/affiliation.ttl", format = "turtle")
+    graphe.parse(location = "sampleAceKG/author.ttl", format = "turtle")
+    graphe.parse(location = "sampleAceKG/conference.ttl", format = "turtle")
+    graphe.parse(location = "sampleAceKG/field.ttl", format = "turtle")
+    graphe.parse(location = "sampleAceKG/institute.ttl", format = "turtle")
+    graphe.parse(location = "sampleAceKG/journal.ttl", format = "turtle")
+    graphe.parse(location = "sampleAceKG/paper.ttl", format = "turtle")
+    
     """
-
     auteur1 = URIRef("http://www.semanticweb.org/acemap#001")
     auteur2 = URIRef("http://www.semanticweb.org/acemap#002")
     auteur3 = URIRef("http://www.semanticweb.org/acemap#003")
@@ -58,7 +59,6 @@ if __name__ == "__main__":
     graphe.add((paper1, ace.paper_publish_date, Literal("2015-03-26", datatype=XSD.date)))
     graphe.add((paper2, ace.paper_publish_date, Literal("2018-05-12", datatype=XSD.date)))
     graphe.add((paper3, ace.paper_publish_date, Literal("2020-02-07", datatype=XSD.date)))
-
     ###
     print("parsing terminé")
 
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     ExportToJSON(AuthorCitPaper(imp(d+"Authors.json"), imp(d+"Papers.json"), imp(d+"PaperToAuthor.json"), imp(d+"PaperCitPaper.json")), d+"AuthorCitPaper.json")
 
     print("FieldToPaper")
-    ExportToJSON(FieldToPaper(graphe, imp(d+"FieldToPaper.json")), d+"FieldToPaper.json")
+    ExportToJSON(FieldToPaper(graphe, imp(d+"Fields.json")), d+"FieldToPaper.json")
 
     print("FieldToAuthor")
     ExportToJSON(FieldToAuthor(graphe, imp(d+"Fields.json")), d+"FieldToAuthors.json")
