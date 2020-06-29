@@ -1,11 +1,13 @@
 #!/usr/bin/python
 #coding=utf-8
+#pip install rdflib
 import json
 import re
 from rdflib import Graph, RDF, URIRef, Literal
 from rdflib.namespace import XSD , FOAF, Namespace
 
-ace = Namespace("http://www.semanticweb.org/acemap#")
+#ace = Namespace("http://www.semanticweb.org/acemap#")
+ace = Namespace("http://www.semanticweb.org/XKG#")
 
 def Sommets(texte) :
     """
@@ -177,8 +179,8 @@ def ListerAnnees(dictionnaire) :
     for key in dictionnaire.keys() :
         #si l'attributs n'est pas sous forme de list
         if not isinstance(dictionnaire[key], list) :
-            #s'il est pas déjà dans le tableau :
             annee = YearFromDate(dictionnaire[key])
+            #s'il est pas déjà dans le tableau :
             if not annee in attributs :
                 attributs.append(annee)
         else :
@@ -894,8 +896,8 @@ def CreerCoauteurs() :
     fields = ListerAttributs(authorToField)
     items = years + fields
     
-    listeNomAuteurs = ListerNoms(IDAuthors, nomAuteurs)
-    listeNomField = ListerNoms(IDField, nomField)
+    listeNomAuteurs = ListerID(IDAuthors)
+    listeNomField = ListerID(IDField)
 
     IndexerElements(index, IDAuthors)
     IndexerElements(index, items)
@@ -940,8 +942,8 @@ def CreerCitations() :
     fields = ListerAttributs(authorToField)
     items = years + fields
     
-    listeNomAuteurs = ListerNoms(IDAuthors, nomAuteurs)
-    listeNomField = ListerNoms(IDField, nomField)
+    listeNomAuteurs = ListerID(IDAuthors)
+    listeNomField = ListerID(IDField)
 
     IndexerElements(index, IDAuthors)
     IndexerElements(index, items)
@@ -984,8 +986,8 @@ def CreerCopublications() :
     authors = ListerAttributs(paperToAuthor)
 
     items = authors + years + fields
-    listeNomsAuteurs = ListerNoms(authors, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
-    listeNomsFields = ListerNoms(fields, ImportFromJSONStruc("JSON_struct/IDToField.json"))
+    listeNomsAuteurs = ListerID(authors)
+    listeNomsFields = ListerID(fields)
     listeIDPapers = ListerID(IDPapers)
 
     IndexerElements(index, items)
@@ -1034,8 +1036,8 @@ def CreerCitationsP():
 
     items = auteurs + years + fields
 
-    listeNomsAuteurs = ListerNoms(auteurs, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
-    listeNomsFields = ListerNoms(fields, ImportFromJSONStruc("JSON_struct/IDToField.json"))
+    listeNomsAuteurs = ListerID(auteurs)
+    listeNomsFields = ListerID(fields)
     listeIDPapers = ListerID(IDPapers)
 
     IndexerElements(index, items)
@@ -1083,8 +1085,8 @@ def CreerCooccurrences() :
 
     items = auteurs + years
 
-    listeNomAuteurs = ListerNoms(auteurs, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
-    listeNomFields = ListerNoms(IDField, ImportFromJSONStruc("JSON_struct/IDToField.json"))
+    listeNomAuteurs = ListerID(auteurs)
+    listeNomFields = ListerID(IDField)
 
     IndexerElements(index, items)
     IndexerElements(index, IDField)
@@ -1126,8 +1128,8 @@ def CreerCitationsE() :
 
     items = auteurs + years
 
-    listeNomAuteurs = ListerNoms(auteurs, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
-    listeNomFields = ListerNoms(IDField, ImportFromJSONStruc("JSON_struct/IDToField.json"))
+    listeNomAuteurs = ListerID(auteurs)
+    listeNomFields = ListerID(IDField)
 
     IndexerElements(index, items)
     IndexerElements(index, IDField)
@@ -1177,9 +1179,9 @@ def CreerPubAut() :
 
     sommets = IDPapers + IDAuthors
 
-    listeNomAuteurs = ListerNoms(IDAuthors, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
+    listeNomAuteurs = ListerID(IDAuthors)
     listeIDPapers = ListerID(IDPapers)
-    listeNomFields = ListerNoms(fields, ImportFromJSONStruc("JSON_struct/IDToField.json"))
+    listeNomFields = ListerID(fields)
 
     AjouterPrefixes("A_Year", aYears)
     AjouterPrefixes("P_Year", pYears)
@@ -1246,9 +1248,9 @@ def CreerAutPubCitees() :
 
     sommets = IDPapers + IDAuthors
 
-    listeNomAuteurs = ListerNoms(IDAuthors, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
+    listeNomAuteurs = ListerID(IDAuthors)
     listeIDPapers = ListerID(IDPapers)
-    listeNomFields = ListerNoms(fields, ImportFromJSONStruc("JSON_struct/IDToField.json"))
+    listeNomFields = ListerID(fields)
 
     AjouterPrefixes("A_Year", aYears)
     AjouterPrefixes("P_Year", pYears)
@@ -1315,9 +1317,9 @@ def CreerPubAutCites() :
 
     sommets = IDPapers + IDAuthors
 
-    listeNomAuteurs = ListerNoms(IDAuthors, ImportFromJSONStruc("JSON_struct/IDToAuthor.json"))
+    listeNomAuteurs = ListerID(IDAuthors)
     listeIDPapers = ListerID(IDPapers)
-    listeNomFields = ListerNoms(fields, ImportFromJSONStruc("JSON_struct/IDToField.json"))
+    listeNomFields = ListerID(fields)
 
     AjouterPrefixes("A_Year", aYears)
     AjouterPrefixes("P_Year", pYears)

@@ -13,7 +13,10 @@ if __name__ == "__main__":
     graphe.parse(location = "sampleAceKG/institute.ttl", format = "turtle")
     graphe.parse(location = "sampleAceKG/journal.ttl", format = "turtle")
     graphe.parse(location = "sampleAceKG/paper.ttl", format = "turtle")
-    
+    """
+
+    graphe.parse(location = "XKG_sample/sample_ace.ttl", format = "turtle")
+
     """
     auteur1 = URIRef("http://www.semanticweb.org/acemap#001")
     auteur2 = URIRef("http://www.semanticweb.org/acemap#002")
@@ -59,6 +62,7 @@ if __name__ == "__main__":
     graphe.add((paper1, ace.paper_publish_date, Literal("2015-03-26", datatype=XSD.date)))
     graphe.add((paper2, ace.paper_publish_date, Literal("2018-05-12", datatype=XSD.date)))
     graphe.add((paper3, ace.paper_publish_date, Literal("2020-02-07", datatype=XSD.date)))
+    """
     ###
     print("parsing terminé")
 
