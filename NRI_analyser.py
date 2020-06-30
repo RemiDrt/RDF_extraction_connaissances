@@ -1,8 +1,7 @@
 from Extractors import *
 #en faisant importFromJSON à la place de importFromJSONstruct, les dico ne contiennent pas d'uri, juste ds chaines de caractère
-AuthorToID = ImportFromJSON("JSON_struct/AuthorToID.json")
-PaperToID = ImportFromJSON("JSON_struct/PaperToID.json")
-FieldToID = ImportFromJSON("JSON_struct/FieldToID.json")
+IDToAuthor = ImportFromJSON("JSON_struct/IDToAuthor.json")
+IDToField = ImportFromJSON("JSON_struct/IDToField.json")
 IDToPaper = ImportFromJSON("JSON_struct/IDToPaper.json")
 
 def AjouterTriplet(graphe, sujet, predicat, objet) :
@@ -68,22 +67,22 @@ def AnalyserSommets(graphe, sommets):
     Pour ajouter les bons id, il faut soit aller chercher dans les dictionnaires JSON.
     Cette fonction est spécifiques aux 9 graphes de recherche d'experts
     """
-    global AuthorToID
-    global FieldToID
+    global IDToAuthor
+    global IDToField
     global IDToPaper
     global ace
     #dans ces 3 dicos il n'y a que des chaines de caractères
 
     for sommet in sommets :
         pref = AnalyserSommet(sommet)
-        if pref == "AUTH" : #cest un auteur, il et on a son nom avec 
-            nom = ValeurSommet(sommet)
-            id = AuthorToID[nom]
+        if pref == "AUTH" : #cest un auteur, il et on a son id avec 
+            id = ace + ValeurSommet(sommet)
+            nom = IDToAuthor[id]
             AjouterTriplet(graphe, URIRef(id), RDF.type, ace.Author)
             AjouterTriplet(graphe, URIRef(id), ace.author_name, Literal(nom, datatype=XSD.string))
         elif pref == "CONC":
-            nom = ValeurSommet(sommet)
-            id = FieldToID[nom]
+            id = ace + ValeurSommet(sommet)
+            nom = IDToField[id]
             AjouterTriplet(graphe, URIRef(id), RDF.type, ace.Field)
             #pour l'instant on ajoute pas fieldname
             #AjouterTriplet(graphe, URIRef(id), ace.field_name, Literal(nom, datatype=XSD.string))
@@ -114,8 +113,8 @@ def AnalyserItemsets(graphe, NRI):
     Analyse les éléments et relations de l'itemsets et ajoute les triplets au graphe
     """
     #on pourra opti le id/nom dans les if avec un truc genre valeur et en fonction des if ca sera un id/nom/année 
-    global AuthorToID
-    global FieldToID
+    global IDToAuthor
+    global IDToField
     global IDToPaper
     global ace
     dico = NRI["Itemsets"]
@@ -131,15 +130,15 @@ def AnalyserItemsets(graphe, NRI):
                 idS = ace + ValeurSommet(sujet)
                 nomS = IDToPaper[idS]
                 if prefixeO == "AUTH" :
-                    nomO = ValeurSommet(objet)
-                    idO = AuthorToID[nomO]
+                    idO = ace + ValeurSommet(objet)
+                    nomO = IDToAuthor[idO]
                     AjouterTriplet(graphe, URIRef(idS), ace.paper_is_written_by, URIRef(idO))
                 elif prefixeO == "Year" :
                     annee = ValeurSommet(objet)
                     AjouterTriplet(graphe, URIRef(idS), ace.paper_publish_date, Literal(annee, datatype=XSD.date))
                 elif prefixeO == "CONC" :
-                    nomO = ValeurSommet(objet)
-                    idO = FieldToID[nomO]
+                    idO = ace + ValeurSommet(objet)
+                    nomO = IDToField[idO]
                     AjouterTriplet(graphe, URIRef(idS), ace.paper_is_in_field, URIRef(idO))
                 else :
                     #dans les itemsets des graphes de recherches peut pas y avoir autre chose que des auteurs, des thématiques ou des années
@@ -148,23 +147,23 @@ def AnalyserItemsets(graphe, NRI):
                     print("sujet : " + str(sujet))
             elif prefixeS == "AUTH":
                 nomS = ValeurSommet(sujet)
-                idS = AuthorToID[nomS]
+                idS = IDToAuthor[nomS]
                 if prefixeO == "CONC":
                     #ca la seule propriété utilisable pour un itemsets d'un auteur : author_is_in_field
-                    #c'est pas encore valider de le mettre donc on ecrit mais faudra peut etre l'
-                    nomO = ValeurSommet(objet)
-                    idO = FieldToID[nomO]
+                    #c'est pas encore valider de le mettre donc on ecrit mais faudra peut etre l'enlever
+                    idO = ace + ValeurSommet(objet)
+                    nomO = IDToField[idO]
                     AjouterTriplet(graphe, URIRef(idS), ace.author_is_in_field, URIRef(idO))
                 else : 
                     print("objet : " + str(objet) + " pas de propriété exploitable pour un auteur")
             elif prefixeS == "CONC" :
-                nomS = ValeurSommet(sujet)
-                idS = FieldToID[nomS]
+                idS = ace + ValeurSommet(sujet)
+                nomS = IDToField[idS]
                 if prefixeO == "AUTH":
                     #c'est une relation entre un field et un auteur on peut ajouter un triplet avec author is in field faut juste inverser sujet et objet
                     #cette propriété n'est pas encore validé faudra peut-etre enlever
-                    nomO = ValeurSommet(objet)
-                    idO = AuthorToID[nomO]
+                    idO = ace + ValeurSommet(objet)
+                    nomO = IDToAuthor[idO]
                     AjouterTriplet(graphe, URIRef(idO), ace.author_is_in_field, URIRef(idS))
                 else : 
                     print("objet : " + str(objet) + " pas de propriété exploitable pour un domaine")
@@ -180,7 +179,7 @@ def AnalyserGraphe(graphe, NRI, relation):
     Analyse les éléments et relations du graphe et ajoute les triplets au graphe rdf
     """
     relation = relation.lower() #on met en minuscule car on veut pas de problèmes liées au maj
-    global AuthorToID
+    global IDToAuthor
     global ace
     dico = NRI["Graphe"]
     items = dico.items()
@@ -209,8 +208,8 @@ def AnalyserGraphe(graphe, NRI, relation):
                     prefixeO = AnalyserSommet(objet)
                     if prefixeO == "AUTH":
                         idS = ace + ValeurSommet(sujet)
-                        nomO = ValeurSommet(objet)
-                        idO = AuthorToID[nomO]
+                        idO = ace + ValeurSommet(objet)
+                        nomO = IDToAuthor[idO]
                         AjouterTriplet(graphe, URIRef(idS), ace.paper_is_written_by, URIRef(idO))
                     else :
                         print("incohérence sommets et relation")

@@ -21,34 +21,43 @@ def ConvertNRIToRDF(NRIFile, RDFFile, graphe, relation):
 
 if __name__ == "__main__":
     graphe = Graph()
-    ConvertNRIToRDF("NRI_generate/CitationsP_XP4.nri", "ConvertedToRDF/CitationsP_XP4.ttl", graphe, "citationsp")
+     #ConvertNRIToRDF("NRI_generate/CitationsP_XP4.nri", "ConvertedToRDF/CitationsP_XP4.ttl", graphe, "citationsp")
+    ConvertNRIToRDF("TestsSampleXKG/CitationsP_XP4.nri", "ConvertedToRDF/CitationsP_XP4.ttl", graphe, "citationsp")
 
     graphe = Graph()
-    ConvertNRIToRDF("NRI_generate/CoAuteurs_XP1.nri", "ConvertedToRDF/CoAuteurs_XP1.ttl", graphe, "coauteurs")
+     #ConvertNRIToRDF("NRI_generate/CoAuteurs_XP1.nri", "ConvertedToRDF/CoAuteurs_XP1.ttl", graphe, "coauteurs")
+    ConvertNRIToRDF("TestsSampleXKG/CoAuteurs_XP1.nri", "ConvertedToRDF/CoAuteurs_XP1.ttl", graphe, "coauteurs")
 
     graphe = Graph()
-    ConvertNRIToRDF("NRI_generate/Citations_XP2.nri", "ConvertedToRDF/Citations_XP2.ttl", graphe, "citations")
+     #ConvertNRIToRDF("NRI_generate/Citations_XP2.nri", "ConvertedToRDF/Citations_XP2.ttl", graphe, "citations")
+    ConvertNRIToRDF("TestsSampleXKG/Citations_XP2.nri", "ConvertedToRDF/Citations_XP2.ttl", graphe, "citations")
 
     graphe = Graph()
-    ConvertNRIToRDF("NRI_generate/Copublications_XP3.nri", "ConvertedToRDF/Copublications_XP3.ttl", graphe, "copublications")
-
-
-    graphe = Graph()
-    ConvertNRIToRDF("NRI_generate/Cooccurrences_XP5.nri", "ConvertedToRDF/Cooccurrences_XP5.ttl", graphe, "cooccurrences")
-
-
-    graphe = Graph()
-    ConvertNRIToRDF("NRI_generate/CitationsE_XP6.nri", "ConvertedToRDF/CitationsE_XP6.ttl", graphe, "citationse")
+     #ConvertNRIToRDF("NRI_generate/Copublications_XP3.nri", "ConvertedToRDF/Copublications_XP3.ttl", graphe, "copublications")
+    ConvertNRIToRDF("TestsSampleXKG/Copublications_XP3.nri", "ConvertedToRDF/Copublications_XP3.ttl", graphe, "copublications")
 
 
     graphe = Graph()
-    ConvertNRIToRDF("NRI_generate/PubAut_bi_XP7.nri", "ConvertedToRDF/PubAut_bi_XP7.ttl", graphe, "pubaut")
+     #ConvertNRIToRDF("NRI_generate/Cooccurrences_XP5.nri", "ConvertedToRDF/Cooccurrences_XP5.ttl", graphe, "cooccurrences")
+    ConvertNRIToRDF("TestsSampleXKG/Cooccurrences_XP5.nri", "ConvertedToRDF/Cooccurrences_XP5.ttl", graphe, "cooccurrences")
 
 
     graphe = Graph()
-    ConvertNRIToRDF("NRI_generate/AutPubCitees_bi_XP8.nri", "ConvertedToRDF/AutPubCitees_bi_XP8.ttl", graphe, "autpubcitees")
+     #ConvertNRIToRDF("NRI_generate/CitationsE_XP6.nri", "ConvertedToRDF/CitationsE_XP6.ttl", graphe, "citationse")
+    ConvertNRIToRDF("TestsSampleXKG/CitationsE_XP6.nri", "ConvertedToRDF/CitationsE_XP6.ttl", graphe, "citationse")
+
 
     graphe = Graph()
-    ConvertNRIToRDF("NRI_generate/PubAutCites_bi_XP9.nri", "ConvertedToRDF/PubAutCites_bi_XP9.ttl", graphe, "pubautcites")
+     #ConvertNRIToRDF("NRI_generate/PubAut_bi_XP7.nri", "ConvertedToRDF/PubAut_bi_XP7.ttl", graphe, "pubaut")
+    ConvertNRIToRDF("TestsSampleXKG/PubAut_bi_XP7.nri", "ConvertedToRDF/PubAut_bi_XP7.ttl", graphe, "pubaut")
+
+
+    graphe = Graph()
+     #ConvertNRIToRDF("NRI_generate/AutPubCitees_bi_XP8.nri", "ConvertedToRDF/AutPubCitees_bi_XP8.ttl", graphe, "autpubcitees")
+    ConvertNRIToRDF("TestsSampleXKG/AutPubCitees_bi_XP8.nri", "ConvertedToRDF/AutPubCitees_bi_XP8.ttl", graphe, "autpubcitees")
+
+    graphe = Graph()
+     #ConvertNRIToRDF("NRI_generate/PubAutCites_bi_XP9.nri", "ConvertedToRDF/PubAutCites_bi_XP9.ttl", graphe, "pubautcites")
+    ConvertNRIToRDF("TestsSampleXKG/PubAutCites_bi_XP9.nri", "ConvertedToRDF/PubAutCites_bi_XP9.ttl", graphe, "pubautcites")
 
     print("done !\n----------------------------")
