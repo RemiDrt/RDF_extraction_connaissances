@@ -21,13 +21,13 @@ def AnalyserSommet(chaine) :
     """
     tab = chaine.split("_")
     if len(tab) > 1 :
-        if len(tab[0]) == 4 :
+        if len(tab[0]) == 4 or len(tab[0]) == 3: #cas normal 4, si c'est trois cest les publications de ACL 
             #on est sur le préfixe
             prefixe = tab[0]
-        elif len(tab[1]) == 4 :
+        elif len(tab[1]) == 4 :#sinon cest surment le cas A_Year ou p_Year donc on s'interesse a year
             #dans le cas des graphes bipartis pour les années c'est possible
             prefixe = tab[1]
-        else : 
+        else : #sinon pas de cas connu
             prefixe = "FALSE"
     else :
         prefixe = "FALSE"

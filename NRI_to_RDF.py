@@ -21,45 +21,37 @@ def ConvertNRIToRDF(NRIFile, RDFFile, graphe, relation):
     AnalyserNRI(graphe, NRI, relation)
     ConvertToRDF(graphe, RDFFile)
 
+
+def ConvertMultipleNRIToRDF(NRIFileToRelation, RDFFile, graphe) :
+    """
+    Fonction qui analyse plusieurs fichiers NRI et converti le tout en un fichier RDF.
+    Prend en paramètres un dictionnaire associant des fichiers NRI a leurs relations, un fichier RDF de destination et un graphe rdflib.
+    Analyse les fichiers en fonctions de leur relation, ajoute les triplet au graphe rdflib puis serialize le graphe dans le fichier de destination
+    """
+    global ace
+    items = NRIFileToRelation.items()
+    graphe.bind("ace", ace)
+    for file, relation in items :
+        print("Extraction et conversion de " + file)
+        NRI = ExtraireNRI(file)
+        AnalyserNRI(graphe, NRI, relation)
+    ConvertToRDF(graphe, RDFFile)
+    print("conversion en RDF terminée !")
+
 if __name__ == "__main__":
     graphe = Graph()
-     #ConvertNRIToRDF("NRI_generate/CitationsP_XP4.nri", "ConvertedToRDF/CitationsP_XP4.ttl", graphe, "citationsp")
-    ConvertNRIToRDF("TestsSampleXKG/CitationsP_XP4.nri", "ConvertedToRDF/CitationsP_XP4.ttl", graphe, "citationsp")
 
-    graphe = Graph()
-     #ConvertNRIToRDF("NRI_generate/CoAuteurs_XP1.nri", "ConvertedToRDF/CoAuteurs_XP1.ttl", graphe, "coauteurs")
-    ConvertNRIToRDF("TestsSampleXKG/CoAuteurs_XP1.nri", "ConvertedToRDF/CoAuteurs_XP1.ttl", graphe, "coauteurs")
+    #construire le dictionnaire avec tous les fichiers associés a leurs relation
+    dicoFichiers = dict()
+    dicoFichiers["TestsSampleXKG/CitationsP_XP4.nri"] = "citationsp"
+    dicoFichiers["TestsSampleXKG/CoAuteurs_XP1.nri"] = "coauteurs"
+    dicoFichiers["TestsSampleXKG/Citations_XP2.nri"] = "citations"
+    dicoFichiers["TestsSampleXKG/Copublications_XP3.nri"] = "copublications"
+    dicoFichiers["TestsSampleXKG/Cooccurrences_XP5.nri"] = "cooccurrences"
+    dicoFichiers["TestsSampleXKG/CitationsE_XP6.nri"] = "citationse"
+    dicoFichiers["TestsSampleXKG/PubAut_bi_XP7.nri"] = "pubaut"
+    dicoFichiers["TestsSampleXKG/AutPubCitees_bi_XP8.nri"] = "autpubcitees"
+    dicoFichiers["TestsSampleXKG/PubAutCites_bi_XP9.nri"] = "pubautcites"
 
-    graphe = Graph()
-     #ConvertNRIToRDF("NRI_generate/Citations_XP2.nri", "ConvertedToRDF/Citations_XP2.ttl", graphe, "citations")
-    ConvertNRIToRDF("TestsSampleXKG/Citations_XP2.nri", "ConvertedToRDF/Citations_XP2.ttl", graphe, "citations")
-
-    graphe = Graph()
-     #ConvertNRIToRDF("NRI_generate/Copublications_XP3.nri", "ConvertedToRDF/Copublications_XP3.ttl", graphe, "copublications")
-    ConvertNRIToRDF("TestsSampleXKG/Copublications_XP3.nri", "ConvertedToRDF/Copublications_XP3.ttl", graphe, "copublications")
-
-
-    graphe = Graph()
-     #ConvertNRIToRDF("NRI_generate/Cooccurrences_XP5.nri", "ConvertedToRDF/Cooccurrences_XP5.ttl", graphe, "cooccurrences")
-    ConvertNRIToRDF("TestsSampleXKG/Cooccurrences_XP5.nri", "ConvertedToRDF/Cooccurrences_XP5.ttl", graphe, "cooccurrences")
-
-
-    graphe = Graph()
-     #ConvertNRIToRDF("NRI_generate/CitationsE_XP6.nri", "ConvertedToRDF/CitationsE_XP6.ttl", graphe, "citationse")
-    ConvertNRIToRDF("TestsSampleXKG/CitationsE_XP6.nri", "ConvertedToRDF/CitationsE_XP6.ttl", graphe, "citationse")
-
-
-    graphe = Graph()
-     #ConvertNRIToRDF("NRI_generate/PubAut_bi_XP7.nri", "ConvertedToRDF/PubAut_bi_XP7.ttl", graphe, "pubaut")
-    ConvertNRIToRDF("TestsSampleXKG/PubAut_bi_XP7.nri", "ConvertedToRDF/PubAut_bi_XP7.ttl", graphe, "pubaut")
-
-
-    graphe = Graph()
-     #ConvertNRIToRDF("NRI_generate/AutPubCitees_bi_XP8.nri", "ConvertedToRDF/AutPubCitees_bi_XP8.ttl", graphe, "autpubcitees")
-    ConvertNRIToRDF("TestsSampleXKG/AutPubCitees_bi_XP8.nri", "ConvertedToRDF/AutPubCitees_bi_XP8.ttl", graphe, "autpubcitees")
-
-    graphe = Graph()
-     #ConvertNRIToRDF("NRI_generate/PubAutCites_bi_XP9.nri", "ConvertedToRDF/PubAutCites_bi_XP9.ttl", graphe, "pubautcites")
-    ConvertNRIToRDF("TestsSampleXKG/PubAutCites_bi_XP9.nri", "ConvertedToRDF/PubAutCites_bi_XP9.ttl", graphe, "pubautcites")
-
-    print("done !\n----------------------------")
+    #conversion des fichiers vers la destination
+    ConvertMultipleNRIToRDF(dicoFichiers, "ConvertedToRDF/aceNRIs.ttl", graphe)
