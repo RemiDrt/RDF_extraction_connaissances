@@ -1,4 +1,6 @@
 from Extractors import *
+from Utilities import *
+from rdflib import XSD, Literal
 #en faisant importFromJSON à la place de importFromJSONstruct, les dico ne contiennent pas d'uri, juste ds chaines de caractère
 IDToAuthor = ImportFromJSON("JSON_struct/IDToAuthor.json")
 IDToField = ImportFromJSON("JSON_struct/IDToField.json")

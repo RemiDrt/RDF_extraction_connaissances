@@ -1,4 +1,5 @@
 from NRI_analyser import *
+from rdflib import Graph
 
 def ConvertToRDF(graphe, file) :
     """
@@ -14,6 +15,7 @@ def ConvertNRIToRDF(NRIFile, RDFFile, graphe, relation):
     analyse le fichier NRI et ajoute les triplet dans le graphe en fonction de la relation. Serialize le graphe le fichier de destination
     """
     global ace
+    print("convertion de " + NRIFile + " vers " + RDFFile)
     NRI = ExtraireNRI(NRIFile)
     graphe.bind("ace", ace)
     AnalyserNRI(graphe, NRI, relation)
