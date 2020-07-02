@@ -254,3 +254,14 @@ def Union(lst1, lst2) :
     """
     lst = list(set(lst1) | set(lst2))
     return lst
+
+def isID(texte) :
+    """
+    Fonction qui valide si oui ou non une chaine da caracère représente un ID
+    Prend en paramètre une chaine de caractère
+    Retourne true ou false
+    """
+    x = re.search("^[A-Z0-9]+$", texte)#on considère qu'un id est seulement constitué de caractère entre 0 et 9 et de lettre en majuscule
+    if x :
+        return True
+    return False 
