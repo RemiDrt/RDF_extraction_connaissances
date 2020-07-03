@@ -208,7 +208,7 @@ def AnalyserItemsets(graphe, NRI):#spécifique
                     AjouterTriplet(graphe, URIRef(idS), ace.paper_is_written_by, URIRef(idO))
                 elif prefixeO == "Year" :
                     annee = ValeurSommet(objet)
-                    #AjouterTriplet(graphe, URIRef(idS), ace.paper_publish_date, Literal(annee, datatype=XSD.date))
+                    AjouterTriplet(graphe, URIRef(idS), ace.paper_publish_date, Literal(annee, datatype=XSD.date))
                 elif prefixeO == "CONC" :
                     idO = ElementToID[ValeurSommet(objet)]
                     AjouterTriplet(graphe, URIRef(idS), ace.paper_is_in_field, URIRef(idO))

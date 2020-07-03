@@ -37,10 +37,12 @@ def ConvertMultipleNRIToRDF(NRIFileToRelation, RDFFile, graphe, IDToAuthor=None,
         print("Extraction et conversion de " + file)
         NRI = ExtraireNRI(file)
         AnalyserNRI(graphe, NRI, relation, IDToAuthor=IDToAuthor, IDToField=IDToField, IDToPaper=IDToPaper, AuthorToID=AuthorToID, FieldToID=FieldToID)
-    paperToDate = ImportFromJSON("../Data/JSON_struct/ACLPaperToDate.json")
-    items = paperToDate.items()
-    for key, val in items :
-        AjouterTriplet(graphe, URIRef(ElementToID[key]), ace.paper_publish_date, Literal(val, datatype=XSD.date))
+    
+    #paperToDate = ImportFromJSON("../Data/JSON_struct/ACLPaperToDate.json")
+    #items = paperToDate.items()
+    #for key, val in items :
+    #    AjouterTriplet(graphe, URIRef(ElementToID[key]), ace.paper_publish_date, Literal(val, datatype=XSD.date))
+    
     ConvertToRDF(graphe, RDFFile)
     print("conversion en RDF terminée !")
 
