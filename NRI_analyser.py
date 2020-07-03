@@ -22,7 +22,9 @@ def AnalyserSommet(chaine) :#spécifique
     Prend en paramètres une chaine de caractères.
     Retourne le préfixe de la chaine (c'est lui qui donne la nature du sommet) retourne la valeure "FALSE" s'il y a une incohérence
     """
+    #year acl : <= ou >
     tab = chaine.split("_")
+    prefixe = "FALSE"
     if len(tab) > 1 :
         if len(tab[0]) == 4 :
             #on est sur le préfixe
@@ -30,16 +32,22 @@ def AnalyserSommet(chaine) :#spécifique
         elif len(tab[1]) == 4 :#sinon cest surement le cas A_Year ou p_Year donc on s'interesse à "Year"
             #dans le cas des graphes bipartis pour les années c'est possible
             prefixe = tab[1]
-        else : #sinon pas de cas connu
-            prefixe = "FALSE"
+        #cas de acl bipartis :
+        if len(tab[1]) > 7 :
+            mot = tab[1][0] + tab[1][1] + tab[1][2] + tab[1][3]
+            if mot.lower() == "year":
+                prefixe = mot
     else : #si cest une publication acl cest de type A00-0000 donc on peut essayer de separer avec un "-" et de faire les memes verifs
         tab = tab[0].split("-")
         if len(tab) > 1 :
             if len(tab[0]) == 3 :#c'est surement ACL
                 prefixe = "PAPE"#on met PAPE pour faciliter la suite 
         else :
-            prefixe = "FALSE"
-
+            #on est peut etre dans les cas des années pour acl c-a-d Year<=XXXX ou Year>YYYY
+            if len(chaine) > 4 :
+                mot = chaine[0] + chaine[1] + chaine[2] + chaine[3]
+                if mot.lower() == "year" :
+                    prefixe = mot
     return prefixe
 
 def ValeurSommet(chaine) :#spécifique
@@ -50,34 +58,45 @@ def ValeurSommet(chaine) :#spécifique
     """
 
     tab = chaine.split("_")
-    chaine = ""
+    txt = "FALSE"
     if len(tab) > 1 :
         if len(tab[0]) == 4 :
             #schéma classique il faut jsute retourer la suite du tableau sans le préfixe et avec des espaces
+            txt = ""
             i = 1
             n = len(tab)
             while i < n :
                 if i == 1:
-                    chaine += tab[i]
+                    txt += tab[i]
                 else:
-                    chaine += " " + tab[i]
+                    txt += " " + tab[i]
                 i += 1
         elif len(tab[1]) == 4 :
             #schéma graphe biparti pour les années
-            chaine = tab[2] 
-        else :
-            chaine = "FALSE"
+            txt = tab[2] 
+        #cas biparti ACL pour les année :
+        elif len(tab[1]) > 7 :
+            mot = tab[1].split("<=")
+            if len(mot) > 1 and isYear(mot[1]) :
+                txt = mot[1]
+            else :
+                mot = tab[1].split(">")
+                if len(mot) > 1 and isYear(mot[1]) :
+                    txt = mot[1]
     else :#cas ACL peut etre
-        tab = tab[0].split("-")
+        tab = chaine.split("-")
         if len(tab) > 1 :
             if len(tab[0]) == 3 :#c'est surement ACL
-                chaine = tab[0]+tab[1]
+                txt = tab[0]+tab[1]
+        elif len(chaine) > 7 :
+            mot = chaine.split("<=")
+            if len(mot) > 1 and isYear(mot[1]) :
+                txt = mot[1]
             else :
-                chaine = "FALSE"
-        else :
-            chaine = "FALSE"
-
-    return chaine
+                mot = chaine.split(">")
+                if len(mot) > 1 and isYear(mot[1]) :
+                    txt = mot[1]
+    return txt
 
 def AnalyserSommets(graphe, sommets, IDToAuthor=None, IDToField=None, IDToPaper=None, AuthorToID=None, FieldToID=None):#spécifique
     """
@@ -189,7 +208,7 @@ def AnalyserItemsets(graphe, NRI):#spécifique
                     AjouterTriplet(graphe, URIRef(idS), ace.paper_is_written_by, URIRef(idO))
                 elif prefixeO == "Year" :
                     annee = ValeurSommet(objet)
-                    AjouterTriplet(graphe, URIRef(idS), ace.paper_publish_date, Literal(annee, datatype=XSD.date))
+                    #AjouterTriplet(graphe, URIRef(idS), ace.paper_publish_date, Literal(annee, datatype=XSD.date))
                 elif prefixeO == "CONC" :
                     idO = ElementToID[ValeurSommet(objet)]
                     AjouterTriplet(graphe, URIRef(idS), ace.paper_is_in_field, URIRef(idO))
@@ -205,8 +224,6 @@ def AnalyserItemsets(graphe, NRI):#spécifique
                     #c'est pas encore valider de le mettre donc on ecrit mais faudra peut etre l'enlever
                     idO = ElementToID[ValeurSommet(objet)]
                     AjouterTriplet(graphe, URIRef(idS), ace.author_is_in_field, URIRef(idO))
-                else : 
-                    print("objet : " + str(objet) + " pas de propriété exploitable pour un auteur")
             elif prefixeS == "CONC" :
                 idS = ElementToID[ValeurSommet(sujet)]
                 if prefixeO == "AUTH":
@@ -214,8 +231,6 @@ def AnalyserItemsets(graphe, NRI):#spécifique
                     #cette propriété n'est pas encore validé faudra peut-etre enlever
                     idO = ElementToID[ValeurSommet(objet)]
                     AjouterTriplet(graphe, URIRef(idO), ace.author_is_in_field, URIRef(idS))
-                else : 
-                    print("objet : " + str(objet) + " pas de propriété exploitable pour un domaine")
             else :
                 print("problème itemsets, sujet suspect")
                 print("objet : " + str(objet))

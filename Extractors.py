@@ -5,8 +5,8 @@ from rdflib import RDF
 from rdflib.namespace import Namespace
 from Utilities import YearFromDate
 
-#ace = Namespace("http://www.semanticweb.org/acemap#")
-ace = Namespace("http://www.semanticweb.org/XKG#")
+ace = Namespace("http://www.semanticweb.org/acemap#")
+#ace = Namespace("http://www.semanticweb.org/XKG#")
 
 def ExtraireSommets(texte) :
     """

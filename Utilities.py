@@ -265,3 +265,16 @@ def isID(texte) :
     if x :
         return True
     return False 
+
+def isYear(texte) :
+    """
+    Fonction qui valide si oui ou non une chaine da caracère représente une année
+    Prend en paramètre une chaine de caractère
+    Retourne true ou false
+    """
+    x = re.search("^[1,2][0-9]{3}?$", texte)#on considère qu'un id est seulement constitué de caractère entre 0 et 9 et de lettre en majuscule
+    if x :
+        return True
+    return False 
+
+
