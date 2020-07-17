@@ -324,7 +324,7 @@ def CreerPubAut() :
 
     IDAuthors = ImportFromJSONStruc("../Data/JSON_struct/Authors.json")
     IDPapers = ImportFromJSONStruc("../Data/JSON_struct/Papers.json")
-    publicationsAuteurs = ImportFromJSONStruc("JSON_struct/PublicationAuteurs.json")
+    publicationsAuteurs = ImportFromJSONStruc("../Data/JSON_struct/PublicationAuteurs.json")
 
     #attributs
     authorToYear = ImportFromJSONStruc("../Data/JSON_struct/AuthorToYear.json")

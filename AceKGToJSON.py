@@ -18,7 +18,7 @@ if __name__ == "__main__":
     graphe.parse(location = "sampleAceKG/paper.ttl", format = "turtle")
     """
 
-    graphe.parse(location = "../Data/XKG_sample/sample_ace.ttl", format = "turtle")
+    graphe.parse(location = "../Data/sampleAceKG/sample.ttl", format = "turtle")
 
     ###
     print("parsing terminé")
