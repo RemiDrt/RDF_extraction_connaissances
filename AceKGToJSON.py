@@ -18,13 +18,13 @@ if __name__ == "__main__":
     graphe.parse(location = "sampleAceKG/paper.ttl", format = "turtle")
     """
 
-    graphe.parse(location = "../Data/sampleAceKG/sample.ttl", format = "turtle")
+    graphe.parse(location = "Data/sampleAceKG/sample.ttl", format = "turtle")
 
     ###
     print("parsing terminé")
 
     print("extraction et serialisations des données en cours ...")
-    d = "../Data/JSON_struct/"
+    d = "Data/JSON_struct/"
     imp = ImportFromJSONStruc
 
     ###Extraction des données et serialization en json

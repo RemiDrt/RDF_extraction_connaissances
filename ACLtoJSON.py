@@ -15,4 +15,4 @@ def ImportTSVPaperToDate(fichier) :
     return paperToDate
 
 if __name__ == "__main__":
-    ExportToJSON(ImportTSVPaperToDate("../Data/Graphes_attribués_NRI/acl.database.annot.tsv"), "../Data/JSON_struct/ACLPaperToDate.json")
+    ExportToJSON(ImportTSVPaperToDate("Data/Graphes_attribués_NRI/acl.database.annot.tsv"), "Data/JSON_struct/ACLPaperToDate.json")

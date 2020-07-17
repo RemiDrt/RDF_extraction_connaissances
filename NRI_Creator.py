@@ -40,13 +40,13 @@ def CreerCoauteurs() :#dossier creaer nri ?
     itemsets = dict()
     index = dict()
 
-    IDAuthors = ImportFromJSONStruc("../Data/JSON_struct/Authors.json")
-    IDField = ImportFromJSONStruc("../Data/JSON_struct/Fields.json")
-    authorToField = ImportFromJSONStruc("../Data/JSON_struct/AuthorToField.json")
-    authorToYear = ImportFromJSONStruc("../Data/JSON_struct/AuthorToYear.json")
-    nomAuteurs = ImportFromJSONStruc("../Data/JSON_struct/IDToAuthor.json")
-    nomField = ImportFromJSONStruc("../Data/JSON_struct/IDToField.json")
-    grapheCoauteurs = ImportFromJSONStruc("../Data/JSON_struct/Coauteurs.json")
+    IDAuthors = ImportFromJSONStruc("Data/JSON_struct/Authors.json")
+    IDField = ImportFromJSONStruc("Data/JSON_struct/Fields.json")
+    authorToField = ImportFromJSONStruc("Data/JSON_struct/AuthorToField.json")
+    authorToYear = ImportFromJSONStruc("Data/JSON_struct/AuthorToYear.json")
+    nomAuteurs = ImportFromJSONStruc("Data/JSON_struct/IDToAuthor.json")
+    nomField = ImportFromJSONStruc("Data/JSON_struct/IDToField.json")
+    grapheCoauteurs = ImportFromJSONStruc("Data/JSON_struct/Coauteurs.json")
 
     years = ListerAnnees(authorToYear)
     fields = ListerAttributs(authorToField)
@@ -84,16 +84,16 @@ def CreerCitations() :
     itemsets = dict()
     index = dict()
 
-    IDAuthors = ImportFromJSONStruc("../Data/JSON_struct/Authors.json")
-    IDField = ImportFromJSONStruc("../Data/JSON_struct/Fields.json")
+    IDAuthors = ImportFromJSONStruc("Data/JSON_struct/Authors.json")
+    IDField = ImportFromJSONStruc("Data/JSON_struct/Fields.json")
     
-    citations = ImportFromJSONStruc("../Data/JSON_struct/Citation.json")
+    citations = ImportFromJSONStruc("Data/JSON_struct/Citation.json")
 
-    authorToField = ImportFromJSONStruc("../Data/JSON_struct/AuthorToField.json")
-    authorToYear = ImportFromJSONStruc("../Data/JSON_struct/AuthorToYear.json")
+    authorToField = ImportFromJSONStruc("Data/JSON_struct/AuthorToField.json")
+    authorToYear = ImportFromJSONStruc("Data/JSON_struct/AuthorToYear.json")
 
-    nomAuteurs = ImportFromJSONStruc("../Data/JSON_struct/IDToAuthor.json")
-    nomField = ImportFromJSONStruc("../Data/JSON_struct/IDToField.json")
+    nomAuteurs = ImportFromJSONStruc("Data/JSON_struct/IDToAuthor.json")
+    nomField = ImportFromJSONStruc("Data/JSON_struct/IDToField.json")
 
     years = ListerAnnees(authorToYear)
     fields = ListerAttributs(authorToField)
@@ -132,13 +132,13 @@ def CreerCopublications() :
     itemsets = dict()
     index = dict()
 
-    IDPapers = ImportFromJSONStruc("../Data/JSON_struct/Papers.json")
+    IDPapers = ImportFromJSONStruc("Data/JSON_struct/Papers.json")
 
-    paperToAuthor = ImportFromJSONStruc("../Data/JSON_struct/PaperToAuthor.json")
-    copublications = ImportFromJSONStruc("../Data/JSON_struct/Copublication.json")
+    paperToAuthor = ImportFromJSONStruc("Data/JSON_struct/PaperToAuthor.json")
+    copublications = ImportFromJSONStruc("Data/JSON_struct/Copublication.json")
 
-    paperToYear = ImportFromJSONStruc("../Data/JSON_struct/PaperToYear.json")
-    paperToField = ImportFromJSONStruc("../Data/JSON_struct/PaperToField.json")
+    paperToYear = ImportFromJSONStruc("Data/JSON_struct/PaperToYear.json")
+    paperToField = ImportFromJSONStruc("Data/JSON_struct/PaperToField.json")
 
     years = ListerAnnees(paperToYear)
     fields = ListerAttributs(paperToField)
@@ -182,12 +182,12 @@ def CreerCitationsP():
     itemsets = dict()
     index = dict()
 
-    IDPapers = ImportFromJSONStruc("../Data/JSON_struct/Papers.json")
-    paperCitPaper = ImportFromJSONStruc("../Data/JSON_struct/PaperCitPaper.json")
+    IDPapers = ImportFromJSONStruc("Data/JSON_struct/Papers.json")
+    paperCitPaper = ImportFromJSONStruc("Data/JSON_struct/PaperCitPaper.json")
 
-    paperToAuthor = ImportFromJSONStruc("../Data/JSON_struct/PaperToAuthor.json")
-    paperToYear = ImportFromJSONStruc("../Data/JSON_struct/PaperToYear.json")
-    paperToField = ImportFromJSONStruc("../Data/JSON_struct/PaperToField.json")
+    paperToAuthor = ImportFromJSONStruc("Data/JSON_struct/PaperToAuthor.json")
+    paperToYear = ImportFromJSONStruc("Data/JSON_struct/PaperToYear.json")
+    paperToField = ImportFromJSONStruc("Data/JSON_struct/PaperToField.json")
 
     auteurs = ListerAttributs(paperToAuthor)
     fields = ListerAttributs(paperToField)
@@ -233,13 +233,13 @@ def CreerCooccurrences() :
     itemsets = dict()
     index = dict()   
 
-    IDField = ImportFromJSONStruc("../Data/JSON_struct/Fields.json")
+    IDField = ImportFromJSONStruc("Data/JSON_struct/Fields.json")
 
-    coocurrence = ImportFromJSONStruc("../Data/JSON_struct/CoOccurrences.json")
+    coocurrence = ImportFromJSONStruc("Data/JSON_struct/CoOccurrences.json")
 
 
-    fieldToAuthor = ImportFromJSONStruc("../Data/JSON_struct/FieldToAuthors.json")
-    fieldToYear = ImportFromJSONStruc("../Data/JSON_struct/FieldToYear.json")
+    fieldToAuthor = ImportFromJSONStruc("Data/JSON_struct/FieldToAuthors.json")
+    fieldToYear = ImportFromJSONStruc("Data/JSON_struct/FieldToYear.json")
 
     auteurs = ListerAttributs(fieldToAuthor)
     years = ListerAnnees(fieldToYear)
@@ -277,12 +277,12 @@ def CreerCitationsE() :
     itemsets = dict()
     index = dict()   
 
-    IDField = ImportFromJSONStruc("../Data/JSON_struct/Fields.json")
+    IDField = ImportFromJSONStruc("Data/JSON_struct/Fields.json")
 
-    citationsE = ImportFromJSONStruc("../Data/JSON_struct/CitationE.json")
+    citationsE = ImportFromJSONStruc("Data/JSON_struct/CitationE.json")
 
-    fieldToAuthor = ImportFromJSONStruc("../Data/JSON_struct/FieldToAuthors.json")
-    fieldToYear = ImportFromJSONStruc("../Data/JSON_struct/FieldToYear.json")
+    fieldToAuthor = ImportFromJSONStruc("Data/JSON_struct/FieldToAuthors.json")
+    fieldToYear = ImportFromJSONStruc("Data/JSON_struct/FieldToYear.json")
 
     auteurs = ListerAttributs(fieldToAuthor)
     years = ListerAnnees(fieldToYear)
@@ -322,15 +322,15 @@ def CreerPubAut() :
     index = dict() 
 
 
-    IDAuthors = ImportFromJSONStruc("../Data/JSON_struct/Authors.json")
-    IDPapers = ImportFromJSONStruc("../Data/JSON_struct/Papers.json")
-    publicationsAuteurs = ImportFromJSONStruc("../Data/JSON_struct/PublicationAuteurs.json")
+    IDAuthors = ImportFromJSONStruc("Data/JSON_struct/Authors.json")
+    IDPapers = ImportFromJSONStruc("Data/JSON_struct/Papers.json")
+    publicationsAuteurs = ImportFromJSONStruc("Data/JSON_struct/PublicationAuteurs.json")
 
     #attributs
-    authorToYear = ImportFromJSONStruc("../Data/JSON_struct/AuthorToYear.json")
-    authorToField = ImportFromJSONStruc("../Data/JSON_struct/AuthorToField.json")
-    paperToYear = ImportFromJSONStruc("../Data/JSON_struct/PaperToYear.json")
-    paperToField = ImportFromJSONStruc("../Data/JSON_struct/PaperToField.json")
+    authorToYear = ImportFromJSONStruc("Data/JSON_struct/AuthorToYear.json")
+    authorToField = ImportFromJSONStruc("Data/JSON_struct/AuthorToField.json")
+    paperToYear = ImportFromJSONStruc("Data/JSON_struct/PaperToYear.json")
+    paperToField = ImportFromJSONStruc("Data/JSON_struct/PaperToField.json")
 
     aYears = ListerAnnees(authorToYear)
     pYears = ListerAnnees(paperToYear)
@@ -390,16 +390,16 @@ def CreerAutPubCitees() :
     index = dict() 
 
 
-    IDAuthors = ImportFromJSONStruc("../Data/JSON_struct/Authors.json")
-    IDPapers = ImportFromJSONStruc("../Data/JSON_struct/Papers.json")
+    IDAuthors = ImportFromJSONStruc("Data/JSON_struct/Authors.json")
+    IDPapers = ImportFromJSONStruc("Data/JSON_struct/Papers.json")
 
-    auteurPublicationCitees = ImportFromJSONStruc("../Data/JSON_struct/AuteurPublicationCitees.json")
+    auteurPublicationCitees = ImportFromJSONStruc("Data/JSON_struct/AuteurPublicationCitees.json")
 
     #attributs
-    authorToYear = ImportFromJSONStruc("../Data/JSON_struct/AuthorToYear.json")
-    authorToField = ImportFromJSONStruc("../Data/JSON_struct/AuthorToField.json")
-    paperToYear = ImportFromJSONStruc("../Data/JSON_struct/PaperToYear.json")
-    paperToField = ImportFromJSONStruc("../Data/JSON_struct/PaperToField.json")
+    authorToYear = ImportFromJSONStruc("Data/JSON_struct/AuthorToYear.json")
+    authorToField = ImportFromJSONStruc("Data/JSON_struct/AuthorToField.json")
+    paperToYear = ImportFromJSONStruc("Data/JSON_struct/PaperToYear.json")
+    paperToField = ImportFromJSONStruc("Data/JSON_struct/PaperToField.json")
 
     aYears = ListerAnnees(authorToYear)
     pYears = ListerAnnees(paperToYear)
@@ -460,16 +460,16 @@ def CreerPubAutCites() :
     index = dict() 
 
 
-    IDAuthors = ImportFromJSONStruc("../Data/JSON_struct/Authors.json")
-    IDPapers = ImportFromJSONStruc("../Data/JSON_struct/Papers.json")
+    IDAuthors = ImportFromJSONStruc("Data/JSON_struct/Authors.json")
+    IDPapers = ImportFromJSONStruc("Data/JSON_struct/Papers.json")
 
-    pubAuteursCites = ImportFromJSONStruc("../Data/JSON_struct/PublicationAuteurCites.json")
+    pubAuteursCites = ImportFromJSONStruc("Data/JSON_struct/PublicationAuteurCites.json")
 
     #attributs
-    authorToYear = ImportFromJSONStruc("../Data/JSON_struct/AuthorToYear.json")
-    authorToField = ImportFromJSONStruc("../Data/JSON_struct/AuthorToField.json")
-    paperToYear = ImportFromJSONStruc("../Data/JSON_struct/PaperToYear.json")
-    paperToField = ImportFromJSONStruc("../Data/JSON_struct/PaperToField.json")
+    authorToYear = ImportFromJSONStruc("Data/JSON_struct/AuthorToYear.json")
+    authorToField = ImportFromJSONStruc("Data/JSON_struct/AuthorToField.json")
+    paperToYear = ImportFromJSONStruc("Data/JSON_struct/PaperToYear.json")
+    paperToField = ImportFromJSONStruc("Data/JSON_struct/PaperToField.json")
 
     aYears = ListerAnnees(authorToYear)
     pYears = ListerAnnees(paperToYear)

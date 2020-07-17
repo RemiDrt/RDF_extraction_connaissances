@@ -5,13 +5,13 @@ from Extractors import ace, ExtraireAuteurs, ExtraireConceptes, ExtrairePublicat
 if __name__ == "__main__":
     graphe = Graph()
     print("parsing de XKG")
-    graphe.parse(location = "../Data/XKG_sample/schema.ttl", format = "turtle")
-    graphe.parse(location = "../Data/XKG_sample/sample_author.ttl", format = "turtle")
-    graphe.parse(location = "../Data/XKG_sample/sample_field.ttl", format = "turtle")
-    graphe.parse(location = "../Data/XKG_sample/sample_paper.ttl", format = "turtle")
-    graphe.parse(location = "../Data/XKG_sample/sample_relation.ttl", format = "turtle")
-    graphe.parse(location = "../Data/XKG_sample/sample_institute.ttl", format = "turtle")
-    graphe.parse(location = "../Data/XKG_sample/sample_venue.ttl", format = "turtle")
+    graphe.parse(location = "Data/XKG_sample/schema.ttl", format = "turtle")
+    graphe.parse(location = "Data/XKG_sample/sample_author.ttl", format = "turtle")
+    graphe.parse(location = "Data/XKG_sample/sample_field.ttl", format = "turtle")
+    graphe.parse(location = "Data/XKG_sample/sample_paper.ttl", format = "turtle")
+    graphe.parse(location = "Data/XKG_sample/sample_relation.ttl", format = "turtle")
+    graphe.parse(location = "Data/XKG_sample/sample_institute.ttl", format = "turtle")
+    graphe.parse(location = "Data/XKG_sample/sample_venue.ttl", format = "turtle")
     print("parsing terminé !")
     auteurs = ExtraireAuteurs(graphe)
     papers = ExtrairePublications(graphe)
@@ -75,6 +75,6 @@ if __name__ == "__main__":
     ##création du tout dans 1 seul fichier
     print("creation du fichier sample propre !")
     graphe.bind("XKG", ace)
-    graphe.serialize(destination="../Data/XKG_sample/sample_ace.ttl", format="turtle", encoding="utf-8")
+    graphe.serialize(destination="Data/XKG_sample/sample_ace.ttl", format="turtle", encoding="utf-8")
     print("fichier créé")
 

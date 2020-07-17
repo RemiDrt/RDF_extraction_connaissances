@@ -38,7 +38,7 @@ def ConvertMultipleNRIToRDF(NRIFileToRelation, RDFFile, graphe, IDToAuthor=None,
         NRI = ExtraireNRI(file)
         AnalyserNRI(graphe, NRI, relation, IDToAuthor=IDToAuthor, IDToField=IDToField, IDToPaper=IDToPaper, AuthorToID=AuthorToID, FieldToID=FieldToID)
     
-    #paperToDate = ImportFromJSON("../Data/JSON_struct/ACLPaperToDate.json")
+    #paperToDate = ImportFromJSON("Data/JSON_struct/ACLPaperToDate.json")
     #items = paperToDate.items()
     #for key, val in items :
     #    AjouterTriplet(graphe, URIRef(ElementToID[key]), ace.paper_publish_date, Literal(val, datatype=XSD.date))
@@ -52,35 +52,35 @@ if __name__ == "__main__":
     graphe = Graph()
 
     #en faisant importFromJSON à la place de importFromJSONstruct, les dico ne contiennent pas d'uri, juste ds chaines de caractère
-    IDToAuthor = ImportFromJSON("../Data/JSON_struct/IDToAuthor.json")
-    IDToField = ImportFromJSON("../Data/JSON_struct/IDToField.json")
-    IDToPaper = ImportFromJSON("../Data/JSON_struct/IDToPaper.json")
+    IDToAuthor = ImportFromJSON("Data/JSON_struct/IDToAuthor.json")
+    IDToField = ImportFromJSON("Data/JSON_struct/IDToField.json")
+    IDToPaper = ImportFromJSON("Data/JSON_struct/IDToPaper.json")
 
     #construire le dictionnaire avec tous les fichiers associés a leurs relation
     dicoFichiers = dict()
 
-    #dicoFichiers["../Data/TestsSampleXKG/CitationsP_XP4.nri"] = "citationsp"
-    #dicoFichiers["../Data/TestsSampleXKG/CoAuteurs_XP1.nri"] = "coauteurs"
-    #dicoFichiers["../Data/TestsSampleXKG/Citations_XP2.nri"] = "citations"
-    #dicoFichiers["../Data/TestsSampleXKG/Copublications_XP3.nri"] = "copublications"
-    #dicoFichiers["../Data/TestsSampleXKG/Cooccurrences_XP5.nri"] = "cooccurrences"
-    #dicoFichiers["../Data/TestsSampleXKG/CitationsE_XP6.nri"] = "citationse"
-    #dicoFichiers["../Data/TestsSampleXKG/PubAut_bi_XP7.nri"] = "pubaut"
-    #dicoFichiers["../Data/TestsSampleXKG/AutPubCitees_bi_XP8.nri"] = "autpubcitees"
-    #dicoFichiers["../Data/TestsSampleXKG/PubAutCites_bi_XP9.nri"] = "pubautcites"
+    #dicoFichiers["Data/TestsSampleXKG/CitationsP_XP4.nri"] = "citationsp"
+    #dicoFichiers["Data/TestsSampleXKG/CoAuteurs_XP1.nri"] = "coauteurs"
+    #dicoFichiers["Data/TestsSampleXKG/Citations_XP2.nri"] = "citations"
+    #dicoFichiers["Data/TestsSampleXKG/Copublications_XP3.nri"] = "copublications"
+    #dicoFichiers["Data/TestsSampleXKG/Cooccurrences_XP5.nri"] = "cooccurrences"
+    #dicoFichiers["Data/TestsSampleXKG/CitationsE_XP6.nri"] = "citationse"
+    #dicoFichiers["Data/TestsSampleXKG/PubAut_bi_XP7.nri"] = "pubaut"
+    #dicoFichiers["Data/TestsSampleXKG/AutPubCitees_bi_XP8.nri"] = "autpubcitees"
+    #dicoFichiers["Data/TestsSampleXKG/PubAutCites_bi_XP9.nri"] = "pubautcites"
 
-    #dicoFichiers["../Data/Graphes_attribués_NRI/acl_XP1_aut_pub.nri"] = "coauteurs"
-    #dicoFichiers["../Data/Graphes_attribués_NRI/acl_XP2_aut_cit.nri"] = "citations"
-    #dicoFichiers["../Data/Graphes_attribués_NRI/acl_XP3_pub_aut.nri"] = "copublications"
-    dicoFichiers["../Data/Graphes_attribués_NRI/acl_XP4_pub_cit.nri"] = "citationsp"
-    #dicoFichiers["../Data/Graphes_attribués_NRI/acl_XP5_conc_pub.nri"] = "cooccurrences"
-    #dicoFichiers["../Data/Graphes_attribués_NRI/acl_XP6_conc_cit.nri"] = "citationse"
-    #dicoFichiers["../Data/Graphes_attribués_NRI/acl_XP7_bi_pub_aut.nri"] = "pubaut"
-    #dicoFichiers["../Data/Graphes_attribués_NRI/acl_XP8_bi_aut_citpub.nri"] = "autpubcitees"
-    #dicoFichiers["../Data/Graphes_attribués_NRI/acl_XP9_bi_pub_citaut.nri"] = "pubautcites"
+    #dicoFichiers["Data/Graphes_attribués_NRI/acl_XP1_aut_pub.nri"] = "coauteurs"
+    #dicoFichiers["Data/Graphes_attribués_NRI/acl_XP2_aut_cit.nri"] = "citations"
+    #dicoFichiers["Data/Graphes_attribués_NRI/acl_XP3_pub_aut.nri"] = "copublications"
+    dicoFichiers["Data/Graphes_attribués_NRI/acl_XP4_pub_cit.nri"] = "citationsp"
+    #dicoFichiers["Data/Graphes_attribués_NRI/acl_XP5_conc_pub.nri"] = "cooccurrences"
+    #dicoFichiers["Data/Graphes_attribués_NRI/acl_XP6_conc_cit.nri"] = "citationse"
+    #dicoFichiers["Data/Graphes_attribués_NRI/acl_XP7_bi_pub_aut.nri"] = "pubaut"
+    #dicoFichiers["Data/Graphes_attribués_NRI/acl_XP8_bi_aut_citpub.nri"] = "autpubcitees"
+    #dicoFichiers["Data/Graphes_attribués_NRI/acl_XP9_bi_pub_citaut.nri"] = "pubautcites"
 
     #conversion des fichiers vers la destination
-    ConvertMultipleNRIToRDF(dicoFichiers, "../Data/ACLtoRDF/aclNRIs.ttl", graphe)
+    ConvertMultipleNRIToRDF(dicoFichiers, "Data/ACLtoRDF/aclNRIs.ttl", graphe)
     fin = time.time()
     print(fin - deb)
     print("----------")

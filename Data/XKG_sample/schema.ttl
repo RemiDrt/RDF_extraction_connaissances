@@ -1,0 +1,612 @@
+@prefix : <http://www.w3.org/2002/07/owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespXKG> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/XKG> .
+
+<http://www.semanticweb.org/XKG> rdf:type :Ontology .
+
+
+#################################################################
+#
+#    Datatypes
+#
+#################################################################
+
+
+###  http://www.w3.org/2001/XMLSchema#date
+
+xsd:date rdf:type rdfs:Datatype .
+
+
+
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://www.semanticweb.org/XKG#Paper_title
+
+<http://www.semanticweb.org/XKG#Paper_title> rdf:type :ObjectProperty ;
+                                                
+                                                rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                                
+                                                rdfs:range [ rdf:type :Restriction ;
+                                                             :onProperty :topDataProperty ;
+                                                             :someValuesFrom xsd:string
+                                                           ] .
+
+
+
+###  http://www.semanticweb.org/XKG#abstract_registration_date
+
+<http://www.semanticweb.org/XKG#abstract_registration_date> rdf:type :ObjectProperty ;
+                                                               
+                                                               rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                               
+                                                               rdfs:range [ rdf:type :Restriction ;
+                                                                            :onProperty :topDataProperty ;
+                                                                            :someValuesFrom xsd:date
+                                                                          ] .
+
+
+
+###  http://www.semanticweb.org/XKG#affiliation_name
+
+<http://www.semanticweb.org/XKG#affiliation_name> rdf:type :ObjectProperty ;
+                                                     
+                                                     rdfs:domain <http://www.semanticweb.org/XKG#Affiliation> ;
+                                                     
+                                                     rdfs:range [ rdf:type :Restriction ;
+                                                                  :onProperty :topDataProperty ;
+                                                                  :someValuesFrom xsd:string
+                                                                ] .
+
+
+
+###  http://www.semanticweb.org/XKG#author_citation_count
+
+<http://www.semanticweb.org/XKG#author_citation_count> rdf:type :ObjectProperty ;
+                                                          
+                                                          rdfs:domain <http://www.semanticweb.org/XKG#Author> ;
+                                                          
+                                                          rdfs:range [ rdf:type :Restriction ;
+                                                                       :onProperty :topDataProperty ;
+                                                                       :someValuesFrom xsd:int
+                                                                     ] .
+
+
+
+###  http://www.semanticweb.org/XKG#author_h_index
+
+<http://www.semanticweb.org/XKG#author_h_index> rdf:type :ObjectProperty ;
+                                                   
+                                                   rdfs:domain <http://www.semanticweb.org/XKG#Author> ;
+                                                   
+                                                   rdfs:range [ rdf:type :Restriction ;
+                                                                :onProperty :topDataProperty ;
+                                                                :someValuesFrom xsd:int
+                                                              ] .
+
+
+
+###  http://www.semanticweb.org/XKG#author_name
+
+<http://www.semanticweb.org/XKG#author_name> rdf:type :ObjectProperty ;
+                                                
+                                                rdfs:domain <http://www.semanticweb.org/XKG#Author> ;
+                                                
+                                                rdfs:range [ rdf:type :Restriction ;
+                                                             :onProperty :topDataProperty ;
+                                                             :someValuesFrom xsd:string
+                                                           ] .
+
+
+
+###  http://www.semanticweb.org/XKG#author_number_of_paper
+
+<http://www.semanticweb.org/XKG#author_number_of_paper> rdf:type :ObjectProperty ;
+                                                           
+                                                           rdfs:domain <http://www.semanticweb.org/XKG#Author> ;
+                                                           
+                                                           rdfs:range [ rdf:type :Restriction ;
+                                                                        :onProperty :topDataProperty ;
+                                                                        :someValuesFrom xsd:int
+                                                                      ] .
+
+
+
+###  http://www.semanticweb.org/XKG#author_rank
+
+<http://www.semanticweb.org/XKG#author_rank> rdf:type :ObjectProperty ;
+                                                
+                                                rdfs:domain <http://www.semanticweb.org/XKG#Author> ;
+                                                
+                                                rdfs:range [ rdf:type :Restriction ;
+                                                             :onProperty :topDataProperty ;
+                                                             :someValuesFrom xsd:int
+                                                           ] .
+
+
+
+###  http://www.semanticweb.org/XKG#author_sci_citation
+
+<http://www.semanticweb.org/XKG#author_sci_citation> rdf:type :ObjectProperty ;
+                                                        
+                                                        rdfs:domain <http://www.semanticweb.org/XKG#Author> ;
+                                                        
+                                                        rdfs:range [ rdf:type :Restriction ;
+                                                                     :onProperty :topDataProperty ;
+                                                                     :someValuesFrom xsd:int
+                                                                   ] .
+
+
+
+###  http://www.semanticweb.org/XKG#author_score
+
+<http://www.semanticweb.org/XKG#author_score> rdf:type :ObjectProperty ;
+                                                 
+                                                 rdfs:domain <http://www.semanticweb.org/XKG#Author> ;
+                                                 
+                                                 rdfs:range [ rdf:type :Restriction ;
+                                                              :onProperty :topDataProperty ;
+                                                              :someValuesFrom xsd:double
+                                                            ] .
+
+
+
+###  http://www.semanticweb.org/XKG#conference_end_date
+
+<http://www.semanticweb.org/XKG#conference_end_date> rdf:type :ObjectProperty ;
+                                                        
+                                                        rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                        
+                                                        rdfs:range [ rdf:type :Restriction ;
+                                                                     :onProperty :topDataProperty ;
+                                                                     :someValuesFrom xsd:date
+                                                                   ] .
+
+
+
+###  http://www.semanticweb.org/XKG#conference_location
+
+<http://www.semanticweb.org/XKG#conference_location> rdf:type :ObjectProperty ;
+                                                        
+                                                        rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                        
+                                                        rdfs:range <http://www.semanticweb.org/XKG#location> .
+
+
+
+###  http://www.semanticweb.org/XKG#conference_name
+
+<http://www.semanticweb.org/XKG#conference_name> rdf:type :ObjectProperty ;
+                                                    
+                                                    rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                    
+                                                    rdfs:range [ rdf:type :Restriction ;
+                                                                 :onProperty :topDataProperty ;
+                                                                 :someValuesFrom xsd:string
+                                                               ] .
+
+
+
+###  http://www.semanticweb.org/XKG#conference_series_id
+
+<http://www.semanticweb.org/XKG#conference_series_id> rdf:type :ObjectProperty ;
+                                                         
+                                                         rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                         
+                                                         rdfs:range [ rdf:type :Restriction ;
+                                                                      :onProperty :topDataProperty ;
+                                                                      :someValuesFrom xsd:string
+                                                                    ] .
+
+
+
+###  http://www.semanticweb.org/XKG#conference_start_date
+
+<http://www.semanticweb.org/XKG#conference_start_date> rdf:type :ObjectProperty ;
+                                                          
+                                                          rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                          
+                                                          rdfs:range [ rdf:type :Restriction ;
+                                                                       :onProperty :topDataProperty ;
+                                                                       :someValuesFrom xsd:date
+                                                                     ] .
+
+
+
+###  http://www.semanticweb.org/XKG#conference_under_cs
+
+<http://www.semanticweb.org/XKG#conference_under_cs> rdf:type :ObjectProperty ;
+                                                        
+                                                        rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                        
+                                                        rdfs:range [ rdf:type :Restriction ;
+                                                                     :onProperty :topDataProperty ;
+                                                                     :someValuesFrom xsd:boolean
+                                                                   ] .
+
+
+
+###  http://www.semanticweb.org/XKG#field_name
+
+<http://www.semanticweb.org/XKG#field_name> rdf:type :ObjectProperty ;
+                                               
+                                               rdfs:domain <http://www.semanticweb.org/XKG#Field> ;
+                                               
+                                               rdfs:range [ rdf:type :Restriction ;
+                                                            :onProperty :topDataProperty ;
+                                                            :someValuesFrom xsd:string
+                                                          ] .
+
+
+
+###  http://www.semanticweb.org/XKG#final_version_due_date
+
+<http://www.semanticweb.org/XKG#final_version_due_date> rdf:type :ObjectProperty ;
+                                                           
+                                                           rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                           
+                                                           rdfs:range [ rdf:type :Restriction ;
+                                                                        :onProperty :topDataProperty ;
+                                                                        :someValuesFrom xsd:date
+                                                                      ] .
+
+
+
+###  http://www.semanticweb.org/XKG#insititute_number_of_authors
+
+<http://www.semanticweb.org/XKG#insititute_number_of_authors> rdf:type :ObjectProperty ;
+                                                                 
+                                                                 rdfs:domain <http://www.semanticweb.org/XKG#Institute> ;
+                                                                 
+                                                                 rdfs:range [ rdf:type :Restriction ;
+                                                                              :onProperty :topDataProperty ;
+                                                                              :someValuesFrom xsd:int
+                                                                            ] .
+
+
+
+###  http://www.semanticweb.org/XKG#institute_location
+
+<http://www.semanticweb.org/XKG#institute_location> rdf:type :ObjectProperty ;
+                                                       
+                                                       rdfs:domain <http://www.semanticweb.org/XKG#Institute> ;
+                                                       
+                                                       rdfs:range <http://www.semanticweb.org/XKG#location> .
+
+
+
+###  http://www.semanticweb.org/XKG#institute_name
+
+<http://www.semanticweb.org/XKG#institute_name> rdf:type :ObjectProperty ;
+                                                   
+                                                   rdfs:domain <http://www.semanticweb.org/XKG#Institute> ;
+                                                   
+                                                   rdfs:range [ rdf:type :Restriction ;
+                                                                :onProperty :topDataProperty ;
+                                                                :someValuesFrom xsd:string
+                                                              ] .
+
+
+
+###  http://www.semanticweb.org/XKG#institute_number_of_paper
+
+<http://www.semanticweb.org/XKG#institute_number_of_paper> rdf:type :ObjectProperty ;
+                                                              
+                                                              rdfs:domain <http://www.semanticweb.org/XKG#Institute> ;
+                                                              
+                                                              rdfs:range [ rdf:type :Restriction ;
+                                                                           :onProperty :topDataProperty ;
+                                                                           :someValuesFrom xsd:int
+                                                                         ] .
+
+
+
+###  http://www.semanticweb.org/XKG#is_coauthor_with
+
+<http://www.semanticweb.org/XKG#is_coauthor_with> rdf:type :ObjectProperty ;
+                                                           
+                                                           rdfs:range <http://www.semanticweb.org/XKG#Author> ;
+                                                           
+                                                           rdfs:domain <http://www.semanticweb.org/XKG#Author> .
+
+
+
+###  http://www.semanticweb.org/XKG#is_written_by
+
+<http://www.semanticweb.org/XKG#is_written_by> rdf:type :ObjectProperty ;
+                                                  
+                                                  rdfs:range <http://www.semanticweb.org/XKG#Author> ;
+                                                  
+                                                  rdfs:domain <http://www.semanticweb.org/XKG#Paper> .
+
+
+
+###  http://www.semanticweb.org/XKG#journal_name
+
+<http://www.semanticweb.org/XKG#journal_name> rdf:type :ObjectProperty ;
+                                                 
+                                                 rdfs:domain <http://www.semanticweb.org/XKG#Journal> ;
+                                                 
+                                                 rdfs:range [ rdf:type :Restriction ;
+                                                              :onProperty :topDataProperty ;
+                                                              :someValuesFrom xsd:string
+                                                            ] .
+
+
+
+###  http://www.semanticweb.org/XKG#notification_due_date
+
+<http://www.semanticweb.org/XKG#notification_due_date> rdf:type :ObjectProperty ;
+                                                          
+                                                          rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                          
+                                                          rdfs:range [ rdf:type :Restriction ;
+                                                                       :onProperty :topDataProperty ;
+                                                                       :someValuesFrom xsd:date
+                                                                     ] .
+
+
+
+###  http://www.semanticweb.org/XKG#official_conference_url
+
+<http://www.semanticweb.org/XKG#official_conference_url> rdf:type :ObjectProperty ;
+                                                            
+                                                            rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                            
+                                                            rdfs:range [ rdf:type :Restriction ;
+                                                                         :onProperty :topDataProperty ;
+                                                                         :someValuesFrom xsd:string
+                                                                       ] .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_cit_paper
+
+<http://www.semanticweb.org/XKG#paper_cit_paper> rdf:type :ObjectProperty ;
+                                                    
+                                                    rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                                    
+                                                    rdfs:range <http://www.semanticweb.org/XKG#Paper> .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_citation_count
+
+<http://www.semanticweb.org/XKG#paper_citation_count> rdf:type :ObjectProperty ;
+                                                         
+                                                         rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                                         
+                                                         rdfs:range [ rdf:type :Restriction ;
+                                                                      :onProperty :topDataProperty ;
+                                                                      :someValuesFrom xsd:int
+                                                                    ] .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_cs_relevant
+
+<http://www.semanticweb.org/XKG#paper_cs_relevant> rdf:type :ObjectProperty ;
+                                                      
+                                                      rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                                      
+                                                      rdfs:range [ rdf:type :Restriction ;
+                                                                   :onProperty :topDataProperty ;
+                                                                   :someValuesFrom xsd:boolean
+                                                                 ] .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_future_rank
+
+<http://www.semanticweb.org/XKG#paper_future_rank> rdf:type :ObjectProperty ;
+                                                      
+                                                      rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                                      
+                                                      rdfs:range [ rdf:type :Restriction ;
+                                                                   :onProperty :topDataProperty ;
+                                                                   :someValuesFrom xsd:int
+                                                                 ] .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_is_in_field
+
+<http://www.semanticweb.org/XKG#paper_is_in_field> rdf:type :ObjectProperty ;
+                                                      
+                                                      rdfs:range <http://www.semanticweb.org/XKG#Field> ;
+                                                      
+                                                      rdfs:domain <http://www.semanticweb.org/XKG#Paper> .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_keyword
+
+<http://www.semanticweb.org/XKG#paper_keyword> rdf:type :ObjectProperty ;
+                                                  
+                                                  rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                                  
+                                                  rdfs:range [ rdf:type :Restriction ;
+                                                               :onProperty :topDataProperty ;
+                                                               :someValuesFrom xsd:string
+                                                             ] .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_publish_date
+
+<http://www.semanticweb.org/XKG#paper_publish_date> rdf:type :ObjectProperty ;
+                                                       
+                                                       rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                                       
+                                                       rdfs:range [ rdf:type :Restriction ;
+                                                                    :onProperty :topDataProperty ;
+                                                                    :someValuesFrom xsd:date
+                                                                  ] .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_publish_on
+
+<http://www.semanticweb.org/XKG#paper_publish_on> rdf:type :ObjectProperty ;
+                                                     
+                                                     rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                                     
+                                                     rdfs:range <http://www.semanticweb.org/XKG#Venue> .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_rank
+
+<http://www.semanticweb.org/XKG#paper_rank> rdf:type :ObjectProperty ;
+                                               
+                                               rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                               
+                                               rdfs:range [ rdf:type :Restriction ;
+                                                            :onProperty :topDataProperty ;
+                                                            :someValuesFrom xsd:int
+                                                          ] .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_reference_count
+
+<http://www.semanticweb.org/XKG#paper_reference_count> rdf:type :ObjectProperty ;
+                                                          
+                                                          rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                                          
+                                                          rdfs:range [ rdf:type :Restriction ;
+                                                                       :onProperty :topDataProperty ;
+                                                                       :someValuesFrom xsd:int
+                                                                     ] .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_sci_citation
+
+<http://www.semanticweb.org/XKG#paper_sci_citation> rdf:type :ObjectProperty ;
+                                                       
+                                                       rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                                       
+                                                       rdfs:range [ rdf:type :Restriction ;
+                                                                    :onProperty :topDataProperty ;
+                                                                    :someValuesFrom xsd:int
+                                                                  ] .
+
+
+
+###  http://www.semanticweb.org/XKG#paper_url
+
+<http://www.semanticweb.org/XKG#paper_url> rdf:type :ObjectProperty ;
+                                              
+                                              rdfs:domain <http://www.semanticweb.org/XKG#Paper> ;
+                                              
+                                              rdfs:range [ rdf:type :Restriction ;
+                                                           :onProperty :topDataProperty ;
+                                                           :someValuesFrom xsd:string
+                                                         ] .
+
+
+
+###  http://www.semanticweb.org/XKG#submission_deadline
+
+<http://www.semanticweb.org/XKG#submission_deadline> rdf:type :ObjectProperty ;
+                                                        
+                                                        rdfs:domain <http://www.semanticweb.org/XKG#Conference> ;
+                                                        
+                                                        rdfs:range [ rdf:type :Restriction ;
+                                                                     :onProperty :topDataProperty ;
+                                                                     :someValuesFrom xsd:date
+                                                                   ] .
+
+
+
+###  http://www.semanticweb.org/XKG#work_in
+
+<http://www.semanticweb.org/XKG#work_in> rdf:type :ObjectProperty ;
+                                            
+                                            rdfs:domain <http://www.semanticweb.org/XKG#Author> ;
+                                            
+                                            rdfs:range <http://www.semanticweb.org/XKG#Institute> .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://www.semanticweb.org/XKG#Affiliation
+
+<http://www.semanticweb.org/XKG#Affiliation> rdf:type :Class .
+
+
+
+###  http://www.semanticweb.org/XKG#Author
+
+<http://www.semanticweb.org/XKG#Author> rdf:type :Class .
+
+
+
+###  http://www.semanticweb.org/XKG#Conference
+
+<http://www.semanticweb.org/XKG#Conference> rdf:type :Class ;
+                                               
+                                               rdfs:subClassOf <http://www.semanticweb.org/XKG#Venue> .
+
+
+
+###  http://www.semanticweb.org/XKG#Field
+
+<http://www.semanticweb.org/XKG#Field> rdf:type :Class .
+
+
+
+###  http://www.semanticweb.org/XKG#Institute
+
+<http://www.semanticweb.org/XKG#Institute> rdf:type :Class .
+
+
+
+###  http://www.semanticweb.org/XKG#Journal
+
+<http://www.semanticweb.org/XKG#Journal> rdf:type :Class ;
+                                            
+                                            rdfs:subClassOf <http://www.semanticweb.org/XKG#Venue> .
+
+
+
+###  http://www.semanticweb.org/XKG#Paper
+
+<http://www.semanticweb.org/XKG#Paper> rdf:type :Class .
+
+
+
+###  http://www.semanticweb.org/XKG#Venue
+
+<http://www.semanticweb.org/XKG#Venue> rdf:type :Class .
+
+
+
+###  http://www.semanticweb.org/XKG#location
+
+<http://www.semanticweb.org/XKG#location> rdf:type :Class .
+
+
+
+
+###  Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net
+
