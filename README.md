@@ -30,14 +30,14 @@ Dans le fichier NRI_to_RDF : <br>
 Vous pouvez créer un fichier RDF à partir de plusieurs graphes NRI <br>
 Il faut entrer le chemin des différents fichiers dans la variable `dicoFichiers` en tant que clé et la valeur doit être la relation du graphe <br>
 Cet outil prend en charge les 8 graphes de recherche d'experts, il faut bien les écrire (ne pas tenir compte des majuscules): <br>
-    - coauteurs <br>
-    - citations <br>
-    - copublications <br>
-    - citationsp <br>
-    - cooccurrences <br>
-    - citationse <br>
-    - pubaut <br>
-    - autpubcitees <br>
-    - pubautcites <br>
+    - `coauteurs` <br>
+    - `citations` <br>
+    - `copublications` <br>
+    - `citationsp` <br>
+    - `cooccurrences` <br>
+    - `citationse` <br>
+    - `pubaut` <br>
+    - `autpubcitees` <br>
+    - `pubautcites` <br>
 
 Executer le programme <br>
